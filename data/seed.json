@@ -1,0 +1,315 @@
+{
+  "dashboardStats": {
+    "totalProfit": 18420.55,
+    "bonus": 1200,
+    "totalDeposit": 2841320,
+    "totalWithdrawal": 1124554
+  },
+  "settings": {
+    "coins": [
+      {
+        "symbol": "BTC",
+        "name": "Bitcoin",
+        "network": "BTC network",
+        "address": "bc1qxtfxtrdepplaceholderaddress0001",
+        "rate": 95000
+      },
+      {
+        "symbol": "ETH",
+        "name": "Ethereum",
+        "network": "ERC-20",
+        "address": "0x8F3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+        "rate": 3500
+      },
+      {
+        "symbol": "USDT",
+        "name": "Tether",
+        "network": "TRC-20",
+        "address": "TXTeamFXTradeDepositPlaceholderAddress001",
+        "rate": 1
+      },
+      {
+        "symbol": "SOL",
+        "name": "Solana",
+        "network": "Solana",
+        "address": "XTeamFXTradeSolanaDepositPlaceholderAddress0001",
+        "rate": 155
+      }
+    ]
+  },
+  "users": [
+    {
+      "id": "TC-48-2091",
+      "name": "Alexander Carter",
+      "email": "alexander.carter@teslacapital.io",
+      "role": "user",
+      "balance": 46253.13,
+      "profileImage": null,
+      "kycStatus": "approved",
+      "kycData": {
+        "first_name": "Alexander",
+        "last_name": "Carter",
+        "document_type": "Passport",
+        "document_number": "P-4481920",
+        "submittedAt": "2026-08-14T09:24:00.000Z"
+      },
+      "idImages": [],
+      "blocked": false,
+      "createdAt": "2024-03-11T10:00:00.000Z",
+      "dashboardStats": {
+        "totalProfit": 12480.4,
+        "bonus": 500
+      }
+    },
+    {
+      "id": "TC-87C508FF",
+      "name": "Paul Morgan11",
+      "email": "cleverde086@gmail.com",
+      "role": "user",
+      "balance": 0,
+      "profileImage": null,
+      "kycStatus": "not_submitted",
+      "kycData": {},
+      "idImages": [],
+      "blocked": false,
+      "createdAt": "2026-09-10T15:19:05.328Z",
+      "dashboardStats": {
+        "totalProfit": 0,
+        "bonus": 0
+      }
+    },
+    {
+      "id": "TC-9A691583",
+      "name": "Isaac Destiny",
+      "email": "destinyisaac35@gmail.com",
+      "role": "user",
+      "balance": 4300,
+      "profileImage": null,
+      "kycStatus": "not_submitted",
+      "kycData": {},
+      "idImages": [],
+      "blocked": false,
+      "createdAt": "2026-09-10T22:39:13.827Z",
+      "dashboardStats": {
+        "totalProfit": 0,
+        "bonus": 0
+      }
+    },
+    {
+      "id": "TC-48-2095",
+      "name": "Amara Okafor",
+      "email": "amara.okafor@teslacapital.io",
+      "role": "user",
+      "balance": 0,
+      "profileImage": null,
+      "kycStatus": "not_submitted",
+      "kycData": {},
+      "idImages": [],
+      "blocked": false,
+      "createdAt": "2026-01-05T09:00:00.000Z",
+      "dashboardStats": {
+        "totalProfit": 0,
+        "bonus": 0
+      }
+    },
+    {
+      "id": "TC-09CFC405",
+      "name": "james doe",
+      "email": "james@gmail.com",
+      "role": "user",
+      "balance": 0,
+      "profileImage": null,
+      "kycStatus": "not_submitted",
+      "kycData": {},
+      "idImages": [],
+      "blocked": false,
+      "createdAt": "2026-09-10T14:44:07.440Z",
+      "dashboardStats": {
+        "totalProfit": 0,
+        "bonus": 0
+      }
+    }
+  ],
+  "deposits": [
+    {
+      "id": "D-1001",
+      "userId": "TC-48-2091",
+      "user": "Alexander Carter",
+      "coin": "btc",
+      "amount": 25000,
+      "status": "approved",
+      "createdAt": "2026-09-05T10:12:00.000Z"
+    },
+    {
+      "id": "D-1005",
+      "userId": "TC-48-2091",
+      "user": "Alexander Carter",
+      "coin": "usdt",
+      "amount": 7500,
+      "status": "approved",
+      "createdAt": "2026-09-09T08:30:00.000Z"
+    },
+    {
+      "id": "D-1789080230703",
+      "userId": "TC-9A691583",
+      "user": "Isaac Destiny",
+      "coin": "btc",
+      "amount": 50000,
+      "status": "approved",
+      "createdAt": "2026-09-10T22:43:50.703Z"
+    },
+    {
+      "id": "D-1789085864456",
+      "userId": "TC-9A691583",
+      "user": "Isaac Destiny",
+      "coin": "btc",
+      "amount": 5000,
+      "status": "approved",
+      "createdAt": "2026-09-11T00:17:44.456Z"
+    }
+  ],
+  "withdrawals": [
+    {
+      "id": "W-2001",
+      "userId": "TC-48-2091",
+      "user": "Alexander Carter",
+      "coin": "usdt",
+      "address": "TXTeamFXTradeWithdrawPlaceholderAddress001",
+      "amount": 5000,
+      "status": "approved",
+      "createdAt": "2026-09-03T11:10:00.000Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "O-3001",
+      "userId": "TC-48-2091",
+      "item": "Tesla Growth Fund",
+      "amount": 50000,
+      "type": "investment",
+      "createdAt": "2026-08-01T10:00:00.000Z"
+    },
+    {
+      "id": "O-3002",
+      "userId": "TC-48-2091",
+      "item": "Cybertruck",
+      "amount": 79990,
+      "type": "vehicle",
+      "createdAt": "2026-08-19T12:30:00.000Z"
+    },
+    {
+      "id": "O-1789088516079",
+      "userId": "TC-9A691583",
+      "item": "Model Y",
+      "amount": 42000,
+      "type": "Vehicle Purchase",
+      "createdAt": "2026-09-11T01:01:56.079Z"
+    }
+  ],
+  "mining": [
+    {
+      "id": "M-1789085925965",
+      "userId": "TC-9A691583",
+      "tierId": "m1",
+      "tierName": "Starter Miner",
+      "price": 1200,
+      "totalReturn": 3600,
+      "dailyEarnings": 800,
+      "days": 3,
+      "createdAt": "2026-09-11T00:18:45.965Z",
+      "expiresAt": "2026-09-14T00:18:45.965Z"
+    },
+    {
+      "id": "M-1789087336529",
+      "userId": "TC-9A691583",
+      "tierId": "m2",
+      "tierName": "Silver Miner",
+      "price": 2500,
+      "totalReturn": 7500,
+      "dailyEarnings": 1666.67,
+      "days": 3,
+      "createdAt": "2026-09-11T00:42:16.530Z",
+      "expiresAt": "2026-09-14T00:42:16.530Z"
+    }
+  ],
+  "investments": [
+    {
+      "id": "I-1789086322349",
+      "userId": "TC-9A691583",
+      "planId": "p1",
+      "planName": "Bronze",
+      "amount": 5000,
+      "roi": 200,
+      "termDays": 3,
+      "returnAmount": 15000,
+      "createdAt": "2026-09-11T00:25:22.349Z",
+      "maturesAt": "2026-09-14T00:25:22.349Z"
+    }
+  ],
+  "activity": [
+    {
+      "text": "Alexander Carter made a deposit of $25,000.00",
+      "time": "2h ago"
+    },
+    {
+      "text": "New withdrawal request from Paul Morgan ($40,000.00)",
+      "time": "5h ago"
+    },
+    {
+      "text": "Sarah Chen registered a new account",
+      "time": "1d ago"
+    },
+    {
+      "text": "KYC application submitted by Michael Ross",
+      "time": "1d ago"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "ACC-9F75771F",
+      "userId": "TC-48-2091",
+      "name": "Alexander Carter",
+      "email": "alexander.carter@teslacapital.io",
+      "salt": "bcf59af6dc2a9e430dbf5605ad9040af",
+      "hash": "fe55d0ee48e251452898b6f9c51f999446f8c44d5f26633ec5e36794bf5e7481cea55173fe09de752e584837ff3f5130fa53a9d1cb96eac4b2ecac1c9e32d12a",
+      "createdAt": "2026-01-05T09:00:00.000Z"
+    },
+    {
+      "id": "ACC-29E74353",
+      "userId": "TC-48-2095",
+      "name": "Amara Okafor",
+      "email": "amara.okafor@teslacapital.io",
+      "salt": "182b8a875e3680d1442fc63a4f09a41d",
+      "hash": "e29d7ead09d88f58bf830b9a0d42278adabfe980782335c53bfccffdf55650c02cc31941aa565f99c35cb58a6f69f4d19a18507146d640458e0581f67b12fb8a",
+      "createdAt": "2026-01-05T09:00:00.000Z"
+    },
+    {
+      "id": "ACC-3E46BA92",
+      "userId": "TC-09CFC405",
+      "name": "james doe",
+      "email": "james@gmail.com",
+      "salt": "17deac439057164290005a9cc245daf3",
+      "hash": "0793f233f3ac9a5ac6dd8196dd65ef9f2815642a7b9e76586b29abb4871778db720052710e95245520344582968014ddad0b2a88600e10c702c0ab6d2177953f",
+      "createdAt": "2026-09-10T14:44:07.440Z"
+    },
+    {
+      "id": "ACC-A8224992",
+      "userId": "TC-87C508FF",
+      "name": "Paul Morgan11",
+      "email": "cleverde086@gmail.com",
+      "salt": "1f8224074e53db46d84004c3a8b1522d",
+      "hash": "e18c88940cc942fcc7b83b82eec68895d64dd852ddc3052ec2e167973bf530bda6c686f26e766dbc430d18dfd0df5269a3383852526fe56783284e7e567416b7",
+      "createdAt": "2026-09-10T15:19:05.328Z"
+    },
+    {
+      "id": "ACC-CAE44AA1",
+      "userId": "TC-9A691583",
+      "name": "Isaac Destiny",
+      "email": "destinyisaac35@gmail.com",
+      "salt": "801ad033c9d8ac3f07ea234eef8cfd91",
+      "hash": "0f0cbc1609adf3c6b1fca3d4390e137c260097450673f0689e921fdfda3b814b1b16af746b4ec51ddeae1bb0cccffd2d4e76729eca23acbcd44694eab16dda7d",
+      "createdAt": "2026-09-10T22:39:13.828Z"
+    }
+  ],
+  "sessions": {}
+}

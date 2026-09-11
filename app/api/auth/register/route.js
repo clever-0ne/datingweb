@@ -1,0 +1,66 @@
+import { NextResponse } from 'next/server';
+import crypto from 'crypto';
+import { readDb, writeDb } from '@/lib/db';
+import { hashPassword, createSession, USER_COOKIE } from '@/lib/auth';
+import { pushNotification } from '@/lib/notifications';
+import { deliverPush } from '@/lib/push';
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export async function POST(req) {
+  const body = await req.json().catch(() => ({}));
+  const name = String(body.name || '').trim();
+  const email = String(body.email || '').trim().toLowerCase();
+  const password = String(body.password || '');
+
+  if (!name) return NextResponse.json({ error: 'Please enter your name.' }, { status: 400 });
+  if (!EMAIL_RE.test(email)) return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
+  if (password.length < 8) {
+    return NextResponse.json({ error: 'Password must be at least 8 characters.' }, { status: 400 });
+  }
+
+  const db = await readDb();
+  db.accounts = db.accounts || [];
+  db.users = db.users || [];
+
+  if (db.accounts.some((a) => a.email === email)) {
+    return NextResponse.json({ error: 'An account with that email already exists.' }, { status: 409 });
+  }
+
+  const userId = `TC-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+  const { salt, hash } = hashPassword(password);
+
+  db.users.push({
+    id: userId,
+    name,
+    email,
+    role: 'user',
+    balance: 0,
+    profileImage: null,
+    kycStatus: 'not_submitted',
+    kycData: {},
+    idImages: [],
+    blocked: false,
+    createdAt: new Date().toISOString(),
+    dashboardStats: { totalProfit: 0, bonus: 0 },
+  });
+
+  const account = { id: `ACC-${crypto.randomBytes(4).toString('hex').toUpperCase()}`, userId, name, email, salt, hash, createdAt: new Date().toISOString() };
+  db.accounts.push(account);
+
+  const token = createSession(db, account.id);
+  const notification = pushNotification(db, userId, {
+    title: 'Welcome to Tesla Capital',
+    body: `Your account ${userId} is ready. Fund it to start investing.`,
+    kind: 'success',
+  });
+  await writeDb(db);
+  await deliverPush(db, userId, notification);
+
+  const res = NextResponse.json({
+    ok: true,
+    user: { id: userId, name, email, balance: 0, kycStatus: 'not_submitted' },
+  });
+  res.cookies.set(USER_COOKIE, token, { httpOnly: true, sameSite: 'lax', path: '/' });
+  return res;
+}

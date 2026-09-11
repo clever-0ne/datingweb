@@ -1,0 +1,47 @@
+/* ============================================================
+   Auth screens — reproduced from xteamt.com/pages/login.html
+   Dark page gradient + glowing glass card.
+   ============================================================ */
+
+.page-auth {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #0f1f38 0%, #0000 55%),
+    radial-gradient(900px 500px at 90% 110%, #0d1b2e 0%, #0000 55%),
+    #070d1a;
+  min-height: 100vh;
+}
+
+.auth-glow {
+  position: relative;
+}
+
+.auth-glow::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  background:
+    radial-gradient(1200px 500px at 10% 0%, rgba(232, 33, 39, 0.35) 0%, #0000 45%),
+    radial-gradient(900px 500px at 90% 100%, rgba(30, 60, 220, 0.35) 0%, #0000 45%),
+    radial-gradient(700px 400px at 50% 50%, rgba(255, 160, 80, 0.18) 0%, #0000 50%);
+  filter: blur(40px);
+  opacity: 0.85;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.hairline {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+/* The auth pages sit on their own dark ground, so the site-wide dark body
+   background must not leak in behind them. */
+body.auth-page {
+  background: #070d1a;
+  background-image: none;
+}
