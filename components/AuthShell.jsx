@@ -32,7 +32,7 @@ export default function AuthShell({ title, subtitle, badge, children }) {
             <div className="flex h-16 items-center justify-between">
               <a href="/" className="flex items-center gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/assets/tesla-logo.svg" alt="Tesla Capital" className="h-7 w-auto invert" />
+                <img src="/assets/logo.svg" alt="Tesla Capital" className="h-7 w-auto invert" />
                 <span className="text-sm font-semibold tracking-tight text-white">Tesla Capital</span>
                 {badge && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-[11px] font-medium text-white">

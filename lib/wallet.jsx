@@ -48,6 +48,9 @@ const EMPTY = {
   },
   totalDeposited: 0,
   totalWithdrawn: 0,
+  referralCode: '',
+  referralCount: 0,
+  referralBonus: 0,
 };
 
 export function WalletProvider({ children }) {
@@ -94,6 +97,9 @@ export function WalletProvider({ children }) {
           investmentPortfolio: d.investmentPortfolio ?? EMPTY.investmentPortfolio,
           totalDeposited: d.totalDeposited ?? 0,
           totalWithdrawn: d.totalWithdrawn ?? 0,
+          referralCode: d.referralCode ?? '',
+          referralCount: d.referralCount ?? 0,
+          referralBonus: d.referralBonus ?? 0,
         });
       }
     } catch (e) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { usePrices } from '@/lib/prices';
@@ -40,10 +40,15 @@ const INVENTORY = CARS.slice(0, 3).map((c, i) => ({
 
 export default function DashboardPage() {
   const [hidden, setHidden] = useState(false);
-  const { balance, transactions, totalDeposited, totalWithdrawn, portfolio, investments } = useWallet();
+  const { balance, transactions, totalDeposited, totalWithdrawn, portfolio, investments, referralCode, referralCount, referralBonus } = useWallet();
   // Live spot prices, refreshed every 60s. `live` is false when the feed is
   // unreachable and we are showing the fallback values.
   const { coins: market, live: pricesLive } = usePrices();
+
+  const [refLink, setRefLink] = useState('');
+  useEffect(() => {
+    setRefLink(`${window.location.origin}/register?ref=${referralCode}`);
+  }, [referralCode]);
   const strip = useRef(null);
 
   const stats = [
@@ -231,17 +236,17 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="flex overflow-hidden rounded-lg" style={{ background: 'rgba(148,163,184,.10)', border: '1px solid rgba(148,163,184,.16)' }}>
-                <input readOnly value="https://teslacap.app/?ref=PM011" className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white focus:outline-none sm:text-sm" />
+                <input readOnly value={refLink} className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white focus:outline-none sm:text-sm" />
                 <button className="flex items-center gap-1 px-3 py-2 text-xs font-semibold text-white" style={{ background: 'linear-gradient(135deg,#2f6dff,#0a54ff)' }}><Copy size={14} /> Copy</button>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <div className="rounded-lg p-3" style={{ background: 'rgba(148,163,184,.10)' }}>
                   <p className="mb-1 text-xs mut">Total Referrals</p>
-                  <p className="text-lg font-semibold text-white">128</p>
+                  <p className="text-lg font-semibold text-white">{referralCount}</p>
                 </div>
                 <div className="rounded-lg p-3" style={{ background: 'rgba(148,163,184,.10)' }}>
                   <p className="mb-1 text-xs mut">Earnings</p>
-                  <p className="text-lg font-semibold text-white">$1,250.00</p>
+                  <p className="text-lg font-semibold text-white">{fmtMoney(referralBonus)}</p>
                 </div>
               </div>
             </div>

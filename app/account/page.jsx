@@ -24,7 +24,7 @@ function Toggle({ on = false, onChange, disabled = false }) {
 }
 
 export default function AccountPage() {
-  const { balance } = useWallet();
+  const { balance, referralCode, referralCount, referralBonus } = useWallet();
   const [authApp, setAuthApp] = useState(true);
   const [sms, setSms] = useState(false);
   const [nPayout, setNPayout] = useState(true);
@@ -64,7 +64,7 @@ export default function AccountPage() {
         <Stat label="Account Balance" value={fmtMoney(balance)} note="Available" noteCls="blut" />
         <Stat label="Total Invested" value="$200,000" note="+$81,050 profit" noteCls="grn" />
         <Stat label="Active Plans" value="3" note="All performing" noteCls="blut" />
-        <Stat label="Referral Bonus" value="$1,240" note="+5 referrals" noteCls="grn" />
+        <Stat label="Referral Bonus" value={fmtMoney(referralBonus)} note={`+${referralCount} referrals`} noteCls="grn" />
       </div>
 
       {/* Profile + account details */}
@@ -101,7 +101,7 @@ export default function AccountPage() {
             <Dd k="Member since" v="Mar 2024" />
             <div className="flex items-center justify-between border-t pt-3.5" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
               <dt className="mut">Referral code</dt>
-              <dd><button className="rounded-full px-2.5 py-1 font-mono text-xs font-bold text-white" style={{ background: 'rgba(148,163,184,.14)' }}>ALEX24 <Copy size={12} className="inline" /></button></dd>
+              <dd><button className="rounded-full px-2.5 py-1 font-mono text-xs font-bold text-white" style={{ background: 'rgba(148,163,184,.14)' }}>{referralCode} <Copy size={12} className="inline" /></button></dd>
             </div>
           </dl>
           <button className="btn btn-ghost mt-6 w-full"><LogOut size={16} /> Sign out</button>

@@ -4,6 +4,7 @@ import { readDb, writeDb } from '@/lib/db';
 import { hashPassword, createSession, USER_COOKIE } from '@/lib/auth';
 import { pushNotification } from '@/lib/notifications';
 import { deliverPush } from '@/lib/push';
+import { REFERRAL_BONUS } from '@/lib/plans';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -22,6 +23,9 @@ export async function POST(req) {
   const db = await readDb();
   db.accounts = db.accounts || [];
   db.users = db.users || [];
+
+  const ref = String(body.ref || '').trim();
+  const referrer = ref ? (db.users || []).find((u) => u.id === ref) : null;
 
   if (db.accounts.some((a) => a.email === email)) {
     return NextResponse.json({ error: 'An account with that email already exists.' }, { status: 409 });
@@ -43,10 +47,20 @@ export async function POST(req) {
     blocked: false,
     createdAt: new Date().toISOString(),
     dashboardStats: { totalProfit: 0, bonus: 0 },
+    referredBy: referrer ? referrer.id : null,
   });
 
   const account = { id: `ACC-${crypto.randomBytes(4).toString('hex').toUpperCase()}`, userId, name, email, salt, hash, createdAt: new Date().toISOString() };
   db.accounts.push(account);
+
+  if (referrer) {
+    referrer.balance = Math.round((Number(referrer.balance || 0) + REFERRAL_BONUS) * 100) / 100;
+    pushNotification(db, referrer.id, {
+      title: 'Referral bonus',
+      body: `${name} signed up with your link — $${REFERRAL_BONUS} added to your balance.`,
+      kind: 'success',
+    });
+  }
 
   const token = createSession(db, account.id);
   const notification = pushNotification(db, userId, {

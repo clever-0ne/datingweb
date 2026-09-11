@@ -7,6 +7,7 @@ import {
   totals,
 } from '@/lib/account';
 import { buildNotifications } from '@/lib/notifications';
+import { REFERRAL_BONUS } from '@/lib/plans';
 
 // GET /api/wallet — everything the signed-in user's wallet renders: balance,
 // transactions, mining contracts, investments, both payout queues,
@@ -22,6 +23,7 @@ export async function GET(req) {
 
   const db = await readDb();
   const userId = session.profile.id;
+  const referralCount = (db.users || []).filter((u) => u.referredBy === userId).length;
 
   return NextResponse.json({
     ok: true,
@@ -32,6 +34,9 @@ export async function GET(req) {
       name: session.profile.name,
       email: session.profile.email,
     },
+    referralCode: userId,
+    referralCount,
+    referralBonus: referralCount * REFERRAL_BONUS,
     // The client anchors its countdowns to this rather than to the device
     // clock, so a phone with its date changed cannot show a contract as
     // matured while the server still considers it running.

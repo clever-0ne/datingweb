@@ -20,7 +20,12 @@ export default function RegisterPage() {
       const r = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), password }),
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          password,
+          ref: new URLSearchParams(window.location.search).get('ref') || '',
+        }),
       });
       const d = await r.json();
       if (d.ok) {
