@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { CreditCard, Copy, Check, Info, QrCode, ArrowLeft, ArrowDownToLine, ArrowUpRight, Car, TrendingUp } from 'lucide-react';
-import { COINS, findCoin, fmt } from '@/lib/coins';
+import { COINS, fmt } from '@/lib/coins';
+import { useCoins, pickCoin } from '@/lib/useCoins';
 import { useWallet } from '@/lib/wallet';
 
 const KIND_ICON = {
@@ -19,10 +20,15 @@ export default function PaymentCheckout({ kind = 'deposit', context = 'Deposit',
   const [done, setDone] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const coin = findCoin(coinId);
-  const coinAmount = amount / coin.rate;
+  // The address and rate below come from the admin's console settings, not from
+  // the static list — otherwise this page would keep quoting an address the
+  // admin has already changed.
+  const coins = useCoins();
+  const coin = pickCoin(coins, coinId);
+  const coinAmount = amount / (coin?.rate || 1);
 
   const copyAddress = () => {
+    if (!coin.address) return;
     const done2 = () => { setCopied(true); setTimeout(() => setCopied(false), 1500); };
     if (navigator.clipboard?.writeText) navigator.clipboard.writeText(coin.address).then(done2, done2);
     else done2();
@@ -89,7 +95,7 @@ export default function PaymentCheckout({ kind = 'deposit', context = 'Deposit',
             </div>
 
             <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {COINS.map((c) => (
+              {coins.map((c) => (
                 <button
                   key={c.id}
                   onClick={() => setCoinId(c.id)}
@@ -114,8 +120,10 @@ export default function PaymentCheckout({ kind = 'deposit', context = 'Deposit',
             <div className="mb-4">
               <h3 className="mb-2 text-lg font-semibold text-white">{coin.name} Address:</h3>
               <div className="flex items-center justify-between gap-2 rounded-xl border border-dashed px-3 py-2.5" style={{ borderColor: 'rgba(148,163,184,.3)' }}>
-                <span className="truncate font-mono text-xs text-white">{coin.address}</span>
-                <button onClick={copyAddress} className="flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-xs font-medium" style={{ background: 'rgba(148,163,184,.12)', color: '#e6ecf6' }}>
+                <span className="truncate font-mono text-xs text-white">
+                  {coin.address || 'Awaiting deposit address from support'}
+                </span>
+                <button type="button" onClick={copyAddress} disabled={!coin.address} className="flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-xs font-medium disabled:opacity-50" style={{ background: 'rgba(148,163,184,.12)', color: '#e6ecf6' }}>
                   {copied ? <Check size={12} /> : <Copy size={12} />} {copied ? 'Copied' : 'Copy'}
                 </button>
               </div>
