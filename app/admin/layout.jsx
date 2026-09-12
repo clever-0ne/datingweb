@@ -76,7 +76,7 @@ export default function AdminLayout({ children }) {
             <div className="flex items-center space-x-3">
               <span className="flex items-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/assets/logo.svg" alt="Tesla" className="h-2 w-auto filter brightness-0 invert" />
+                <img src="/assets/logo.svg" alt="Tesla Capital" className="h-5 w-auto filter brightness-0 invert" />
               </span>
               <span className="hidden sm:inline-flex items-center rounded-full bg-slate-100 text-slate-900 px-3 py-1 text-xs font-medium">
                 <Shield className="mr-1 h-3 w-3 text-purple" />Admin Console
@@ -94,7 +94,7 @@ export default function AdminLayout({ children }) {
               <button
                 type="button"
                 onClick={logout}
-                className="rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+                className="rounded-full border border-white/20 px-3 py-2 text-xs font-medium text-white transition hover:bg-white/10 sm:px-4 sm:text-sm"
               >
                 <span>Logout</span>
               </button>

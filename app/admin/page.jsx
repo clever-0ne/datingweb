@@ -2,6 +2,17 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ArrowLeft, X } from 'lucide-react';
+import { COINS } from '@/lib/coins';
+
+/** Card skeletons for the settings tab, used only when the console has no
+ *  saved coins yet. Addresses start blank — the admin fills them in. */
+const BLANK_COINS = COINS.map(({ symbol, name, network, rate }) => ({
+  symbol,
+  name,
+  network,
+  rate,
+  address: '',
+}));
 
 /* ---------------- helpers ---------------- */
 
@@ -124,7 +135,13 @@ export default function AdminConsole() {
 
   const loadSettings = useCallback(async () => {
     const [s, d] = await Promise.all([api('/api/admin/settings'), api('/api/admin/dashboard-stats')]);
-    if (s.ok) setSettings({ coins: (s.data.settings && s.data.settings.coins) || [] });
+    // An empty list would render no cards at all, leaving nowhere to type an
+    // address — so fall back to a blank skeleton with the same coins the user
+    // site knows about. The addresses fill in as the admin saves them.
+    if (s.ok) {
+      const saved = s.data.settings?.coins || [];
+      setSettings({ coins: saved.length ? saved : BLANK_COINS });
+    }
     if (d.ok) {
       const v = d.data.dashboardStats || {};
       setDashboardStats({
@@ -333,8 +350,8 @@ export default function AdminConsole() {
       {tab === 'users' && (
         <section>
           {!currentUser ? (
-            <div className="glass-card p-6">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="glass-card p-4 sm:p-6">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h3 className="text-base font-medium text-black dark:text-white">User Accounts</h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -361,7 +378,7 @@ export default function AdminConsole() {
                   return (
                     <div
                       key={u.id}
-                      className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-gray-300 hover:bg-gray-50 dark:border-white/10 dark:bg-slate-800 dark:hover:bg-white/5"
+                      className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-gray-300 hover:bg-gray-50 sm:flex-row sm:items-center dark:border-white/10 dark:bg-slate-800 dark:hover:bg-white/5"
                     >
                       <button
                         type="button"
@@ -400,7 +417,7 @@ export default function AdminConsole() {
                       <button
                         type="button"
                         onClick={() => setSelectedId(u.id)}
-                        className="shrink-0 rounded-full bg-tesla px-4 py-1.5 text-xs font-medium text-white transition hover:bg-tesla-600 dark:bg-white dark:text-slate-900"
+                        className="shrink-0 rounded-full bg-tesla px-4 py-2 text-center text-xs font-medium text-white transition hover:bg-tesla-600 sm:py-1.5 dark:bg-white dark:text-slate-900"
                       >
                         Manage User
                       </button>
@@ -451,8 +468,8 @@ export default function AdminConsole() {
 
       {/* ===================== Approvals ===================== */}
       {tab === 'approvals' && (
-        <section className="glass-card p-6">
-          <div className="mb-4 flex items-center justify-between">
+        <section className="glass-card p-4 sm:p-6">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 className="text-base font-medium text-black dark:text-white">Mining Payout Approvals</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -540,7 +557,7 @@ export default function AdminConsole() {
       {/* ===================== Settings ===================== */}
       {tab === 'settings' && (
         <section>
-          <div className="glass-card p-6">
+          <div className="glass-card p-4 sm:p-6">
             <h3 className="mb-1 text-base font-medium text-black dark:text-white">Deposit Addresses &amp; Rates</h3>
             <p className="mb-6 text-xs text-slate-500 dark:text-slate-400">
               These addresses are shown to users in the deposit modal. Rates are used to compute the coin amount a
@@ -592,13 +609,13 @@ export default function AdminConsole() {
             <button
               type="button"
               onClick={saveSettings}
-              className="mt-6 rounded-full bg-gray-200 px-6 py-2.5 text-sm font-medium text-slate-900 shadow-lg transition hover:bg-gray-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+              className="mt-6 w-full rounded-full bg-gray-200 px-6 py-2.5 text-sm font-medium text-slate-900 shadow-lg transition hover:bg-gray-300 sm:w-auto dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
             >
               Save Settings
             </button>
           </div>
 
-          <div className="glass-card p-6 mt-6">
+          <div className="glass-card p-4 sm:p-6 mt-6">
             <h3 className="mb-1 text-base font-medium text-black dark:text-white">Dashboard Stats</h3>
             <p className="mb-6 text-xs text-slate-500 dark:text-slate-400">
               Control the numbers shown on the user dashboard overview cards.
@@ -633,7 +650,7 @@ export default function AdminConsole() {
             <button
               type="button"
               onClick={saveDashboardStats}
-              className="mt-6 rounded-full bg-gray-200 px-6 py-2.5 text-sm font-medium text-slate-900 shadow-lg transition hover:bg-gray-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+              className="mt-6 w-full rounded-full bg-gray-200 px-6 py-2.5 text-sm font-medium text-slate-900 shadow-lg transition hover:bg-gray-300 sm:w-auto dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
             >
               Save Dashboard Stats
             </button>
@@ -722,9 +739,9 @@ function UserDetail({
   const h4Cls = 'text-sm font-medium text-black dark:text-white';
 
   return (
-    <div className="glass-card p-6">
+    <div className="glass-card p-4 sm:p-6">
       {/* User header */}
-      <div className="mb-6 flex items-center gap-4">
+      <div className="mb-6 flex flex-wrap items-center gap-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-100 text-base font-medium text-slate-900 dark:bg-white/10 dark:text-white">
           {user.profileImage ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -865,7 +882,7 @@ function UserDetail({
       </div>
 
       {/* Danger zone */}
-      <div className="mt-4 flex items-center justify-between rounded-xl border border-[#fecaca] bg-[#fff5f5] p-4 dark:border-[#ef4444]/30 dark:bg-[#ef4444]/5">
+      <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[#fecaca] bg-[#fff5f5] p-4 sm:flex-row sm:items-center sm:justify-between dark:border-[#ef4444]/30 dark:bg-[#ef4444]/5">
         <div>
           <p className="text-sm font-medium text-[#b91c1c] dark:text-danger">Delete user account</p>
           <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -875,7 +892,7 @@ function UserDetail({
         <button
           type="button"
           onClick={onDelete}
-          className="shrink-0 rounded-full border border-[#fca5a5] px-5 py-2 text-xs font-medium text-[#b91c1c] transition hover:bg-[#fef2f2] dark:border-[#ef4444]/40 dark:text-danger dark:hover:bg-[#ef4444]/10"
+          className="shrink-0 rounded-full border border-[#fca5a5] px-5 py-2 text-center text-xs font-medium text-[#b91c1c] transition hover:bg-[#fef2f2] dark:border-[#ef4444]/40 dark:text-danger dark:hover:bg-[#ef4444]/10"
         >
           Delete User
         </button>
