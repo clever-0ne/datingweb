@@ -11,28 +11,28 @@
         "symbol": "BTC",
         "name": "Bitcoin",
         "network": "BTC network",
-        "address": "bc1qxtfxtrdepplaceholderaddress0001",
+        "address": "",
         "rate": 95000
       },
       {
         "symbol": "ETH",
         "name": "Ethereum",
         "network": "ERC-20",
-        "address": "0x8F3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+        "address": "",
         "rate": 3500
       },
       {
         "symbol": "USDT",
         "name": "Tether",
         "network": "TRC-20",
-        "address": "TXTeamFXTradeDepositPlaceholderAddress001",
+        "address": "",
         "rate": 1
       },
       {
         "symbol": "SOL",
         "name": "Solana",
         "network": "Solana",
-        "address": "XTeamFXTradeSolanaDepositPlaceholderAddress0001",
+        "address": "",
         "rate": 155
       }
     ]
