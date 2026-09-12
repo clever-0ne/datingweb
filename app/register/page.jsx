@@ -1,7 +1,7 @@
 'use client';
 
 import '@/app/auth.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import AuthShell, { authInputCls, authLabelCls, authBtnCls } from '@/components/AuthShell';
 
@@ -9,8 +9,15 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [ref, setRef] = useState('');
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    setRef(new URLSearchParams(window.location.search).get('ref') || '');
+  }, []);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -24,7 +31,9 @@ export default function RegisterPage() {
           name: name.trim(),
           email: email.trim(),
           password,
-          ref: new URLSearchParams(window.location.search).get('ref') || '',
+          phone: phone.trim(),
+          address: address.trim(),
+          ref: ref || new URLSearchParams(window.location.search).get('ref') || '',
         }),
       });
       const d = await r.json();
@@ -86,6 +95,53 @@ export default function RegisterPage() {
             placeholder="At least 8 characters"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={authInputCls}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="reg-phone" className={authLabelCls}>
+            Phone number
+          </label>
+          <input
+            id="reg-phone"
+            type="tel"
+            required
+            autoComplete="tel"
+            placeholder="+1 555 000 0000"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className={authInputCls}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="reg-address" className={authLabelCls}>
+            Address
+          </label>
+          <input
+            id="reg-address"
+            type="text"
+            required
+            autoComplete="street-address"
+            placeholder="Street, City, Country"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className={authInputCls}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="reg-ref" className={authLabelCls}>
+            Referral code <span className="font-normal text-slate-400">(optional)</span>
+          </label>
+          <input
+            id="reg-ref"
+            type="text"
+            autoComplete="off"
+            placeholder="TC-XXXXXXX"
+            value={ref}
+            onChange={(e) => setRef(e.target.value)}
             className={authInputCls}
           />
         </div>

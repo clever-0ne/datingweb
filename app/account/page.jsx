@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { LogOut, Camera, ShieldCheck, Bell, TrendingUp, Mail, Copy, BellRing } from 'lucide-react';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { usePush } from '@/lib/usePush';
@@ -23,8 +23,30 @@ function Toggle({ on = false, onChange, disabled = false }) {
   );
 }
 
+function resizeImage(file, size) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        const min = Math.min(img.width, img.height);
+        ctx.drawImage(img, (img.width - min) / 2, (img.height - min) / 2, min, min, 0, 0, size, size);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function AccountPage() {
-  const { balance, referralCode, referralCount, referralBonus } = useWallet();
+  const { balance, user, referralCode, refresh } = useWallet();
   const [nPayout, setNPayout] = useState(true);
   const [nMarket, setNMarket] = useState(true);
   const [nWeekly, setNWeekly] = useState(false);
@@ -33,6 +55,28 @@ export default function AccountPage() {
   // registered for.
   const push = usePush();
 
+  const fileRef = useRef(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const onPhoto = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setPhotoBusy(true);
+    try {
+      const image = await resizeImage(file, 160);
+      const r = await fetch('/api/account/photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image }),
+      });
+      const d = await r.json();
+      if (d.ok) await refresh();
+    } catch (err) {
+      /* ignore upload errors */
+    }
+    setPhotoBusy(false);
+  };
+
   return (
     <>
       {/* Hero */}
@@ -40,12 +84,12 @@ export default function AccountPage() {
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center">
             <div className="h-[78px] w-[78px] shrink-0 overflow-hidden rounded-full border-2" style={{ borderColor: 'rgba(255,255,255,.25)' }}>
-              <img src="/assets/avatar.svg" alt="Profile" className="h-full w-full object-cover" />
+              <img src={user?.profileImage || '/assets/avatar.svg'} alt="Profile" className="h-full w-full object-cover" />
             </div>
             <div className="min-w-0">
               <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-slate-400">Tesla Capital</p>
-              <h1 className="mb-1 truncate text-2xl font-semibold text-white">Hi, Alexander 👋</h1>
-              <p className="truncate text-sm mut">alexander.carter@teslacapital.io</p>
+              <h1 className="mb-1 truncate text-2xl font-semibold text-white">Hi, {user?.name || 'there'} 👋</h1>
+              <p className="truncate text-sm mut">{user?.email || ''}</p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -65,15 +109,16 @@ export default function AccountPage() {
               <h3 className="text-lg font-semibold text-white">Personal Information</h3>
               <p className="text-xs mut">Manage your profile details</p>
             </div>
-            <button className="rounded-full border px-3.5 py-1.5 text-xs font-semibold text-white" style={{ borderColor: 'rgba(148,163,184,.3)' }}>
-              <Camera size={14} className="mr-1 inline" /> Change photo
+            <button onClick={() => fileRef.current?.click()} className="rounded-full border px-3.5 py-1.5 text-xs font-semibold text-white" style={{ borderColor: 'rgba(148,163,184,.3)' }}>
+              <Camera size={14} className="mr-1 inline" /> {photoBusy ? 'Uploading…' : 'Change photo'}
             </button>
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPhoto} />
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Label label="Full name"><input className="inp" defaultValue="Alexander Carter" /></Label>
-            <Label label="Email address"><input className="inp" defaultValue="alexander.carter@teslacapital.io" /></Label>
-            <Label label="Phone number"><input className="inp" defaultValue="+1 (555) 012-3456" /></Label>
-            <Label label="Country"><input className="inp" defaultValue="United States" /></Label>
+            <Label label="Full name"><input className="inp" readOnly defaultValue={user?.name || ''} /></Label>
+            <Label label="Email address"><input className="inp" readOnly defaultValue={user?.email || ''} /></Label>
+            <Label label="Phone number"><input className="inp" readOnly defaultValue={user?.phone || ''} /></Label>
+            <Label label="Address"><input className="inp" readOnly defaultValue={user?.address || ''} /></Label>
           </div>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <button className="btn btn-pri">Save changes</button>
@@ -85,10 +130,8 @@ export default function AccountPage() {
           <h3 className="mb-1 text-lg font-semibold text-white">Account</h3>
           <p className="mb-4 text-xs mut">Membership &amp; identifiers</p>
           <dl className="space-y-3.5 text-sm">
-            <Dd k="Account ID" v="TC-48-2091" mono />
-            <Dd k="Tier" v="Platinum" />
-            <Dd k="Verification" v="Approved" green />
-            <Dd k="Member since" v="Mar 2024" />
+            <Dd k="Account ID" v={user?.id || '—'} mono />
+            <Dd k="Member since" v={user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—'} />
             <div className="flex items-center justify-between border-t pt-3.5" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
               <dt className="mut">Referral code</dt>
               <dd><button className="rounded-full px-2.5 py-1 font-mono text-xs font-bold text-white" style={{ background: 'rgba(148,163,184,.14)' }}>{referralCode} <Copy size={12} className="inline" /></button></dd>

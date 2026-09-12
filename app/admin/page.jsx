@@ -839,41 +839,6 @@ function UserDetail({
         )}
       </div>
 
-      {/* KYC */}
-      <div className={`mt-4 ${panelCls}`}>
-        <div className="mb-2 flex items-center justify-between">
-          <h4 className={h4Cls}>KYC Status</h4>
-          <button
-            type="button"
-            onClick={onClearKyc}
-            className="rounded-full border border-[#fecaca] px-3 py-1 text-[11px] font-medium text-[#b91c1c] transition hover:bg-[#fef2f2] dark:border-[#ef4444]/40 dark:text-danger dark:hover:bg-[#ef4444]/10"
-          >
-            Clear KYC
-          </button>
-        </div>
-        <select
-          value={user.kycStatus || 'not_submitted'}
-          onChange={(e) => onKyc(e.target.value)}
-          className={inputCls}
-        >
-          <option value="not_submitted">Not submitted</option>
-          <option value="submitted">Submitted</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-        </select>
-
-        {user.kycStatus !== 'not_submitted' && (
-          <div className="mt-3 space-y-2">
-            <div className="rounded-xl border border-slate-200 bg-white p-3 dark:border-white/10 dark:bg-gray-800">
-              <p className="mb-1 text-xs font-medium text-slate-500 dark:text-slate-400">Submitted Identity</p>
-              <p className="text-sm font-medium text-black dark:text-white">{kycName || '—'}</p>
-              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{kycDoc || '—'}</p>
-              {kyc.submittedAt && <p className="mt-1 text-[10px] text-slate-400">Submitted {fmtDate(kyc.submittedAt)}</p>}
-            </div>
-          </div>
-        )}
-      </div>
-
       {/* Account Status */}
       <div className={`mt-4 ${panelCls}`}>
         <div className="mb-2 flex items-center justify-between">
@@ -897,28 +862,6 @@ function UserDetail({
             {user.blocked ? 'Unblock User' : 'Block User'}
           </button>
         </div>
-      </div>
-
-      {/* ID Images */}
-      <div className={`mt-4 ${panelCls}`}>
-        <h4 className={`mb-2 ${h4Cls}`}>ID Documents</h4>
-        {idImages.length ? (
-          <div className="flex flex-wrap gap-3">
-            {idImages.map((src, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={i}
-                src={src}
-                alt="ID document"
-                title="Click to enlarge"
-                onClick={() => window.open(src)}
-                className="h-24 w-24 cursor-pointer rounded-lg border border-slate-200 object-cover dark:border-white/10"
-              />
-            ))}
-          </div>
-        ) : (
-          <p className="py-2 text-xs text-slate-400">No ID images uploaded.</p>
-        )}
       </div>
 
       {/* Danger zone */}

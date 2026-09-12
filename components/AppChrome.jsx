@@ -114,8 +114,8 @@ export default function AppChrome({ children }) {
           </div>
 
           <div className="flex items-center space-x-3 px-6 py-4" style={{ borderBottom: '1px solid rgba(148,163,184,.12)' }}>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1e2430] text-white">
-              <User size={18} />
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-[#1e2430] text-white">
+              {user?.profileImage ? <img src={user.profileImage} alt="" className="h-full w-full object-cover" /> : <User size={18} />}
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-white">{user?.name || 'Account'}</p>

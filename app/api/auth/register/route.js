@@ -13,12 +13,16 @@ export async function POST(req) {
   const name = String(body.name || '').trim();
   const email = String(body.email || '').trim().toLowerCase();
   const password = String(body.password || '');
+  const phone = String(body.phone || '').trim();
+  const address = String(body.address || '').trim();
 
   if (!name) return NextResponse.json({ error: 'Please enter your name.' }, { status: 400 });
   if (!EMAIL_RE.test(email)) return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
   if (password.length < 8) {
     return NextResponse.json({ error: 'Password must be at least 8 characters.' }, { status: 400 });
   }
+  if (!phone) return NextResponse.json({ error: 'Please enter your phone number.' }, { status: 400 });
+  if (!address) return NextResponse.json({ error: 'Please enter your address.' }, { status: 400 });
 
   const db = await readDb();
   db.accounts = db.accounts || [];
@@ -38,6 +42,8 @@ export async function POST(req) {
     id: userId,
     name,
     email,
+    phone,
+    address,
     role: 'user',
     balance: 0,
     profileImage: null,

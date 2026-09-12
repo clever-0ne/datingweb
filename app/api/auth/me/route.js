@@ -8,7 +8,7 @@ export async function GET(req) {
   const p = session.profile;
   return NextResponse.json({
     user: p
-      ? { id: p.id, name: p.name, email: p.email, balance: p.balance, kycStatus: p.kycStatus }
-      : { id: session.account.userId, name: session.account.name, email: session.account.email, balance: 0 },
+      ? { id: p.id, name: p.name, email: p.email, balance: p.balance, kycStatus: p.kycStatus, phone: p.phone || '', address: p.address || '', profileImage: p.profileImage || null }
+      : { id: session.account.userId, name: session.account.name, email: session.account.email, balance: 0, phone: '', address: '', profileImage: null },
   });
 }
