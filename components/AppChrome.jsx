@@ -98,7 +98,7 @@ export default function AppChrome({ children }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 transform border-r bg-[linear-gradient(180deg,#111a2a,#0c1220)] transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-[60] w-72 transform border-r bg-[linear-gradient(180deg,#111a2a,#0c1220)] transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{ borderColor: 'rgba(148,163,184,.12)' }}

@@ -94,9 +94,6 @@ export default function AccountPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="pill pill-sec"><span className="mr-1 h-1.5 w-1.5 rounded-full" style={{ background: '#6ee7b7' }} /> Identity Verified</span>
-            <button className="rounded-full px-4 py-2 text-xs font-semibold text-white" style={{ background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.28)' }}>
-              <LogOut size={14} className="mr-1 inline" /> Log out
-            </button>
           </div>
         </div>
       </div>
@@ -137,7 +134,6 @@ export default function AccountPage() {
               <dd><button className="rounded-full px-2.5 py-1 font-mono text-xs font-bold text-white" style={{ background: 'rgba(148,163,184,.14)' }}>{referralCode} <Copy size={12} className="inline" /></button></dd>
             </div>
           </dl>
-          <button className="btn btn-ghost mt-6 w-full"><LogOut size={16} /> Sign out</button>
         </div>
       </div>
 
