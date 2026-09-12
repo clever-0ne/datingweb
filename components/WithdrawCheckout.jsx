@@ -3,11 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowUpFromLine, ShieldCheck, Check, X, Mail } from 'lucide-react';
-import { COINS } from '@/lib/coins';
+import { useCoins, pickCoin } from '@/lib/useCoins';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 
 export default function WithdrawCheckout({ backHref = '/withdraw' }) {
   const { balance, withdraw } = useWallet();
+  // Same source as the deposit screens, so the two never disagree about which
+  // networks are on offer.
+  const coins = useCoins();
   const [amount, setAmount] = useState(500);
   const [coinId, setCoinId] = useState('btc');
   const [address, setAddress] = useState('');
@@ -35,7 +38,7 @@ export default function WithdrawCheckout({ backHref = '/withdraw' }) {
 
   const confirmPin = () => {
     if (pin.length < 4) { setErr('Enter your 4-digit withdrawal PIN.'); return; }
-    const c = COINS.find((x) => x.id === coinId) || COINS[0];
+    const c = pickCoin(coins, coinId);
     withdraw(amount, 'Withdrawal', c.name + ' · ' + c.network);
     setShowPin(false);
     setDone(true);
@@ -92,7 +95,7 @@ export default function WithdrawCheckout({ backHref = '/withdraw' }) {
             <div className="mb-4">
               <label className="mb-1.5 block text-sm font-medium text-white">Withdrawal method</label>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {COINS.map((c) => (
+                {coins.map((c) => (
                   <button key={c.id} onClick={() => setCoinId(c.id)} className={`rounded-xl border p-2.5 text-center transition ${coinId === c.id ? 'border-[#2f8a68] bg-[rgba(47,138,104,.15)]' : 'border-[rgba(148,163,184,.15)] hover:border-[rgba(148,163,184,.35)]'}`}>
                     <img src={c.icon} alt={c.name} className="mx-auto mb-1 h-7 w-7 rounded-full" />
                     <p className="text-sm font-medium text-white">{c.symbol}</p>

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Wallet, DollarSign, Clock, ArrowDownToLine, Search, PlusCircle, ListChecks, ShieldCheck, FileText, Check, Copy } from 'lucide-react';
 import { useWallet, fmtMoney } from '@/lib/wallet';
-import { COINS } from '@/lib/coins';
+import { useCoins, pickCoin } from '@/lib/useCoins';
 
 export default function DepositPage() {
   const [method, setMethod] = useState('btc');
@@ -12,26 +12,18 @@ export default function DepositPage() {
   const [submitting, setSubmitting] = useState(false);
   const [notice, setNotice] = useState(null);
   const [copied, setCopied] = useState(false);
-  const [coins, setCoins] = useState(COINS);
   const { balance, totalDeposited, transactions, deposit } = useWallet();
 
-  // Pull the live addresses/rates the admin has configured in the console.
-  useEffect(() => {
-    fetch('/api/coins')
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.ok && d.coins?.length) setCoins(d.coins);
-      })
-      .catch(() => {});
-  }, []);
-
-  const coin = coins.find((c) => c.id === method) || coins[0] || COINS[0];
+  // Live addresses/rates the admin has configured in the console.
+  const coins = useCoins();
+  const coin = pickCoin(coins, method);
   const last = transactions.find((t) => t.type === 'Deposit');
   const pendingDeposits = transactions
     .filter((t) => t.type === 'Deposit' && t.status === 'pending')
     .reduce((s, t) => s + t.amount, 0);
 
   const copyAddress = () => {
+    if (!coin?.address) return;
     const done = () => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
@@ -168,8 +160,10 @@ export default function DepositPage() {
               <span className="pill pill-sec">{coin.network}</span>
             </div>
             <div className="flex items-center justify-between gap-2 rounded-xl border border-dashed px-3 py-2.5" style={{ borderColor: 'rgba(148,163,184,.3)', background: '#0d1321' }}>
-              <span className="truncate font-mono text-xs text-white">{coin.address}</span>
-              <button type="button" onClick={copyAddress} className="flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-xs font-medium" style={{ background: 'rgba(148,163,184,.12)', color: '#e6ecf6' }}>
+              <span className="truncate font-mono text-xs text-white">
+                {coin.address || 'Awaiting deposit address from support'}
+              </span>
+              <button type="button" onClick={copyAddress} disabled={!coin.address} className="flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-xs font-medium disabled:opacity-50" style={{ background: 'rgba(148,163,184,.12)', color: '#e6ecf6' }}>
                 {copied ? <Check size={12} /> : <Copy size={12} />} {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
