@@ -39,3 +39,7 @@ next-env.d.ts
 /_dev.log
 /_payout.mjs
 /database/
+
+# Local run artefacts — never committed.
+.server.log
+scripts/out/

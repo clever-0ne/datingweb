@@ -35,7 +35,7 @@ export default function AdminLogin() {
 
   return (
     <AuthShell
-      badge="Admin Console"
+      variant="console"
       title="Admin Sign In"
       subtitle="Restricted access. Staff credentials only."
     >

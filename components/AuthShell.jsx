@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Shield } from 'lucide-react';
 
 export const authInputCls =
   'w-full rounded-xl border border-black/15 bg-white px-3 py-2.5 text-sm text-black placeholder:text-slate-400 outline-none transition focus:border-black focus:ring-2 focus:ring-black/20';
@@ -13,11 +12,20 @@ export const authBtnCls =
 
 /**
  * Shared auth chrome for both the user site (/login, /register) and the
- * standalone admin console (/admin/login). `badge` swaps the wordmark for a
- * labelled pill — the console uses it so the two entry points stay visually
- * distinct, which matters because they are separate auth systems.
+ * standalone admin console (/admin/login).
+ *
+ * `variant` picks how much header the page gets:
+ *   'app'     — the customer pages. The wordmark alone, small.
+ *   'console' — the admin login. The wordmark alone and nothing else.
+ *
+ * Both variants show the mark on its own: /assets/logo.svg already *is* the
+ * TESLA wordmark, so the "Tesla Capital" text that used to sit beside it said
+ * the same thing twice and made the bar read as cluttered. The mark is itself
+ * an <a href="/">, so dropping the separate "Back to home" link costs nothing.
  */
-export default function AuthShell({ title, subtitle, badge, children }) {
+export default function AuthShell({ title, subtitle, variant = 'app', children }) {
+  const isConsole = variant === 'console';
+
   useEffect(() => {
     document.body.classList.add('auth-page');
     return () => document.body.classList.remove('auth-page');
@@ -30,22 +38,13 @@ export default function AuthShell({ title, subtitle, badge, children }) {
         <header className="border-b border-white/10 bg-black/90 backdrop-blur-xl">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
-              <a href="/" className="flex items-center gap-3">
+              <a href="/" className="flex items-center" aria-label="Tesla Capital — home">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/assets/logo.svg" alt="Tesla Capital" className="h-5 w-auto invert" />
-                <span className="text-sm font-semibold tracking-tight text-white">Tesla Capital</span>
-                {badge && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-[11px] font-medium text-white">
-                    <Shield className="h-3 w-3 text-purple" />
-                    {badge}
-                  </span>
-                )}
-              </a>
-              {/* Plain anchor, not <Link>: the landing page loads its theme
-                  stylesheets and scripts as part of the document, so it needs
-                  a full page load to initialise the slider and counters. */}
-              <a href="/" className="text-xs font-medium text-slate-300 transition hover:text-white">
-                Back to home
+                <img
+                  src="/assets/logo.svg"
+                  alt="Tesla Capital"
+                  className={`w-auto invert ${isConsole ? 'h-5' : 'h-2'}`}
+                />
               </a>
             </div>
           </div>

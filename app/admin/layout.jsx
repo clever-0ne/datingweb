@@ -107,7 +107,10 @@ export default function AdminLayout({ children }) {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-7xl px-3 pb-16 pt-20 sm:px-6 lg:px-8">{children}</main>
+      {/* admin-main opts this element out of globals.css's blanket mobile
+          `main { padding: ... !important }`, which would otherwise flatten the
+          pt-20 that keeps content clear of the fixed nav above. */}
+      <main className="admin-main mx-auto max-w-7xl px-3 pb-16 pt-20 sm:px-6 lg:px-8">{children}</main>
     </div>
   );
 }

@@ -7,7 +7,9 @@ export const metadata = {
   description: 'Tesla Capital — invest, trade crypto, and manage Tesla vehicle inventory.',
   manifest: '/manifest.json',
   icons: {
-    icon: '/assets/tesla-logo-192.png',
+    // The SVG is the red T on transparent — no white plate, so the tab shows
+    // the mark on whatever colour the browser's tab strip is.
+    icon: [{ url: '/assets/tesla-t.svg', type: 'image/svg+xml' }],
     apple: '/assets/apple-touch-icon.png',
   },
   appleWebApp: {

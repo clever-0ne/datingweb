@@ -332,8 +332,11 @@ export default function AdminConsole() {
 
   /* ---------------- render ---------------- */
 
+  // min-w-0 + flex-1 rather than whitespace-nowrap: on a phone the three tabs
+  // have to share the width, and a nowrap button refuses to shrink, so the row
+  // overflowed and Settings sat off the right edge behind overflow-x-auto.
   const tabCls = (name) =>
-    `flex-1 whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition ${
+    `flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-xs font-medium transition sm:px-4 sm:text-sm ${
       tab === name ? 'bg-gray-200 text-slate-900 dark:bg-white/15 dark:text-white' : 'text-slate-500 dark:text-gray-300'
     }`;
 
@@ -347,7 +350,7 @@ export default function AdminConsole() {
         <button type="button" onClick={() => setTab('approvals')} className={tabCls('approvals')}>
           Approvals
           {pendingPayouts > 0 && (
-            <span className="ml-2 inline-flex items-center rounded-full bg-[#fff3e7] px-2 py-0.5 text-[11px] font-semibold text-[#9a3412] dark:bg-[#f59e0b]/20 dark:text-[#fbbf24]">
+            <span className="inline-flex shrink-0 items-center rounded-full bg-[#fff3e7] px-1.5 py-0.5 text-[10px] font-semibold text-[#9a3412] sm:px-2 sm:text-[11px] dark:bg-[#f59e0b]/20 dark:text-[#fbbf24]">
               {pendingPayouts}
             </span>
           )}
