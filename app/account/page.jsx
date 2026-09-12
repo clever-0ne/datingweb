@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { LogOut, Camera, ShieldCheck, Smartphone, MessageSquare, Monitor, Bell, TrendingUp, Mail, Copy, BellRing } from 'lucide-react';
+import { LogOut, Camera, ShieldCheck, Bell, TrendingUp, Mail, Copy, BellRing } from 'lucide-react';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { usePush } from '@/lib/usePush';
 
@@ -25,8 +25,6 @@ function Toggle({ on = false, onChange, disabled = false }) {
 
 export default function AccountPage() {
   const { balance, referralCode, referralCount, referralBonus } = useWallet();
-  const [authApp, setAuthApp] = useState(true);
-  const [sms, setSms] = useState(false);
   const [nPayout, setNPayout] = useState(true);
   const [nMarket, setNMarket] = useState(true);
   const [nWeekly, setNWeekly] = useState(false);
@@ -57,14 +55,6 @@ export default function AccountPage() {
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Stats */}
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Stat label="Account Balance" value={fmtMoney(balance)} note="Available" noteCls="blut" />
-        <Stat label="Total Invested" value="$200,000" note="+$81,050 profit" noteCls="grn" />
-        <Stat label="Active Plans" value="3" note="All performing" noteCls="blut" />
-        <Stat label="Referral Bonus" value={fmtMoney(referralBonus)} note={`+${referralCount} referrals`} noteCls="grn" />
       </div>
 
       {/* Profile + account details */}
@@ -120,24 +110,6 @@ export default function AccountPage() {
               <Label label="Confirm new password"><input type="password" placeholder="••••••••••" className="inp" /></Label>
             </div>
             <button className="btn btn-pri">Update password</button>
-          </div>
-        </div>
-
-        <div className="panel p-5 sm:p-6">
-          <h3 className="mb-1 text-lg font-semibold text-white">Two-Factor Authentication</h3>
-          <p className="mb-5 text-xs mut">Add an extra layer of security to your account</p>
-          <SettingRow icon={Smartphone} title="Authenticator app" sub="Time-based one-time codes"><Toggle on={authApp} onChange={setAuthApp} /></SettingRow>
-          <SettingRow icon={MessageSquare} title="SMS codes" sub="Backup codes via text message"><Toggle on={sms} onChange={setSms} /></SettingRow>
-          <p className="mb-2 mt-5 text-xs mut">Active sessions</p>
-          <div className="flex items-center justify-between rounded-xl border px-4 py-3" style={{ borderColor: 'rgba(148,163,184,.12)', background: 'rgba(148,163,184,.06)' }}>
-            <div className="flex items-center gap-3">
-              <span className="chip chip-b h-9 w-9 rounded-lg"><Monitor size={16} /></span>
-              <div>
-                <p className="text-sm font-semibold text-white">Windows · Chrome</p>
-                <p className="text-xs mut">New York, US · Current session</p>
-              </div>
-            </div>
-            <span className="text-xs font-semibold grn">Active now</span>
           </div>
         </div>
       </div>

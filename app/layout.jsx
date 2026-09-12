@@ -6,6 +6,15 @@ export const metadata = {
   title: 'Tesla Capital',
   description: 'Tesla Capital — invest, trade crypto, and manage Tesla vehicle inventory.',
   manifest: '/manifest.json',
+  icons: {
+    icon: '/assets/tesla-logo-192.png',
+    apple: '/assets/apple-touch-icon.png',
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'Tesla Capital',
+    statusBarStyle: 'black-translucent',
+  },
 };
 
 export const viewport = {
