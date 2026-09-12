@@ -94,6 +94,9 @@ export default function AdminConsole() {
   const [txModal, setTxModal] = useState(null); // 'deposits' | 'withdrawals' | 'orders'
 
   const [settings, setSettings] = useState({ coins: [] });
+  // Live market prices, shown next to each rate field so the admin can see how
+  // far the configured rate has drifted from the market.
+  const [liveRates, setLiveRates] = useState({});
   const [dashboardStats, setDashboardStats] = useState({
     totalProfit: 0,
     bonus: 0,
@@ -142,6 +145,14 @@ export default function AdminConsole() {
       const saved = s.data.settings?.coins || [];
       setSettings({ coins: saved.length ? saved : BLANK_COINS });
     }
+    fetch('/api/prices', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((p) => {
+        const map = {};
+        for (const c of p.coins || []) map[String(c.sym || '').toUpperCase()] = c.price;
+        setLiveRates(map);
+      })
+      .catch(() => {});
     if (d.ok) {
       const v = d.data.dashboardStats || {};
       setDashboardStats({
@@ -602,6 +613,16 @@ export default function AdminConsole() {
                     onChange={(e) => setCoinField(i, 'rate', e.target.value)}
                     className={inputCls}
                   />
+                  <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                    Live market:{' '}
+                    {liveRates[String(c.symbol || '').toUpperCase()] != null ? (
+                      <span className="font-medium text-black dark:text-white">
+                        ${fmtMoney(liveRates[String(c.symbol || '').toUpperCase()])}
+                      </span>
+                    ) : (
+                      <span className="text-slate-400">—</span>
+                    )}
+                  </p>
                 </div>
               ))}
             </div>

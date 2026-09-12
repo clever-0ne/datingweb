@@ -18,5 +18,11 @@ export async function GET() {
     rate: c.rate,
     icon: `/assets/coins/${String(c.symbol || '').toLowerCase()}.png`,
   }));
-  return NextResponse.json({ ok: true, coins });
+  // no-store on the way out as well as force-dynamic above: a cached copy of
+  // this response keeps serving an address the admin has already replaced,
+  // which reads as the address being hardcoded.
+  return NextResponse.json(
+    { ok: true, coins },
+    { headers: { 'Cache-Control': 'no-store, max-age=0' } },
+  );
 }

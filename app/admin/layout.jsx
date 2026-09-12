@@ -69,32 +69,36 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="font-sans antialiased text-slate-900">
-      {/* Top Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/60 bg-slate-950 dark:border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <span className="flex items-center">
+      {/* Top Navigation — solid, not translucent. On a phone this is the only
+          chrome the console has, so it stays opaque and its controls stay light
+          enough to read against the dark bar (the theme toggle used to be
+          slate-500 on slate-950, which is very close to invisible). */}
+      <nav className="fixed inset-x-0 top-0 z-[100] border-b border-white/10 bg-slate-950">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+              <span className="flex shrink-0 items-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/assets/logo.svg" alt="Tesla Capital" className="h-5 w-auto filter brightness-0 invert" />
               </span>
-              <span className="hidden sm:inline-flex items-center rounded-full bg-slate-100 text-slate-900 px-3 py-1 text-xs font-medium">
-                <Shield className="mr-1 h-3 w-3 text-purple" />Admin Console
+              <span className="hidden shrink-0 items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-900 sm:inline-flex">
+                <Shield className="mr-1 h-3 w-3 text-purple" />
+                Admin Console
               </span>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex shrink-0 items-center gap-2">
               <button
                 type="button"
                 onClick={toggleTheme}
-                className="p-2 rounded-full text-slate-500 transition hover:bg-slate-100 dark:hover:bg-white/10"
+                className="rounded-full p-2 text-slate-200 transition hover:bg-white/10 hover:text-white"
                 aria-label="Toggle dark mode"
               >
-                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               </button>
               <button
                 type="button"
                 onClick={logout}
-                className="rounded-full border border-white/20 px-3 py-2 text-xs font-medium text-white transition hover:bg-white/10 sm:px-4 sm:text-sm"
+                className="rounded-full border border-white/25 px-3 py-2 text-xs font-medium text-white transition hover:bg-white/10 sm:px-4 sm:text-sm"
               >
                 <span>Logout</span>
               </button>
@@ -103,7 +107,7 @@ export default function AdminLayout({ children }) {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">{children}</main>
+      <main className="mx-auto max-w-7xl px-3 pb-16 pt-20 sm:px-6 lg:px-8">{children}</main>
     </div>
   );
 }
