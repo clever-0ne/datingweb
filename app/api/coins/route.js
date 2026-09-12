@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { readDb } from '@/lib/db';
 
-// Reads live admin-edited settings, so it must never be prerendered — a cached
-// copy would keep serving deposit addresses the admin has already changed.
+// MUST stay. This handler takes no arguments and touches no dynamic API (no
+// cookies, no headers, no request), so Next 14 classifies the route as static:
+// it calls GET() once at build time and serves that one response to everyone
+// until the next deploy. The admin's saved address then never appears, no matter
+// how often it is saved — the exact "the address is hardcoded" symptom. Declaring
+// the route dynamic is what makes each request hit the database.
 export const dynamic = 'force-dynamic';
 
 // GET /api/coins — the deposit addresses + rates configured by the admin in
