@@ -49,6 +49,13 @@ export default function DashboardPage() {
   useEffect(() => {
     setRefLink(`${window.location.origin}/register?ref=${referralCode}`);
   }, [referralCode]);
+
+  const [copied, setCopied] = useState(false);
+  const copyRef = () => {
+    navigator.clipboard?.writeText(refLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
   const strip = useRef(null);
 
   const stats = [
@@ -237,7 +244,7 @@ export default function DashboardPage() {
               </div>
               <div className="flex overflow-hidden rounded-lg" style={{ background: 'rgba(148,163,184,.10)', border: '1px solid rgba(148,163,184,.16)' }}>
                 <input readOnly value={refLink} className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white focus:outline-none sm:text-sm" />
-                <button className="flex items-center gap-1 px-3 py-2 text-xs font-semibold text-white" style={{ background: 'linear-gradient(135deg,#2f6dff,#0a54ff)' }}><Copy size={14} /> Copy</button>
+                <button onClick={copyRef} className="flex items-center gap-1 px-3 py-2 text-xs font-semibold text-white" style={{ background: 'linear-gradient(135deg,#2f6dff,#0a54ff)' }}><Copy size={14} /> {copied ? 'Copied' : 'Copy'}</button>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <div className="rounded-lg p-3" style={{ background: 'rgba(148,163,184,.10)' }}>
