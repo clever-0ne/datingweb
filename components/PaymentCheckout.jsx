@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { CreditCard, Copy, Check, Info, QrCode, ArrowLeft, ArrowDownToLine, ArrowUpRight, Car, TrendingUp } from 'lucide-react';
-import { COINS, fmt } from '@/lib/coins';
+import { fmt } from '@/lib/coins';
 import { useCoins, pickCoin } from '@/lib/useCoins';
 import { useWallet } from '@/lib/wallet';
 
