@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { readDb, writeDb } from '@/lib/db';
 import { hashPassword, createSession, USER_COOKIE } from '@/lib/auth';
 import { pushNotification } from '@/lib/notifications';
-import { deliverPush } from '@/lib/push';
+import { deliverPush, deliverAdminPush } from '@/lib/push';
 import { REFERRAL_BONUS } from '@/lib/plans';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -76,6 +76,14 @@ export async function POST(req) {
   });
   await writeDb(db);
   await deliverPush(db, userId, notification);
+
+  // Alert the console that there is a new account. After the write, like every
+  // other push: the user is registered whether or not this lands, and a push
+  // failure must not fail their signup.
+  await deliverAdminPush(db, {
+    title: 'New user registered',
+    body: `${name} (${email}) just created an account.`,
+  });
 
   const res = NextResponse.json({
     ok: true,

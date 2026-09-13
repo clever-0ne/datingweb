@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Shield, Sun, Moon } from 'lucide-react';
+import { Shield, Sun, Moon, Bell, BellOff } from 'lucide-react';
+import { usePush } from '@/lib/usePush';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
@@ -11,6 +12,15 @@ export default function AdminLayout({ children }) {
   const [theme, setTheme] = useState('light');
 
   const isLogin = pathname === '/admin/login';
+
+  /**
+   * Console alerts. Per-device and opt-in, filed under the admin audience
+   * rather than a user id — the console has no account to subscribe with. The
+   * hook reports whether the browser and the server can do push at all, and
+   * the control below stays hidden unless both can, so an admin is never
+   * offered a button that cannot work.
+   */
+  const push = usePush({ subscribeUrl: '/api/admin/push/subscribe' });
 
   // Console surfaces are always light; opt the body into the console palette.
   // The login screen is the exception — it uses the dark auth ground, and the
@@ -87,6 +97,18 @@ export default function AdminLayout({ children }) {
               </span>
             </div>
             <div className="flex shrink-0 items-center gap-2">
+              {push.available && (
+                <button
+                  type="button"
+                  onClick={() => (push.subscribed ? push.unsubscribe() : push.subscribe())}
+                  disabled={push.busy}
+                  className="rounded-full p-2 text-slate-200 transition hover:bg-white/10 hover:text-white disabled:opacity-50"
+                  aria-label={push.subscribed ? 'Turn off console alerts' : 'Turn on console alerts'}
+                  title={push.error || (push.subscribed ? 'Alerts on for this device' : 'Get alerted about new signups and approvals')}
+                >
+                  {push.subscribed ? <Bell className="h-5 w-5" /> : <BellOff className="h-5 w-5" />}
+                </button>
+              )}
               <button
                 type="button"
                 onClick={toggleTheme}

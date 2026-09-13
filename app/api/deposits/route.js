@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { readDb, writeDb } from '@/lib/db';
 import { currentUser } from '@/lib/auth';
 import { pushNotification } from '@/lib/notifications';
-import { deliverPush } from '@/lib/push';
+import { deliverPush, deliverAdminPush } from '@/lib/push';
 import { fmtUsd } from '@/lib/format';
 
 const COINS = ['btc', 'eth', 'usdt', 'sol'];
@@ -43,6 +43,13 @@ export async function POST(req) {
   });
   await writeDb(db);
   await deliverPush(db, session.profile.id, notification);
+
+  // A deposit sits in the console's queue until an admin approves it, so this
+  // is the moment that queue grows — the push tells the admin to go look.
+  await deliverAdminPush(db, {
+    title: 'Deposit awaiting approval',
+    body: `${session.profile.name} submitted a ${coin.toUpperCase()} deposit of ${fmtUsd(amount)}.`,
+  });
 
   return NextResponse.json({ ok: true, deposit });
 }

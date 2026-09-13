@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { readDb, writeDb } from '@/lib/db';
 import { currentUser } from '@/lib/auth';
 import { pushNotification } from '@/lib/notifications';
-import { deliverPush } from '@/lib/push';
+import { deliverPush, deliverAdminPush } from '@/lib/push';
 import { fmtUsd } from '@/lib/format';
 
 const COINS = ['btc', 'eth', 'usdt', 'sol'];
@@ -53,6 +53,13 @@ export async function POST(req) {
   });
   await writeDb(db);
   await deliverPush(db, session.profile.id, notification);
+
+  // Same reasoning as a deposit: this is the request landing in the console's
+  // review queue, which is the only moment an admin can act on it.
+  await deliverAdminPush(db, {
+    title: 'Withdrawal awaiting approval',
+    body: `${session.profile.name} requested a ${coin.toUpperCase()} withdrawal of ${fmtUsd(amount)}.`,
+  });
 
   return NextResponse.json({ ok: true, withdrawal });
 }

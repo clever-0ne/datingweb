@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 import { readDb, writeDb } from '@/lib/db';
 import { currentUser } from '@/lib/auth';
 import { buildMining } from '@/lib/account';
+import { fmtUsd } from '@/lib/format';
 import {
   MINING_PAYOUTS, PayoutError, createRequest, confirmRequest, redact,
 } from '@/lib/payout';
-import { deliverPush } from '@/lib/push';
+import { deliverPush, deliverAdminPush } from '@/lib/push';
 
 /**
  * POST /api/mining/withdraw — the two-step mining payout.
@@ -49,6 +50,12 @@ export async function POST(req) {
         grossOf: (m) => m.totalReturn,
       });
       await writeDb(db);
+      // Approval is what releases the user's code, so a request nobody reviews
+      // is a payout the user cannot collect. This is the queue growing.
+      await deliverAdminPush(db, {
+        title: 'Mining payout awaiting approval',
+        body: `${session.profile.name} requested ${fmtUsd(payout.gross)} across ${payout.itemIds.length} contract${payout.itemIds.length === 1 ? '' : 's'}.`,
+      });
       return NextResponse.json({ ok: true, request: redact(payout) });
     }
 
