@@ -4,6 +4,7 @@ import '@/app/auth.css';
 import { useState } from 'react';
 import Link from 'next/link';
 import AuthShell, { authInputCls, authLabelCls, authBtnCls } from '@/components/AuthShell';
+import { PasskeySignIn } from '@/components/PasskeyPanel';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -81,6 +82,8 @@ export default function LoginPage() {
           {busy ? 'Signing in…' : 'Sign In'}
         </button>
       </form>
+
+      <PasskeySignIn />
 
       <p className="mt-4 text-center text-xs text-slate-500">
         Don&apos;t have an account?{' '}

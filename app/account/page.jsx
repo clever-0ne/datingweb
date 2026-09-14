@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { LogOut, Camera, ShieldCheck, Bell, TrendingUp, Mail, Copy, BellRing } from 'lucide-react';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { usePush } from '@/lib/usePush';
+import { PasskeyManager } from '@/components/PasskeyPanel';
 
 function Toggle({ on = false, onChange, disabled = false }) {
   return (
@@ -150,6 +151,14 @@ export default function AccountPage() {
             </div>
             <button className="btn btn-pri">Update password</button>
           </div>
+        </div>
+
+        <div className="panel p-5 sm:p-6">
+          <h3 className="mb-1 text-lg font-semibold text-white">Passkeys</h3>
+          <p className="mb-5 text-xs mut">
+            Sign in with your fingerprint, face or screen lock instead of a password
+          </p>
+          <PasskeyManager />
         </div>
       </div>
 
