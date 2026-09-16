@@ -37,8 +37,12 @@ next-env.d.ts
 
 # local scratch / logs
 /_dev.log
-/_payout.mjs
 /database/
+
+# Local dev scripts and their output — verification harnesses, screenshots and
+# cookie jars. Never part of the app.
+/scripts/dev/
+/scripts/out/
 
 # Local run artefacts — never committed.
 .server.log

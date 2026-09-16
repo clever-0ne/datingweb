@@ -54,7 +54,7 @@ async function main() {
   });
   console.log(`login: ${login.status()} ${await login.text()}`);
 
-  await page.goto(`${BASE}/admin`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/console-006cd676`, { waitUntil: 'networkidle' });
   // The console swaps its blank shell for the real UI once the session check
   // resolves; wait for a tab to exist rather than for the network to settle.
   await page.getByRole('button', { name: 'Settings' }).waitFor({ timeout: 15000 });

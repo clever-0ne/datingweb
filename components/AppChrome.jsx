@@ -58,7 +58,7 @@ export default function AppChrome({ children }) {
     href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   // The admin panel is a completely separate app with its own shell
-  // (see app/admin/layout.jsx), and the public pages have no shell at all.
+  // (see app/console-006cd676/layout.jsx), and the public pages have no shell at all.
   // Never wrap either in the dark user chrome.
   if (isPublic) return children;
 

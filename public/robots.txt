@@ -1,0 +1,28 @@
+# Tesla Capital
+#
+# The operations console is deliberately not listed here either way. A
+# Disallow line for a path is itself a hint that the path exists — it is the
+# first thing anyone reads a robots.txt for. The console is kept out of indexes
+# by an X-Robots-Tag: noindex header on its own responses (middleware.js), and
+# its address is not guessable. So: this file names the private areas of the
+# *product*, and stays quiet about the console.
+
+User-agent: *
+Allow: /
+
+# Signed-in product surfaces — nothing here is useful in a search result.
+Disallow: /dashboard
+Disallow: /account
+Disallow: /deposit
+Disallow: /withdraw
+Disallow: /transactions
+Disallow: /invest
+Disallow: /invest-dashboard
+Disallow: /inventory
+Disallow: /cloud-mining
+Disallow: /my-miners
+
+# The API answers JSON, never a page.
+Disallow: /api/
+
+Sitemap: /sitemap.xml

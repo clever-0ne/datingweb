@@ -3,6 +3,7 @@
 import '@/app/auth.css';
 import { useState } from 'react';
 import AuthShell, { authInputCls, authLabelCls, authBtnCls } from '@/components/AuthShell';
+import { CONSOLE_PATH } from '@/lib/console';
 
 export default function AdminLogin() {
   const [password, setPassword] = useState('');
@@ -22,8 +23,8 @@ export default function AdminLogin() {
       const d = await res.json();
       if (d.ok) {
         // Full page load so the httpOnly session cookie is definitely sent
-        // with the request for /admin, rather than relying on a soft navigation.
-        window.location.href = '/admin';
+        // with the request for the console, rather than relying on a soft navigation.
+        window.location.href = CONSOLE_PATH;
         return;
       }
       setErr(d.error || 'Invalid admin credentials.');

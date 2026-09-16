@@ -30,7 +30,7 @@ function findChromium() {
 }
 
 const PAGES = [
-  ['admin-login', '/admin/login'],
+  ['admin-login', '/console-006cd676/login'],
   ['user-login', '/login'],
 ];
 

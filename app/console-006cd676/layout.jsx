@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Shield, Sun, Moon, Bell, BellOff } from 'lucide-react';
 import { usePush } from '@/lib/usePush';
+import { CONSOLE_PATH } from '@/lib/console';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
@@ -11,7 +12,7 @@ export default function AdminLayout({ children }) {
   const [authed, setAuthed] = useState(null);
   const [theme, setTheme] = useState('light');
 
-  const isLogin = pathname === '/admin/login';
+  const isLogin = pathname === `${CONSOLE_PATH}/login`;
 
   /**
    * Console alerts. Per-device and opt-in, filed under the admin audience
@@ -59,7 +60,7 @@ export default function AdminLayout({ children }) {
   }, [isLogin, pathname]);
 
   useEffect(() => {
-    if (authed === false && !isLogin) router.replace('/admin/login');
+    if (authed === false && !isLogin) router.replace(`${CONSOLE_PATH}/login`);
   }, [authed, isLogin, router]);
 
   if (isLogin) return <>{children}</>;
@@ -74,7 +75,7 @@ export default function AdminLayout({ children }) {
     } catch (e) {
       /* fall through — the cookie is cleared server-side on the next request */
     }
-    window.location.href = '/admin/login';
+    window.location.href = `${CONSOLE_PATH}/login`;
   };
 
   return (

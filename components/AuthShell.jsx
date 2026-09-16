@@ -12,7 +12,7 @@ export const authBtnCls =
 
 /**
  * Shared auth chrome for both the user site (/login, /register) and the
- * standalone admin console (/admin/login).
+ * standalone admin console (see lib/console.js).
  *
  * `variant` picks how much header the page gets:
  *   'app'     — the customer pages. The wordmark alone, small.
