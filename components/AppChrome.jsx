@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { NAV, BOTTOM_NAV, isPublicRoute } from '@/lib/nav';
 import { useWallet } from '@/lib/wallet';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const ICONS = {
   LayoutDashboard, ArrowDownToLine, ArrowUpFromLine, TrendingUp, BarChart3,
@@ -16,7 +17,7 @@ const ICONS = {
 };
 
 /** Status dot colour per notification kind (see lib/notifications.js). */
-const NOTIF_DOT = { success: '#2f8a68', error: '#ef4444', info: '#2f6dff' };
+const NOTIF_DOT = { success: 'var(--green)', error: 'var(--red)', info: 'var(--primary)' };
 
 export default function AppChrome({ children }) {
   const pathname = usePathname();
@@ -59,7 +60,7 @@ export default function AppChrome({ children }) {
 
   // The admin panel is a completely separate app with its own shell
   // (see app/console-006cd676/layout.jsx), and the public pages have no shell at all.
-  // Never wrap either in the dark user chrome.
+  // Never wrap either in the user chrome.
   if (isPublic) return children;
 
   // Waiting on the one wallet request. A blank div here reads as a broken page,
@@ -67,12 +68,15 @@ export default function AppChrome({ children }) {
   if (authed !== true) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <span className="h-6 w-6 animate-spin rounded-full border-2 border-slate-600 border-t-transparent" />
+        <span
+          className="h-6 w-6 animate-spin rounded-full border-2 border-t-transparent"
+          style={{ borderColor: 'var(--hairline-strong)', borderTopColor: 'transparent' }}
+        />
       </div>
     );
   }
 
-  const NavItem = ({ item, activeCls }) => {
+  const NavItem = ({ item }) => {
     const Icon = ICONS[item.icon] || LayoutDashboard;
     return (
       <Link
@@ -98,28 +102,31 @@ export default function AppChrome({ children }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-[60] w-72 transform border-r bg-[linear-gradient(180deg,#111a2a,#0c1220)] transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-[60] w-72 transform border-r transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
-        style={{ borderColor: 'rgba(148,163,184,.12)' }}
+        style={{ background: 'var(--chrome-grad)', borderColor: 'var(--hairline)' }}
       >
         <div className="flex h-full flex-col">
-          <div className="flex h-16 items-center justify-between px-6" style={{ borderBottom: '1px solid rgba(148,163,184,.12)' }}>
+          <div className="flex h-16 items-center justify-between px-6" style={{ borderBottom: '1px solid var(--hairline)' }}>
             <Link href="/dashboard" onClick={() => setSidebarOpen(false)}>
               <img src="/assets/logo.svg" alt="Tesla Capital" className="logo" style={{ height: 15, width: 'auto' }} />
             </Link>
-            <button className="text-slate-300 lg:hidden" onClick={() => setSidebarOpen(false)} aria-label="Close">
+            <button className="icon-btn lg:hidden" onClick={() => setSidebarOpen(false)} aria-label="Close">
               <X size={18} />
             </button>
           </div>
 
-          <div className="flex items-center space-x-3 px-6 py-4" style={{ borderBottom: '1px solid rgba(148,163,184,.12)' }}>
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-[#1e2430] text-white">
+          <div className="flex items-center space-x-3 px-6 py-4" style={{ borderBottom: '1px solid var(--hairline)' }}>
+            <div
+              className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full"
+              style={{ background: 'var(--soft-2)', color: 'var(--text)' }}
+            >
               {user?.profileImage ? <img src={user.profileImage} alt="" className="h-full w-full object-cover" /> : <User size={18} />}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-white">{user?.name || 'Account'}</p>
-              <p className="truncate text-xs text-slate-400">{user?.email || ''}</p>
+              <p className="hi truncate text-sm font-semibold">{user?.name || 'Account'}</p>
+              <p className="mut truncate text-xs">{user?.email || ''}</p>
             </div>
           </div>
 
@@ -129,11 +136,11 @@ export default function AppChrome({ children }) {
             ))}
           </nav>
 
-          <div className="p-4" style={{ borderTop: '1px solid rgba(148,163,184,.12)' }}>
+          <div className="p-4" style={{ borderTop: '1px solid var(--hairline)' }}>
             <button
               type="button"
               onClick={logout}
-              className="flex w-full items-center gap-2 px-1 text-sm font-medium text-slate-400 hover:text-white"
+              className="mut hover-tx flex w-full items-center gap-2 px-1 text-sm font-medium"
             >
               <LogOut size={16} /> Logout
             </button>
@@ -147,18 +154,21 @@ export default function AppChrome({ children }) {
         <header className="sticky top-0 z-30">
           <div
             className="flex items-center justify-between px-4 py-2.5 sm:px-6"
-            style={{ background: '#0d1421', borderBottom: '1px solid rgba(148,163,184,.12)' }}
+            style={{ background: 'var(--chrome)', borderBottom: '1px solid var(--hairline)' }}
           >
             <div className="flex min-w-0 items-center">
-              <button className="mr-2 text-slate-300 lg:hidden" onClick={() => setSidebarOpen(true)} aria-label="Menu">
+              <button className="icon-btn mr-2 lg:hidden" onClick={() => setSidebarOpen(true)} aria-label="Menu">
                 <Menu size={20} />
               </button>
-              <div className="min-w-0 flex-1 truncate text-[15px] font-semibold text-white sm:text-lg">
+              <div className="hi min-w-0 flex-1 truncate text-[15px] font-semibold sm:text-lg">
                 {NAV.find((n) => isActive(n.href))?.label || 'Dashboard'}
               </div>
             </div>
             <div className="relative ml-2 flex flex-shrink-0 items-center">
-              <button className="relative rounded-full p-2 text-slate-300" onClick={toggleNotif} aria-label="Notifications">
+              {/* The theme switch sits with the bell because both are quiet,
+                  app-wide controls rather than destinations. */}
+              <ThemeToggle />
+              <button className="icon-btn relative" onClick={toggleNotif} aria-label="Notifications">
                 <Bell size={20} />
                 {unread > 0 && (
                   <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ef4444] px-1 text-[10px] font-bold text-white">
@@ -167,19 +177,22 @@ export default function AppChrome({ children }) {
                 )}
               </button>
               {notifOpen && (
-                <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-2xl border bg-[#141a29] shadow-2xl" style={{ borderColor: 'rgba(148,163,184,.15)' }}>
-                  <div className="border-b p-3" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
-                    <h3 className="text-sm font-semibold text-white">Notifications</h3>
+                <div
+                  className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-2xl border shadow-2xl"
+                  style={{ background: 'var(--chrome)', borderColor: 'var(--hairline-strong)' }}
+                >
+                  <div className="border-b p-3" style={{ borderColor: 'var(--hairline)' }}>
+                    <h3 className="hi text-sm font-semibold">Notifications</h3>
                   </div>
                   {notifications.length === 0 ? (
-                    <div className="p-4 text-center text-xs text-slate-400">No notifications</div>
+                    <div className="mut p-4 text-center text-xs">No notifications</div>
                   ) : (
                     <div className="max-h-80 overflow-y-auto">
                       {notifications.map((n) => (
                         <div
                           key={n.id}
                           className="border-b p-3 last:border-0"
-                          style={{ borderColor: 'rgba(148,163,184,.1)' }}
+                          style={{ borderColor: 'var(--hairline)' }}
                         >
                           <div className="flex items-start gap-2">
                             <span
@@ -187,9 +200,9 @@ export default function AppChrome({ children }) {
                               style={{ background: NOTIF_DOT[n.kind] || NOTIF_DOT.info }}
                             />
                             <div className="min-w-0">
-                              <p className="text-xs font-semibold text-white">{n.title}</p>
-                              <p className="mt-0.5 break-words text-[11px] leading-relaxed text-slate-400">{n.body}</p>
-                              <p className="mt-1 text-[10px] text-slate-500">
+                              <p className="hi text-xs font-semibold">{n.title}</p>
+                              <p className="mut mt-0.5 break-words text-[11px] leading-relaxed">{n.body}</p>
+                              <p className="faint mt-1 text-[10px]">
                                 {new Date(n.createdAt).toLocaleString(undefined, {
                                   month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
                                 })}
@@ -214,11 +227,14 @@ export default function AppChrome({ children }) {
         {/* Footer */}
         {/* pb-24 on phones: the tab bar floats over this row rather than sitting
             above it, so the footer has to clear the bar itself. */}
-        <footer className="mt-auto border-t pt-6 pb-24 lg:pb-6" style={{ borderColor: 'rgba(148,163,184,.12)', background: '#0d1220' }}>
+        <footer
+          className="mt-auto border-t pt-6 pb-24 lg:pb-6"
+          style={{ borderColor: 'var(--hairline)', background: 'var(--chrome-2)' }}
+        >
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 sm:px-6 md:flex-row">
-            <p className="text-xs text-slate-400">&copy; 2026 Tesla Capital. All rights reserved.</p>
-            <div className="flex items-center gap-4 text-xs text-slate-400">
-              <Link href="/terms" className="hover:text-white">Terms of Service</Link>
+            <p className="mut text-xs">&copy; 2026 Tesla Capital. All rights reserved.</p>
+            <div className="mut flex items-center gap-4 text-xs">
+              <Link href="/terms" className="hover-tx">Terms of Service</Link>
               <span>Privacy Policy</span>
             </div>
           </div>

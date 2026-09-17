@@ -23,20 +23,38 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     title: 'Tesla Capital',
-    statusBarStyle: 'black-translucent',
+    // 'default' rather than 'black-translucent': the latter draws white status
+    // text for a dark page, and the app is white by default now.
+    statusBarStyle: 'default',
   },
 };
 
+// White, because that is what a first visit gets. lib/theme.js repaints this tag
+// the moment someone chooses dark, so the status bar follows.
 export const viewport = {
-  themeColor: '#0a0e18',
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
 };
 
+/**
+ * Runs before the first paint, so someone who chose dark never sees a white
+ * frame flash past on the way to the page. It has to be in the HTML — anything
+ * React did here would run after the paint it exists to prevent.
+ *
+ * Mirrors lib/theme.js: `theme` is 'dark' or it is light. If you change the key
+ * or the values there, change them here too.
+ */
+const THEME_BOOT = `try{if(localStorage.getItem('theme')==='dark'){document.documentElement.dataset.theme='dark';var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#0a0e18')}}catch(e){}`;
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: THEME_BOOT writes data-theme onto <html> before
+    // React hydrates, so the attribute on the client legitimately differs from
+    // the one the server sent. Without this React discards the attribute.
+    <html lang="en" suppressHydrationWarning>
       <body>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <PageLoader />
         <WalletProvider>
           <AppChrome>{children}</AppChrome>
