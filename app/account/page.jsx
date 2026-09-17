@@ -89,7 +89,7 @@ export default function AccountPage() {
             </div>
             <div className="min-w-0">
               <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-slate-400">Tesla Capital</p>
-              <h1 className="mb-1 truncate text-2xl font-semibold text-white">Hi, {user?.name || 'there'} 👋</h1>
+              <h1 className="mb-1 truncate text-2xl font-semibold text-white">Hi, {user?.name || 'there'}</h1>
               <p className="truncate text-sm mut">{user?.email || ''}</p>
             </div>
           </div>

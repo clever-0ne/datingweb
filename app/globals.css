@@ -430,7 +430,9 @@ body.conult-page img.processor {
   /* The env() is 0 unless the app ever sets viewport-fit=cover, so this is a
      14px float today and lifts itself clear of the home indicator if it does. */
   bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-  border-radius: 26px;
+  /* A capsule, not a rounded rectangle: the ends are true semicircles at any
+     bar height, so the curve never depends on a pixel guess. */
+  border-radius: 999px;
   /* Lighter than the page it sits on. A dark tint over a dark ground reads as
      a hole, not as a raised pane — on a dark app the lift has to come from the
      tint and the edge, because a drop shadow has nothing to fall on. */
@@ -438,22 +440,18 @@ body.conult-page img.processor {
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.13);
+  /* The lit top edge is an inset shadow rather than a gradient strip: an inset
+     shadow follows the border-radius on its own, which is what lets this box
+     stay unclipped — and staying unclipped is what lets the selected tab's
+     glow spill past the glass instead of being cut off at the rim. */
   box-shadow:
     0 14px 38px -12px rgba(0, 0, 0, 0.75),
     0 2px 8px -2px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  /* Clipped so the selected tab's glow is caught inside the pane rather than
+     haloing out past the rim, which reads as a rendering fault and not as
+     light. The box-shadow above still escapes — overflow only clips children. */
   overflow: hidden;
-}
-
-/* The highlight a real edge catches, brightest through the middle. */
-.tab-glass::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
 }
 
 .tab-glass__inner {
@@ -462,8 +460,8 @@ body.conult-page img.processor {
   padding: 6px;
 }
 
-/* 19px, not 26 — the lozenge radius is the bar's radius less the padding, so
-   the two curves stay concentric instead of fighting. */
+/* Also a capsule, so each tab is a pill nested inside the bar's pill and the
+   two curves stay concentric at whatever height either one ends up. */
 .tab-glass__item {
   display: flex;
   flex: 1;
@@ -472,7 +470,7 @@ body.conult-page img.processor {
   justify-content: center;
   gap: 3px;
   padding: 7px 2px;
-  border-radius: 19px;
+  border-radius: 999px;
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -482,12 +480,17 @@ body.conult-page img.processor {
 }
 .tab-glass__item:active { transform: scale(0.94); }
 
-/* The selected tab carries its own lit lozenge, and the tint does the work —
-   a coloured label as well would be two signals for one state. */
+/* The selected tab wears the same blue as the sidebar's active item — same
+   gradient, same glow — so the app's two navigations read as one system rather
+   than as two opinions. The glow is what makes it bleed past the glass. */
 .tab-glass__item.is-on {
   color: #fff;
-  background: rgba(255, 255, 255, 0.14);
+  background: linear-gradient(135deg, var(--primary-2), var(--primary));
+  box-shadow:
+    0 8px 22px -6px rgba(10, 84, 255, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
+.tab-glass__item.is-on:active { transform: scale(0.94); }
 
 /* With no backdrop-filter the panel is only a translucent box, so it has to be
    opaque enough to stand on its own. */
