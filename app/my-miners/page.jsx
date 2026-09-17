@@ -9,6 +9,7 @@ import { useWallet, fmtMoney } from '@/lib/wallet';
 import { MINING_WITHDRAWAL_FEE_PCT, HASHRATE_UNIT } from '@/lib/plans';
 import { round2 } from '@/lib/format';
 import PayoutCard from '@/components/PayoutCard';
+import PayoutSubmitted from '@/components/PayoutSubmitted';
 import BoostModal from '@/components/BoostModal';
 import {
   MiningBars, LiveEarnings, MiningProgress, TotalMiningEarnings, Countdown,
@@ -143,10 +144,9 @@ export default function MyMinersPage() {
     setBusy(false);
     setConfirmOpen(false);
     if (d?.ok) {
-      setNotice({
-        kind: 'ok',
-        text: `Request ${d.request?.id} submitted. It moves to your main balance once an administrator approves it and you enter your code.`,
-      });
+      // The request object, not a sentence: the confirmation below explains the
+      // approval-and-code step, and it needs the figures to do that.
+      setNotice({ kind: 'ok', request: d.request });
     } else {
       setNotice({ kind: 'err', text: d?.error || 'Could not submit the request.' });
     }
@@ -205,18 +205,20 @@ export default function MyMinersPage() {
         </div>
       </div>
 
-      {notice && (
+      {notice?.kind === 'ok' ? (
+        <PayoutSubmitted
+          request={notice.request}
+          itemLabel="contract"
+          onDismiss={() => setNotice(null)}
+        />
+      ) : notice ? (
         <div
           className="mb-6 rounded-xl px-4 py-3 text-xs font-medium"
-          style={
-            notice.kind === 'ok'
-              ? { background: 'rgba(47,138,104,.15)', color: '#5ee0a9' }
-              : { background: 'rgba(239,68,68,.15)', color: '#fca5a5' }
-          }
+          style={{ background: 'rgba(239,68,68,.15)', color: '#fca5a5' }}
         >
           {notice.text}
         </div>
-      )}
+      ) : null}
 
       {/* Summary */}
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">

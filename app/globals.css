@@ -316,3 +316,103 @@ body.conult-page img.processor {
 
 /* The source keeps admin surfaces light even under .dark on several panels;
    these plain hex utilities are used inline in the console components. */
+
+/* — Brand splash (components/PageLoader.jsx) —
+   The red T on #0a0e18, which is the literal the manifest already uses for
+   background_color and theme_color — so on a phone the splash hands over to
+   the OS splash without a seam. Literal rather than var(--bg) because
+   body.conult-page re-tints the tokens, and a splash is brand, not surface. */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: #0a0e18;
+  /* No JavaScript: this is the only thing that takes the splash away. The
+     effect in PageLoader dismisses it far sooner in every normal load. */
+  animation: boot-retire 0.5s ease 5s forwards;
+}
+
+/* A different animation-name on purpose. Swapping only the duration or delay
+   of a running animation does not restart it, so the fade would jump to its
+   end instead of playing. */
+.boot[data-leaving='true'] { animation: boot-out 0.45s ease forwards; }
+
+@keyframes boot-out {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+@keyframes boot-retire {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+/* The glow the mark sits in — a soft red pool, nothing that reads as a shape. */
+.boot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 46%, rgba(232, 33, 39, 0.11), transparent 40%);
+}
+
+.boot__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+}
+/* A full track, and the arc that sweeps around it. */
+.boot__mark::before,
+.boot__mark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.boot__mark::before { border: 2px solid rgba(232, 33, 39, 0.16); }
+.boot__mark::after {
+  border: 2px solid transparent;
+  border-top-color: #e82127;
+  border-right-color: rgba(232, 33, 39, 0.5);
+  animation: boot-spin 0.9s linear infinite;
+}
+.boot__mark img {
+  display: block;
+  width: 40px;
+  height: auto;
+  filter: drop-shadow(0 0 14px rgba(232, 33, 39, 0.45));
+  animation: boot-breathe 1.7s ease-in-out infinite;
+}
+
+.boot__word {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #6f7c92;
+  animation: boot-word 0.7s ease both;
+}
+
+@keyframes boot-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes boot-breathe {
+  0%, 100% { opacity: 0.88; transform: scale(0.955); }
+  50%      { opacity: 1;    transform: scale(1); }
+}
+@keyframes boot-word {
+  from { opacity: 0; letter-spacing: 0.46em; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot__mark::after,
+  .boot__mark img,
+  .boot__word { animation: none; }
+  .boot__mark img { opacity: 1; }
+  .boot[data-leaving='true'] { animation-duration: 0.18s; }
+}
