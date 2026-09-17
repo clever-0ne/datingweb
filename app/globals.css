@@ -416,3 +416,86 @@ body.conult-page img.processor {
   .boot__mark img { opacity: 1; }
   .boot[data-leaving='true'] { animation-duration: 0.18s; }
 }
+
+/* — Floating tab bar (components/AppChrome.jsx) —
+   The three parts of the material, which only work together: a blur, the
+   saturation pushed up so what shows through keeps its colour, and a lit top
+   edge. The hairline is what actually sells it — a blurred panel without a
+   specular edge reads as dirty glass rather than as glass. */
+.tab-glass {
+  position: fixed;
+  z-index: 50;
+  left: 12px;
+  right: 12px;
+  /* The env() is 0 unless the app ever sets viewport-fit=cover, so this is a
+     14px float today and lifts itself clear of the home indicator if it does. */
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  border-radius: 26px;
+  /* Lighter than the page it sits on. A dark tint over a dark ground reads as
+     a hole, not as a raised pane — on a dark app the lift has to come from the
+     tint and the edge, because a drop shadow has nothing to fall on. */
+  background: rgba(38, 47, 68, 0.55);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow:
+    0 14px 38px -12px rgba(0, 0, 0, 0.75),
+    0 2px 8px -2px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  overflow: hidden;
+}
+
+/* The highlight a real edge catches, brightest through the middle. */
+.tab-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+}
+
+.tab-glass__inner {
+  display: flex;
+  justify-content: space-around;
+  padding: 6px;
+}
+
+/* 19px, not 26 — the lozenge radius is the bar's radius less the padding, so
+   the two curves stay concentric instead of fighting. */
+.tab-glass__item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 7px 2px;
+  border-radius: 19px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #8593a8;
+  transition: color 0.22s ease, background-color 0.22s ease,
+    transform 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.tab-glass__item:active { transform: scale(0.94); }
+
+/* The selected tab carries its own lit lozenge, and the tint does the work —
+   a coloured label as well would be two signals for one state. */
+.tab-glass__item.is-on {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* With no backdrop-filter the panel is only a translucent box, so it has to be
+   opaque enough to stand on its own. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .tab-glass { background: rgba(28, 35, 52, 0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-glass__item { transition: none; }
+  .tab-glass__item:active { transform: none; }
+}

@@ -212,7 +212,9 @@ export default function AppChrome({ children }) {
         </main>
 
         {/* Footer */}
-        <footer className="mt-auto border-t py-6" style={{ borderColor: 'rgba(148,163,184,.12)', background: '#0d1220' }}>
+        {/* pb-24 on phones: the tab bar floats over this row rather than sitting
+            above it, so the footer has to clear the bar itself. */}
+        <footer className="mt-auto border-t pt-6 pb-24 lg:pb-6" style={{ borderColor: 'rgba(148,163,184,.12)', background: '#0d1220' }}>
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 sm:px-6 md:flex-row">
             <p className="text-xs text-slate-400">&copy; 2026 Tesla Capital. All rights reserved.</p>
             <div className="flex items-center gap-4 text-xs text-slate-400">
@@ -223,24 +225,24 @@ export default function AppChrome({ children }) {
         </footer>
       </div>
 
-      {/* Mobile bottom nav */}
-      <nav
-        className="fixed bottom-0 left-0 right-0 z-50 border-t bg-[#0b0f1a] lg:hidden"
-        style={{ borderColor: 'rgba(148,163,184,.14)' }}
-      >
-        <div className="flex justify-around px-2 py-2">
+      {/* Mobile bottom nav — a floating glass bar rather than a flush strip.
+          The styles live in globals.css under "Floating tab bar": a blur, a
+          saturation boost and a lit top edge, which is the whole of the
+          material and none of which works without the other two. */}
+      <nav className="tab-glass lg:hidden" aria-label="Primary">
+        <div className="tab-glass__inner">
           {BOTTOM_NAV.map((item) => {
             const Icon = ICONS[item.icon] || LayoutDashboard;
+            const on = isActive(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-1 flex-col items-center justify-center rounded-xl py-1 text-[11px] font-semibold ${
-                  isActive(item.href) ? 'text-white' : 'text-slate-400'
-                }`}
+                aria-current={on ? 'page' : undefined}
+                className={`tab-glass__item ${on ? 'is-on' : ''}`}
               >
-                <Icon size={20} className="mb-1" />
-                {item.label}
+                <Icon size={20} />
+                <span>{item.label}</span>
               </Link>
             );
           })}
