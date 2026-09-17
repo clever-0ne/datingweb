@@ -6,6 +6,7 @@ import { useWallet, fmtMoney } from '@/lib/wallet';
 import { usePrices } from '@/lib/prices';
 import { fmtPrice, fmtChange } from '@/lib/market';
 import { CARS } from '@/lib/cars';
+import { glowOf } from '@/lib/ui';
 import TradingViewChart from '@/components/TradingViewChart';
 import {
   Wallet, Eye, EyeOff, PlusCircle, ArrowUpRight, DollarSign, Gift, ArrowDown,
@@ -98,7 +99,7 @@ export default function DashboardPage() {
             {stats.map((s) => {
               const Icon = s.icon;
               return (
-                <div key={s.label} className="card flex flex-col">
+                <div key={s.label} className={`card card-glow ${glowOf(s.chip)} flex flex-col`}>
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm mut">{s.label}</span>
                     <span className={`chip ${s.chip} h-8 w-8 rounded-full`}><Icon size={16} /></span>

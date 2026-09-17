@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Wallet, Info, X, Zap } from 'lucide-react';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { MINING_TIERS, miningDaily, HASHRATE_UNIT } from '@/lib/plans';
+import { tierGlow } from '@/lib/ui';
 import { MiningBars } from '@/components/MiningLive';
 
 export default function CloudMiningPage() {
@@ -66,18 +67,17 @@ export default function CloudMiningPage() {
 
       {/* Plans */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {MINING_TIERS.map((p) => {
+        {MINING_TIERS.map((p, idx) => {
           const daily = miningDaily(p);
           const isSel = selected === p.id;
           return (
             <div
               key={p.id}
-              className={`card flex flex-col transition ${isSel ? 'ring-2 ring-[#2f6dff]' : ''}`}
-              style={isSel ? { borderColor: 'rgba(47,109,255,.6)' } : undefined}
+              className={`card card-glow ${tierGlow(p.name, idx)} flex flex-col ${isSel ? 'card-sel' : ''}`}
             >
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-white">{p.name}</h3>
-                <span className="pill pill-pri"><Zap size={12} /> {p.days} days</span>
+                <span className="pill pill-tone"><Zap size={12} /> {p.days} days</span>
               </div>
               <div className="mb-1 flex items-end gap-1">
                 <span className="text-3xl font-bold text-white">{fmtMoney(p.price)}</span>

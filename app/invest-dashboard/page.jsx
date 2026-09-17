@@ -6,6 +6,7 @@ import { Plus, ArrowRight, TrendingUp, Wallet, Clock, PiggyBank, ArrowUpFromLine
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { WITHDRAWAL_FEE_PCT } from '@/lib/plans';
 import { round2 } from '@/lib/format';
+import { glowOf } from '@/lib/ui';
 import PayoutCard from '@/components/PayoutCard';
 import PayoutSubmitted from '@/components/PayoutSubmitted';
 import BoostModal from '@/components/BoostModal';
@@ -135,7 +136,7 @@ export default function InvestDashboardPage() {
         {stats.map((s) => {
           const Icon = s.icon;
           return (
-            <div key={s.label} className="card">
+            <div key={s.label} className={`card card-glow ${glowOf(s.chip)}`}>
               <div className="mb-1 flex items-center justify-between">
                 <p className="text-xs mut">{s.label}</p>
                 <span className={`chip ${s.chip} h-7 w-7 rounded-full`}><Icon size={14} /></span>

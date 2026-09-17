@@ -8,6 +8,7 @@ import {
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { MINING_WITHDRAWAL_FEE_PCT, HASHRATE_UNIT } from '@/lib/plans';
 import { round2 } from '@/lib/format';
+import { glowOf, tierGlow } from '@/lib/ui';
 import PayoutCard from '@/components/PayoutCard';
 import PayoutSubmitted from '@/components/PayoutSubmitted';
 import BoostModal from '@/components/BoostModal';
@@ -22,7 +23,7 @@ function MinerCard({ m, onBoost }) {
   const active = m.status === 'active';
 
   return (
-    <div className="card flex flex-col">
+    <div className={`card card-glow ${tierGlow(m.tierName)} flex flex-col`}>
       <div className="mb-3 flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-lg font-bold text-white">
           <Cpu size={18} className="text-[#2f6dff]" /> {m.tierName}
@@ -225,7 +226,7 @@ export default function MyMinersPage() {
         {summary.map((s) => {
           const Icon = s.icon;
           return (
-            <div key={s.label} className="card">
+            <div key={s.label} className={`card card-glow ${glowOf(s.chip)}`}>
               <div className="mb-1 flex items-center justify-between">
                 <p className="text-xs mut">{s.label}</p>
                 <span className={`chip ${s.chip} h-7 w-7 rounded-full`}><Icon size={14} /></span>

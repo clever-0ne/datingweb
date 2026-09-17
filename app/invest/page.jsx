@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { TrendingUp, ArrowRight, X } from 'lucide-react';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { INVESTMENT_PLANS, planReturn } from '@/lib/plans';
+import { tierGlow, toneChip } from '@/lib/ui';
 
 // Derived rather than written out, so the hero can't contradict the plans.
 const TERMS = [...new Set(INVESTMENT_PLANS.map((p) => p.termDays))].sort((a, b) => a - b);
@@ -86,9 +87,11 @@ export default function InvestPage() {
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {INVESTMENT_PLANS.map((p, idx) => {
-            const chipCls = ['chip-g', 'chip-b', 'chip-p', 'chip-y'][idx % 4];
+            // Bronze, Silver, Gold … are metals, so each plan wears its own
+            // colour and the chip beside it wears the same one.
+            const chipCls = toneChip(p.name, idx);
             return (
-              <div key={p.id} className={`panel flex flex-col p-6 transition ${plan === p.id ? 'ring-2 ring-[#2f6dff]' : ''}`}>
+              <div key={p.id} className={`card card-glow ${tierGlow(p.name, idx)} flex flex-col p-6 ${plan === p.id ? 'card-sel' : ''}`}>
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className={`chip ${chipCls} h-11 w-11 rounded-xl`}><TrendingUp size={20} /></div>
@@ -97,7 +100,7 @@ export default function InvestPage() {
                       <p className="text-sm mut">{p.termDays}-Day Plan</p>
                     </div>
                   </div>
-                  <span className="pill pill-pri">{p.roi}% ROI</span>
+                  <span className="pill pill-tone">{p.roi}% ROI</span>
                 </div>
                 <div className="mb-4 space-y-3">
                   <Row k="Principal:" v={fmtMoney(p.amount)} />

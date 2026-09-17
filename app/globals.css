@@ -94,12 +94,70 @@ a { color: inherit; text-decoration: none; }
    welcome. It keeps the resting float and skips the lift. */
 .card-static { transition: none; }
 
+/* A card that carries a colour. The tint is not decoration: each of these cards
+   already had a colour in its icon chip and its footnote, and the glow is that
+   same colour, so the light on the card, the chip and the number all agree
+   instead of the card glowing one hue while its contents are another.
+
+   The glow is three things again — a wash across the face from the top right
+   where a light would be, a halo outside the rim, and a rim tinted to match.
+   Only the halo is obvious; the other two are what stop it looking like a
+   sticker. */
+.card-glow {
+  --glow-rgb: 141 178 255;
+  background:
+    radial-gradient(140% 130% at 100% 0%, rgb(var(--glow-rgb) / 0.2) 0%, rgb(var(--glow-rgb) / 0) 58%),
+    linear-gradient(180deg, #28324a 0%, var(--panel) 100%);
+  border-color: rgb(var(--glow-rgb) / 0.3);
+  box-shadow:
+    0 18px 40px -12px rgba(0, 0, 0, 0.9),
+    0 0 30px -8px rgb(var(--glow-rgb) / 0.55),
+    0 4px 12px -4px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+/* The four colours the rest of the app already uses for these same figures. */
+.card-glow-g { --glow-rgb: 95 207 159; }   /* --green  */
+.card-glow-y { --glow-rgb: 243 202 85; }   /* --yellow */
+.card-glow-p { --glow-rgb: 159 176 255; }  /* --purple */
+.card-glow-b { --glow-rgb: 141 178 255; }  /* --blue   */
+.card-glow-r { --glow-rgb: 255 148 148; }  /* --red    */
+.card-glow-n { --glow-rgb: 176 186 208; }  /* --slate, for "Silver" */
+.card-glow-o { --glow-rgb: 214 138 88; }   /* --bronze, for "Bronze" */
+
+@media (hover: hover) and (pointer: fine) {
+  .card-glow:not(.card-static):hover {
+    border-color: rgb(var(--glow-rgb) / 0.48);
+    box-shadow:
+      0 26px 54px -14px rgba(0, 0, 0, 0.95),
+      0 0 46px -6px rgb(var(--glow-rgb) / 0.75),
+      0 8px 20px -6px rgba(0, 0, 0, 0.75),
+      inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  }
+}
+
+/* A chosen card. This is a rule of its own rather than Tailwind's ring-2
+   because a ring is a box-shadow too, so on a glowing card the two would
+   overwrite each other and the selection would vanish. Here the ring is drawn
+   in the card's own colour, so picking the gold plan rings it gold. */
+.card-sel {
+  border-color: rgb(var(--glow-rgb) / 0.8);
+  box-shadow:
+    0 18px 40px -12px rgba(0, 0, 0, 0.9),
+    0 0 0 2px rgb(var(--glow-rgb) / 0.5),
+    0 0 40px -6px rgb(var(--glow-rgb) / 0.7),
+    0 4px 12px -4px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card { transition: none; }
 }
+/* No overflow: hidden here. The radial washes below are background images and
+   border-radius already clips those, so the only thing it was clipping was the
+   shadow and the glow belonging to the cards inside it — which is most of why
+   the dashboard's cards looked flat. */
 .balance-band {
   position: relative;
-  overflow: hidden;
   border-radius: 20px;
   border: 1px solid var(--border);
   background:
@@ -141,6 +199,10 @@ a { color: inherit; text-decoration: none; }
 .pill-yel { color: var(--yellow); background: rgba(240,185,11,.15); }
 .pill-red { color: var(--red); background: rgba(255,107,107,.15); }
 .pill-gry { color: #a3aebf; background: rgba(148,163,184,.14); }
+/* A pill that wears the colour of the card it sits on. `--glow-rgb` is already
+   set by the card, so a pill on a gold plan is gold without anyone having to
+   keep the two in step by hand. */
+.pill-tone { color: rgb(var(--glow-rgb)); background: rgb(var(--glow-rgb) / 0.16); }
 
 /* ---- icon chips ---- */
 .chip { display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; }
@@ -150,6 +212,7 @@ a { color: inherit; text-decoration: none; }
 .chip-y { background: rgba(240,185,11,.15); color: var(--yellow); }
 .chip-r { background: rgba(255,107,107,.15); color: var(--red); }
 .chip-n { background: rgba(148,163,184,.12); color: #b6c0d2; }
+.chip-o { background: rgba(214,138,88,.16); color: #e3a273; }
 
 /* ---- table ---- */
 table.tbl { width: 100%; border-collapse: collapse; }
