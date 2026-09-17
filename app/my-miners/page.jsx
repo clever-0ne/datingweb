@@ -269,7 +269,7 @@ export default function MyMinersPage() {
       {confirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60" onClick={() => !busy && setConfirmOpen(false)} />
-          <div className="card relative z-10 w-full max-w-md p-6">
+          <div className="card card-static relative z-10 w-full max-w-md p-6">
             <div className="mb-4 flex items-start justify-between">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">Mining Payout</p>

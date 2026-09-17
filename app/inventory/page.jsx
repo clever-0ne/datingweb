@@ -83,7 +83,7 @@ export default function InventoryPage() {
 
           <div className={list ? 'flex flex-col gap-6' : 'grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'}>
             {filtered.map((c) => (
-              <article key={c.slug} className={`card card-lift overflow-hidden ${list ? 'flex md:flex-row' : ''}`}>
+              <article key={c.slug} className={`card overflow-hidden ${list ? 'flex md:flex-row' : ''}`}>
                 <Link href={`/inventory/${c.slug}`} className={`relative overflow-hidden ${list ? 'md:w-2/5' : 'aspect-[16/9]'}`}>
                   <img src={c.image} alt={c.name} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
                   {c.badge && <span className="absolute right-3 top-3 rounded-full bg-white px-2 py-0.5 text-xs font-medium text-black">{c.badge}</span>}
