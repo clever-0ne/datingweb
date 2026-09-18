@@ -25,36 +25,36 @@ function MinerCard({ m, onBoost }) {
   return (
     <div className={`card card-glow ${tierGlow(m.tierName)} flex flex-col`}>
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="flex items-center gap-2 text-lg font-bold text-white">
-          <Cpu size={18} className="text-[#2f6dff]" /> {m.tierName}
+        <h3 className="flex items-center gap-2 text-lg font-bold hi">
+          <Cpu size={18} className="text-[color:var(--primary)]" /> {m.tierName}
         </h3>
         <span className={`pill ${active ? 'pill-sec' : 'pill-gry'}`}>
-          <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full" style={{ background: active ? '#2f8a68' : '#64748b' }} />
+          <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full" style={{ background: active ? 'var(--secondary)' : 'var(--faint)' }} />
           {active ? 'Active' : 'Completed'}
         </span>
       </div>
 
       {active ? (
-        <div className="mb-4 flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: 'rgba(47,138,104,.08)', border: '1px solid rgba(47,138,104,.15)' }}>
+        <div className="mb-4 flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: 'var(--ok-bg)', border: '1px solid var(--ok-bg)' }}>
           <span className="relative flex h-2.5 w-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
           </span>
           <span className="text-xs font-semibold grn">Mining</span>
-          <Countdown to={m.expiresAt} className="ml-auto font-mono text-xs text-slate-400" />
+          <Countdown to={m.expiresAt} className="ml-auto font-mono text-xs mut" />
           <MiningBars />
         </div>
       ) : (
-        <div className="mb-4 flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: 'rgba(148,163,184,.08)', border: '1px solid rgba(148,163,184,.15)' }}>
-          <Clock size={14} className="text-slate-400" />
-          <span className="text-xs font-semibold text-slate-400">Matured</span>
+        <div className="mb-4 flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: 'var(--soft)', border: '1px solid var(--soft-2)' }}>
+          <Clock size={14} className="mut" />
+          <span className="text-xs font-semibold mut">Matured</span>
           {m.withdrawable && <span className="ml-auto text-xs font-medium grn">Ready to withdraw</span>}
         </div>
       )}
 
       {m.hashrate != null && (
         <div className="mb-4 flex items-end gap-1">
-          <span className="text-2xl font-bold text-white">{m.hashrate}</span>
+          <span className="text-2xl font-bold hi">{m.hashrate}</span>
           <span className="mb-1 text-sm mut">{HASHRATE_UNIT}</span>
         </div>
       )}
@@ -94,7 +94,7 @@ function Row({ k, v }) {
   return (
     <div className="flex justify-between">
       <span className="mut">{k}</span>
-      <span className="font-medium text-white">{v}</span>
+      <span className="font-medium hi">{v}</span>
     </div>
   );
 }
@@ -159,8 +159,8 @@ export default function MyMinersPage() {
       <div className="panel relative mb-6 overflow-hidden p-6 sm:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-slate-400">Tesla Capital</p>
-            <h1 className="mb-1 text-2xl font-semibold text-white">My Miners</h1>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest mut">Tesla Capital</p>
+            <h1 className="mb-1 text-2xl font-semibold hi">My Miners</h1>
             <p className="text-sm mut">Track your active and completed mining contracts.</p>
             {matured.length > 0 && (
               <p className="mt-2 text-xs grn">
@@ -172,7 +172,7 @@ export default function MyMinersPage() {
             {active.length > 0 && (
               <div
                 className="rounded-2xl px-5 py-3"
-                style={{ background: 'rgba(47,138,104,.08)', border: '1px solid rgba(47,138,104,.22)' }}
+                style={{ background: 'var(--ok-bg)', border: '1px solid var(--ok-bg)' }}
               >
                 <div className="mb-1 flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
@@ -215,7 +215,7 @@ export default function MyMinersPage() {
       ) : notice ? (
         <div
           className="mb-6 rounded-xl px-4 py-3 text-xs font-medium"
-          style={{ background: 'rgba(239,68,68,.15)', color: '#fca5a5' }}
+          style={{ background: 'var(--bad-bg)', color: 'var(--bad-text)' }}
         >
           {notice.text}
         </div>
@@ -231,7 +231,7 @@ export default function MyMinersPage() {
                 <p className="text-xs mut">{s.label}</p>
                 <span className={`chip ${s.chip} h-7 w-7 rounded-full`}><Icon size={14} /></span>
               </div>
-              <p className="text-lg font-semibold text-white">{s.value}</p>
+              <p className="text-lg font-semibold hi">{s.value}</p>
             </div>
           );
         })}
@@ -240,8 +240,8 @@ export default function MyMinersPage() {
       {/* Miners grid */}
       {mining.length === 0 ? (
         <div className="panel p-10 text-center">
-          <Cpu size={40} className="mx-auto mb-3 text-slate-500" />
-          <h3 className="mb-1 text-lg font-semibold text-white">No mining contracts yet</h3>
+          <Cpu size={40} className="mx-auto mb-3 faint" />
+          <h3 className="mb-1 text-lg font-semibold hi">No mining contracts yet</h3>
           <p className="mb-5 text-sm mut">Buy your first contract to start earning a fixed return.</p>
           <Link href="/cloud-mining" className="btn btn-pri"><Plus size={16} /> Browse Contracts</Link>
         </div>
@@ -255,7 +255,7 @@ export default function MyMinersPage() {
       {miningWithdrawals.length > 0 && (
         <div className="mt-8">
           <div className="mb-4">
-            <h2 className="text-lg font-light text-white">Mining Payouts</h2>
+            <h2 className="text-lg font-light hi">Mining Payouts</h2>
             <p className="text-xs mut">Matured contracts cashed out to your main balance.</p>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -273,13 +273,13 @@ export default function MyMinersPage() {
           <div className="card card-static relative z-10 w-full max-w-md p-6">
             <div className="mb-4 flex items-start justify-between">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">Mining Payout</p>
-                <h2 className="text-xl font-bold text-white">Withdraw matured returns</h2>
+                <p className="text-[11px] font-semibold uppercase tracking-widest mut">Mining Payout</p>
+                <h2 className="text-xl font-bold hi">Withdraw matured returns</h2>
               </div>
               <button
                 type="button"
                 onClick={() => setConfirmOpen(false)}
-                className="text-slate-400 hover:text-white"
+                className="mut hover-tx"
                 aria-label="Close"
               >
                 <X size={20} />
@@ -287,11 +287,11 @@ export default function MyMinersPage() {
             </div>
 
             {matured.length === 0 ? (
-              <div className="mb-5 rounded-xl p-4 text-sm" style={{ background: 'rgba(148,163,184,.08)', border: '1px solid rgba(148,163,184,.15)' }}>
-                <p className="font-semibold text-white">Nothing has matured yet</p>
+              <div className="mb-5 rounded-xl p-4 text-sm" style={{ background: 'var(--soft)', border: '1px solid var(--soft-2)' }}>
+                <p className="font-semibold hi">Nothing has matured yet</p>
                 <p className="mt-1 text-xs leading-relaxed mut">
                   {nextMaturity
-                    ? <>Your next contract matures in <Countdown to={nextMaturity} className="font-mono text-white" />. A contract becomes withdrawable the moment its term ends — the earnings above are still accruing until then.</>
+                    ? <>Your next contract matures in <Countdown to={nextMaturity} className="font-mono hi" />. A contract becomes withdrawable the moment its term ends — the earnings above are still accruing until then.</>
                     : 'Buy a contract and its return becomes withdrawable when the term ends.'}
                 </p>
               </div>
@@ -300,9 +300,9 @@ export default function MyMinersPage() {
                 <Row k={`Contracts (${matured.length})`} v={fmtMoney(gross)} />
                 <Row
                   k={`Gas fee (${MINING_WITHDRAWAL_FEE_PCT}%) — charged now`}
-                  v={<span style={{ color: '#fca5a5' }}>−{fmtMoney(fee)}</span>}
+                  v={<span style={{ color: 'var(--bad-text)' }}>−{fmtMoney(fee)}</span>}
                 />
-                <div className="border-t pt-2" style={{ borderColor: 'rgba(148,163,184,.15)' }}>
+                <div className="border-t pt-2" style={{ borderColor: 'var(--soft-2)' }}>
                   <Row k="Credited on release" v={<span className="grn">{fmtMoney(gross)}</span>} />
                 </div>
                 <Row k="Balance after fee" v={fmtMoney(round2(balance - fee))} />
@@ -330,7 +330,7 @@ export default function MyMinersPage() {
                   {busy ? 'Submitting…' : feeCovered ? 'Submit Withdrawal Request' : 'Insufficient balance for fee'}
                 </button>
                 {!feeCovered && (
-                  <p className="mt-2 text-center text-xs" style={{ color: '#fca5a5' }}>
+                  <p className="mt-2 text-center text-xs" style={{ color: 'var(--bad-text)' }}>
                     You need {fmtMoney(round2(fee - balance))} more to cover the gas fee.
                   </p>
                 )}

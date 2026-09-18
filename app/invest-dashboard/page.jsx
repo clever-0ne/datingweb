@@ -22,7 +22,7 @@ function Row({ k, v }) {
   return (
     <div className="flex justify-between">
       <span className="mut">{k}</span>
-      <span className="font-medium text-white">{v}</span>
+      <span className="font-medium hi">{v}</span>
     </div>
   );
 }
@@ -94,8 +94,8 @@ export default function InvestDashboardPage() {
       <div className="panel relative mb-6 overflow-hidden p-6 sm:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-slate-400">Tesla Capital</p>
-            <h1 className="mb-1 text-2xl font-semibold text-white">Investment Dashboard</h1>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest mut">Tesla Capital</p>
+            <h1 className="mb-1 text-2xl font-semibold hi">Investment Dashboard</h1>
             <p className="text-sm mut">Live performance across your investment plans.</p>
             {matured.length > 0 && (
               <p className="mt-2 text-xs grn">
@@ -125,7 +125,7 @@ export default function InvestDashboardPage() {
       ) : notice ? (
         <div
           className="mb-6 rounded-xl px-4 py-3 text-xs font-medium"
-          style={{ background: 'rgba(239,68,68,.15)', color: '#fca5a5' }}
+          style={{ background: 'var(--bad-bg)', color: 'var(--bad-text)' }}
         >
           {notice.text}
         </div>
@@ -141,7 +141,7 @@ export default function InvestDashboardPage() {
                 <p className="text-xs mut">{s.label}</p>
                 <span className={`chip ${s.chip} h-7 w-7 rounded-full`}><Icon size={14} /></span>
               </div>
-              <p className="text-lg font-semibold text-white">{s.value}</p>
+              <p className="text-lg font-semibold hi">{s.value}</p>
               <p className={`text-xs font-medium ${s.noteCls}`}>{s.note}</p>
             </div>
           );
@@ -152,7 +152,7 @@ export default function InvestDashboardPage() {
       <div className="mb-6 panel p-5">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h3 className="mb-1 text-lg font-medium text-white">Active Plans</h3>
+            <h3 className="mb-1 text-lg font-medium hi">Active Plans</h3>
             <p className="text-xs mut">Your investment plans and their performance</p>
           </div>
         </div>
@@ -166,7 +166,7 @@ export default function InvestDashboardPage() {
                 {plans.map((p) => (
                   <tr key={p.id}>
                     <td className="py-3">
-                      <p className="font-medium text-white">{p.name}</p>
+                      <p className="font-medium hi">{p.name}</p>
                       <p className="text-xs mut">{p.term}</p>
                     </td>
                     <td className="py-3 mut">{fmtMoney(p.amount)}</td>
@@ -198,7 +198,7 @@ export default function InvestDashboardPage() {
       {/* Investment total */}
       <div className="panel p-5">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-lg font-medium text-white">Investment Plans</h3>
+          <h3 className="text-lg font-medium hi">Investment Plans</h3>
           <Link href="/invest" className="text-xs font-medium blut">Browse <ArrowRight size={12} className="inline" /></Link>
         </div>
         <p className="text-sm mut">
@@ -211,7 +211,7 @@ export default function InvestDashboardPage() {
       {investmentWithdrawals.length > 0 && (
         <div className="mt-8">
           <div className="mb-4">
-            <h2 className="text-lg font-light text-white">Investment Payouts</h2>
+            <h2 className="text-lg font-light hi">Investment Payouts</h2>
             <p className="text-xs mut">Matured plans cashed out to your main balance.</p>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -229,13 +229,13 @@ export default function InvestDashboardPage() {
           <div className="card card-static relative z-10 w-full max-w-md p-6">
             <div className="mb-4 flex items-start justify-between">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">Investment Payout</p>
-                <h2 className="text-xl font-bold text-white">Withdraw matured returns</h2>
+                <p className="text-[11px] font-semibold uppercase tracking-widest mut">Investment Payout</p>
+                <h2 className="text-xl font-bold hi">Withdraw matured returns</h2>
               </div>
               <button
                 type="button"
                 onClick={() => setConfirmOpen(false)}
-                className="text-slate-400 hover:text-white"
+                className="mut hover-tx"
                 aria-label="Close"
               >
                 <X size={20} />
@@ -243,11 +243,11 @@ export default function InvestDashboardPage() {
             </div>
 
             {matured.length === 0 ? (
-              <div className="mb-5 rounded-xl p-4 text-sm" style={{ background: 'rgba(148,163,184,.08)', border: '1px solid rgba(148,163,184,.15)' }}>
-                <p className="font-semibold text-white">Nothing has matured yet</p>
+              <div className="mb-5 rounded-xl p-4 text-sm" style={{ background: 'var(--soft)', border: '1px solid var(--soft-2)' }}>
+                <p className="font-semibold hi">Nothing has matured yet</p>
                 <p className="mt-1 text-xs leading-relaxed mut">
                   {nextMaturity
-                    ? <>Your next plan matures in <Countdown to={nextMaturity} className="font-mono text-white" />. A plan becomes withdrawable the moment its term ends.</>
+                    ? <>Your next plan matures in <Countdown to={nextMaturity} className="font-mono hi" />. A plan becomes withdrawable the moment its term ends.</>
                     : 'Open a plan and its return becomes withdrawable when the term ends.'}
                 </p>
               </div>
@@ -256,9 +256,9 @@ export default function InvestDashboardPage() {
                 <Row k={`Plans (${matured.length})`} v={fmtMoney(gross)} />
                 <Row
                   k={`Gas fee (${WITHDRAWAL_FEE_PCT}%) — charged now`}
-                  v={<span style={{ color: '#fca5a5' }}>−{fmtMoney(fee)}</span>}
+                  v={<span style={{ color: 'var(--bad-text)' }}>−{fmtMoney(fee)}</span>}
                 />
-                <div className="border-t pt-2" style={{ borderColor: 'rgba(148,163,184,.15)' }}>
+                <div className="border-t pt-2" style={{ borderColor: 'var(--soft-2)' }}>
                   <Row k="Credited on release" v={<span className="grn">{fmtMoney(gross)}</span>} />
                 </div>
                 <Row k="Balance after fee" v={fmtMoney(round2(balance - fee))} />
@@ -286,7 +286,7 @@ export default function InvestDashboardPage() {
                   {busy ? 'Submitting…' : feeCovered ? 'Submit Withdrawal Request' : 'Insufficient balance for fee'}
                 </button>
                 {!feeCovered && (
-                  <p className="mt-2 text-center text-xs" style={{ color: '#fca5a5' }}>
+                  <p className="mt-2 text-center text-xs" style={{ color: 'var(--bad-text)' }}>
                     You need {fmtMoney(round2(fee - balance))} more to cover the gas fee.
                   </p>
                 )}

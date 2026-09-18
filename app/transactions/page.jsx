@@ -27,7 +27,7 @@ export default function TransactionsPage() {
   return (
     <>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="flex items-center text-xl font-bold text-white">
+        <h1 className="flex items-center text-xl font-bold hi">
           <Receipt size={24} className="mr-2 blut" /> Transactions
         </h1>
         <span className="pill pill-gry">{transactions.length} records</span>
@@ -49,14 +49,14 @@ export default function TransactionsPage() {
                 const Icon = ICONS[t.icon] || Receipt;
                 return (
                   <tr key={t.id}>
-                    <td className="text-[11px] text-white">{t.date}</td>
+                    <td className="text-[11px] hi">{t.date}</td>
                     <td>
                       <div className="flex items-center gap-2">
                         <span className={`chip ${KIND_CHIP[t.kind]} h-8 w-8 rounded-full`}>
                           <Icon size={14} />
                         </span>
                         <div>
-                          <p className="text-xs font-medium text-white sm:text-sm">{t.type}</p>
+                          <p className="text-xs font-medium hi sm:text-sm">{t.type}</p>
                           <p className="text-xs mut">{t.sub}</p>
                         </div>
                       </div>

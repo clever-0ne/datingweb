@@ -57,7 +57,7 @@ export default function DepositPage() {
     <>
       {/* Header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="flex items-center text-xl font-bold text-white"><Wallet size={24} className="mr-2 blut" /> Deposits</h1>
+        <h1 className="flex items-center text-xl font-bold hi"><Wallet size={24} className="mr-2 blut" /> Deposits</h1>
         <div className="hidden gap-2 md:flex">
           <Link href="/transactions" className="btn btn-ghost">Deposit History</Link>
           <a href="#form" className="btn btn-pri">New Deposit</a>
@@ -73,7 +73,7 @@ export default function DepositPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium uppercase tracking-wide faint">{c.label}</p>
-                  <p className="mt-1 text-xl font-bold text-white">{c.value}</p>
+                  <p className="mt-1 text-xl font-bold hi">{c.value}</p>
                 </div>
                 <div className={`chip ${c.chip} h-10 w-10 rounded-lg`}><Icon size={20} /></div>
               </div>
@@ -84,17 +84,17 @@ export default function DepositPage() {
 
       {/* Methods table */}
       <div className="panel overflow-hidden">
-        <div className="border-b p-5" style={{ borderColor: 'rgba(148,163,184,.10)' }}>
-          <h2 className="text-base font-bold text-white">Select Deposit Method</h2>
+        <div className="border-b p-5" style={{ borderColor: 'var(--soft)' }}>
+          <h2 className="text-base font-bold hi">Select Deposit Method</h2>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4" style={{ borderColor: 'rgba(148,163,184,.10)', background: 'rgba(148,163,184,.04)' }}>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4" style={{ borderColor: 'var(--soft)', background: 'var(--soft)' }}>
           <div className="flex items-center gap-2">
             <span className="btn btn-pri" style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem' }}>Crypto</span>
-            <span className="rounded-lg px-3 py-1.5 text-xs font-medium" style={{ background: 'rgba(148,163,184,.14)', color: '#aab4c8' }}>Select a network</span>
+            <span className="rounded-lg px-3 py-1.5 text-xs font-medium" style={{ background: 'var(--soft-2)', color: '#aab4c8' }}>Select a network</span>
           </div>
           <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 faint" />
-            <input placeholder="Search payment methods..." className="w-full rounded-lg border py-1.5 pl-9 pr-4 text-sm md:w-60" style={{ background: '#121826', borderColor: 'rgba(148,163,184,.2)', color: '#e6ecf6' }} />
+            <input placeholder="Search payment methods..." className="w-full rounded-lg border py-1.5 pl-9 pr-4 text-sm md:w-60" style={{ background: 'var(--field)', borderColor: 'var(--hairline-strong)', color: 'var(--text)' }} />
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -105,16 +105,16 @@ export default function DepositPage() {
                 <tr key={m.id} className="text-sm">
                   <td className="py-4">
                     <div className="flex items-center">
-                      <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-lg p-1.5" style={{ background: 'rgba(148,163,184,.12)' }}>
+                      <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-lg p-1.5" style={{ background: 'var(--hairline)' }}>
                         <img src={m.icon} alt={m.name} className="h-full w-full object-contain" />
                       </div>
                       <div>
-                        <p className="font-medium text-white">{m.name}</p>
+                        <p className="font-medium hi">{m.name}</p>
                         <p className="text-xs mut">{m.network}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="py-4 text-right"><div className="text-xs faint">Min: <span className="font-medium text-white">$10.00</span></div></td>
+                  <td className="py-4 text-right"><div className="text-xs faint">Min: <span className="font-medium hi">$10.00</span></div></td>
                   <td className="py-4 text-right"><button className="btn btn-pri" style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem' }} onClick={() => setMethod(m.id)}>Deposit</button></td>
                 </tr>
               ))}
@@ -125,16 +125,16 @@ export default function DepositPage() {
 
       {/* Form */}
       <div id="form" className="panel mt-6 overflow-hidden">
-        <div className="border-b p-5" style={{ borderColor: 'rgba(148,163,184,.10)' }}>
-          <h2 className="flex items-center text-base font-bold text-white"><PlusCircle size={20} className="mr-2 blut" /> Deposit Details</h2>
+        <div className="border-b p-5" style={{ borderColor: 'var(--soft)' }}>
+          <h2 className="flex items-center text-base font-bold hi"><PlusCircle size={20} className="mr-2 blut" /> Deposit Details</h2>
         </div>
         <form className="p-6" onSubmit={submitDeposit}>
           <div className="mb-4 flex items-center justify-between">
-            <label className="text-sm font-medium text-white">Amount to deposit</label>
-            <span className="text-xs faint">Min: <span className="font-medium text-white">$10.00</span></span>
+            <label className="text-sm font-medium hi">Amount to deposit</label>
+            <span className="text-xs faint">Min: <span className="font-medium hi">$10.00</span></span>
           </div>
           <div className="relative mb-4">
-            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-white">$</span>
+            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center hi">$</span>
             <input
               type="number"
               min="10"
@@ -143,27 +143,27 @@ export default function DepositPage() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="block w-full rounded-xl border py-3 pl-10 pr-12 text-lg"
-              style={{ background: '#121826', borderColor: 'rgba(148,163,184,.2)', color: '#e6ecf6' }}
+              style={{ background: 'var(--field)', borderColor: 'var(--hairline-strong)', color: 'var(--text)' }}
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1.5 block text-sm font-medium text-white">Payment method</label>
-            <select value={method} onChange={(e) => setMethod(e.target.value)} className="w-full rounded-xl border px-3 py-3 text-sm" style={{ background: '#121826', borderColor: 'rgba(148,163,184,.2)', color: '#e6ecf6' }}>
+            <label className="mb-1.5 block text-sm font-medium hi">Payment method</label>
+            <select value={method} onChange={(e) => setMethod(e.target.value)} className="w-full rounded-xl border px-3 py-3 text-sm" style={{ background: 'var(--field)', borderColor: 'var(--hairline-strong)', color: 'var(--text)' }}>
               {coins.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.network})</option>)}
             </select>
           </div>
 
           {/* Admin-provided deposit address */}
-          <div className="mb-4 rounded-xl border p-4" style={{ borderColor: 'rgba(47,138,104,.3)', background: 'rgba(47,138,104,.08)' }}>
+          <div className="mb-4 rounded-xl border p-4" style={{ borderColor: 'var(--ok-bg)', background: 'var(--ok-bg)' }}>
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-medium text-white">Send {coin.symbol} to this address</span>
+              <span className="text-sm font-medium hi">Send {coin.symbol} to this address</span>
               <span className="pill pill-sec">{coin.network}</span>
             </div>
-            <div className="flex items-center justify-between gap-2 rounded-xl border border-dashed px-3 py-2.5" style={{ borderColor: 'rgba(148,163,184,.3)', background: '#0d1321' }}>
-              <span className="truncate font-mono text-xs text-white">
+            <div className="flex items-center justify-between gap-2 rounded-xl border border-dashed px-3 py-2.5" style={{ borderColor: 'var(--hairline-strong)', background: '#0d1321' }}>
+              <span className="truncate font-mono text-xs hi">
                 {coin.address || 'Awaiting deposit address from support'}
               </span>
-              <button type="button" onClick={copyAddress} disabled={!coin.address} className="flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-xs font-medium disabled:opacity-50" style={{ background: 'rgba(148,163,184,.12)', color: '#e6ecf6' }}>
+              <button type="button" onClick={copyAddress} disabled={!coin.address} className="flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-xs font-medium disabled:opacity-50" style={{ background: 'var(--hairline)', color: 'var(--text)' }}>
                 {copied ? <Check size={12} /> : <Copy size={12} />} {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
@@ -171,7 +171,7 @@ export default function DepositPage() {
           </div>
 
           {notice && (
-            <p className={`mb-4 rounded-xl px-3 py-2 text-xs font-medium ${notice.kind === 'ok' ? 'bg-[rgba(47,138,104,.15)] text-[#5ee0a9]' : 'bg-[rgba(239,68,68,.15)] text-[#fca5a5]'}`}>
+            <p className={`mb-4 rounded-xl px-3 py-2 text-xs font-medium ${notice.kind === 'ok' ? 'bg-[var(--ok-bg)] text-[var(--ok-text)]' : 'bg-[var(--bad-bg)] text-[var(--bad-text)]'}`}>
               {notice.text}
             </p>
           )}
@@ -186,23 +186,23 @@ export default function DepositPage() {
       {/* Info cards */}
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
         <div className="panel overflow-hidden">
-          <div className="flex items-center border-b p-4" style={{ borderColor: 'rgba(148,163,184,.10)' }}>
-            <ListChecks size={20} className="mr-2 blut" /><h3 className="text-base font-medium text-white">Deposit Process</h3>
+          <div className="flex items-center border-b p-4" style={{ borderColor: 'var(--soft)' }}>
+            <ListChecks size={20} className="mr-2 blut" /><h3 className="text-base font-medium hi">Deposit Process</h3>
           </div>
           <div className="p-5">
-            <ol className="relative ml-3 space-y-6 border-l" style={{ borderColor: 'rgba(148,163,184,.16)' }}>
+            <ol className="relative ml-3 space-y-6 border-l" style={{ borderColor: 'var(--hairline-strong)' }}>
               {['Select Method', 'Enter Amount', 'Send Crypto', 'Pending Approval'].map((s, i) => (
                 <li key={s} className="ml-6">
                   <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full ring-4" style={{ background: 'rgba(10,84,255,.16)', color: '#8db2ff', '--tw-ring-color': '#0b0f1a' }}><span className="text-xs font-bold">{i + 1}</span></span>
-                  <h3 className="font-medium text-white">{s}</h3>
+                  <h3 className="font-medium hi">{s}</h3>
                 </li>
               ))}
             </ol>
           </div>
         </div>
         <div className="panel overflow-hidden">
-          <div className="flex items-center border-b p-4" style={{ borderColor: 'rgba(148,163,184,.10)' }}>
-            <ShieldCheck size={20} className="mr-2 yel" /><h3 className="text-base font-medium text-white">Security Tips</h3>
+          <div className="flex items-center border-b p-4" style={{ borderColor: 'var(--soft)' }}>
+            <ShieldCheck size={20} className="mr-2 yel" /><h3 className="text-base font-medium hi">Security Tips</h3>
           </div>
           <div className="space-y-3 p-5">
             {['Always verify the address before sending.', 'Use secure and private connections.', 'Double-check the network type for crypto.', 'Never share your payment credentials.'].map((t) => (
@@ -211,8 +211,8 @@ export default function DepositPage() {
           </div>
         </div>
         <div className="panel overflow-hidden">
-          <div className="flex items-center border-b p-4" style={{ borderColor: 'rgba(148,163,184,.10)' }}>
-            <FileText size={20} className="mr-2 grn" /><h3 className="text-base font-medium text-white">Deposit Policy</h3>
+          <div className="flex items-center border-b p-4" style={{ borderColor: 'var(--soft)' }}>
+            <FileText size={20} className="mr-2 grn" /><h3 className="text-base font-medium hi">Deposit Policy</h3>
           </div>
           <div className="space-y-4 p-5">
             <Row k="Processing Time" v="After admin approval" />
@@ -228,8 +228,8 @@ export default function DepositPage() {
 function Row({ k, v }) {
   return (
     <div className="flex items-center justify-between">
-      <div><h4 className="text-sm font-medium text-white">{k}</h4></div>
-      <span className="text-xs font-medium text-white">{v}</span>
+      <div><h4 className="text-sm font-medium hi">{k}</h4></div>
+      <span className="text-xs font-medium hi">{v}</span>
     </div>
   );
 }

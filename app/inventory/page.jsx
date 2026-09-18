@@ -28,9 +28,9 @@ export default function InventoryPage() {
     <>
       {/* Hero */}
       <div className="panel relative mb-8 p-6 text-center sm:p-10">
-        <p className="mb-3 text-sm font-medium text-slate-400">Inventory</p>
-        <h1 className="text-3xl font-semibold text-white sm:text-4xl">Browse Inventory</h1>
-        <p className="mx-auto mt-4 max-w-3xl text-base text-slate-400">
+        <p className="mb-3 text-sm font-medium mut">Inventory</p>
+        <h1 className="text-3xl font-semibold hi sm:text-4xl">Browse Inventory</h1>
+        <p className="mx-auto mt-4 max-w-3xl text-base mut">
           Explore premium electric vehicles ready for immediate delivery.
         </p>
       </div>
@@ -39,7 +39,7 @@ export default function InventoryPage() {
         {/* Filters */}
         <div className="lg:w-1/4">
           <div className="panel p-6">
-            <h2 className="mb-6 text-lg font-medium text-white">Filters</h2>
+            <h2 className="mb-6 text-lg font-medium hi">Filters</h2>
             <div className="space-y-4">
               <Field label="Model">
                 <select value={model} onChange={(e) => setModel(e.target.value)} className="inp">
@@ -72,12 +72,12 @@ export default function InventoryPage() {
         <div className="lg:w-3/4">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="mb-1 text-2xl font-light text-white">Available Vehicles</h2>
+              <h2 className="mb-1 text-2xl font-light hi">Available Vehicles</h2>
               <p className="text-sm mut">Showing {filtered.length} of {CARS.length} vehicles</p>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={() => setList(false)} className={`rounded-lg p-2 ${!list ? 'text-white' : 'text-slate-400'}`}><Grid3x3 size={20} /></button>
-              <button onClick={() => setList(true)} className={`rounded-lg p-2 ${list ? 'text-white' : 'text-slate-400'}`}><List size={20} /></button>
+              <button onClick={() => setList(false)} className={`rounded-lg p-2 ${!list ? 'hi' : 'mut'}`}><Grid3x3 size={20} /></button>
+              <button onClick={() => setList(true)} className={`rounded-lg p-2 ${list ? 'hi' : 'mut'}`}><List size={20} /></button>
             </div>
           </div>
 
@@ -90,7 +90,7 @@ export default function InventoryPage() {
                 </Link>
                 <div className="p-4">
                   <Link href={`/inventory/${c.slug}`}>
-                    <h3 className="mb-1 text-base font-medium text-white">{c.name}</h3>
+                    <h3 className="mb-1 text-base font-medium hi">{c.name}</h3>
                   </Link>
                   <p className="text-sm mut">{c.year} {c.model}</p>
                   <div className="mb-3 mt-3 flex items-center gap-6 text-xs">
@@ -104,7 +104,7 @@ export default function InventoryPage() {
                       <p className="text-xs mut">After Est. Gas Savings</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Link href={`/inventory/${c.slug}`} className="rounded border px-3 py-1.5 text-xs font-medium text-white" style={{ borderColor: 'rgba(148,163,184,.3)' }}>Learn</Link>
+                      <Link href={`/inventory/${c.slug}`} className="rounded border px-3 py-1.5 text-xs font-medium hi" style={{ borderColor: 'var(--hairline-strong)' }}>Learn</Link>
                       <Link href={`/inventory/${c.slug}/checkout`} className="btn btn-pri" style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem' }}>Order</Link>
                     </div>
                   </div>
@@ -121,7 +121,7 @@ export default function InventoryPage() {
 function Field({ label, children }) {
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-slate-400">{label}</h3>
+      <h3 className="mb-2 text-sm font-medium mut">{label}</h3>
       {children}
     </div>
   );

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 
 export const authInputCls =
-  'w-full rounded-xl border border-black/15 bg-white px-3 py-2.5 text-sm text-black placeholder:text-slate-400 outline-none transition focus:border-black focus:ring-2 focus:ring-black/20';
+  'w-full rounded-xl border border-black/15 bg-white px-3 py-2.5 text-sm text-black outline-none transition focus:border-black focus:ring-2 focus:ring-black/20';
 
 export const authLabelCls = 'mb-1 block text-xs font-medium text-slate-700';
 
@@ -56,7 +56,7 @@ export default function AuthShell({ title, subtitle, variant = 'app', children }
             <div className="relative z-10 auth-card hairline rounded-2xl p-6 shadow-2xl">
               <div className="mb-6 text-center">
                 <h1 className="text-xl font-bold tracking-tight text-black">{title}</h1>
-                <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
+                <p className="mt-1 text-xs faint">{subtitle}</p>
               </div>
               {children}
             </div>

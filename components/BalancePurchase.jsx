@@ -21,10 +21,10 @@ export default function BalancePurchase({ name = 'Investment', price = 100, back
   if (done) {
     return (
       <div className="panel mx-auto max-w-md p-8 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'rgba(47,138,104,.16)' }}>
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'var(--ok-bg)' }}>
           <Check size={28} className="grn" />
         </div>
-        <h3 className="mb-1 text-lg font-medium text-white">Purchase complete</h3>
+        <h3 className="mb-1 text-lg font-medium hi">Purchase complete</h3>
         <p className="mb-2 text-sm mut">You paid <span className="font-medium grn">{fmtMoney(price)}</span> from your main balance.</p>
         <Link href={backHref} className="btn btn-pri mt-4 w-full">Back</Link>
       </div>
@@ -33,35 +33,35 @@ export default function BalancePurchase({ name = 'Investment', price = 100, back
 
   return (
     <>
-      <Link href={backHref} className="mb-4 inline-flex items-center text-xs font-medium text-slate-400 hover:text-white">
+      <Link href={backHref} className="mb-4 inline-flex items-center text-xs font-medium mut hover-tx">
         <ArrowLeft size={14} className="mr-1" /> Back
       </Link>
 
       <div className="panel relative mb-6 p-6">
-        <h1 className="mb-1 text-xl font-light text-white">Checkout</h1>
+        <h1 className="mb-1 text-xl font-light hi">Checkout</h1>
         <p className="text-sm mut">Complete your purchase</p>
       </div>
 
       <div className="panel mx-auto max-w-lg overflow-hidden">
-        <div className="border-b p-5" style={{ borderColor: 'rgba(148,163,184,.10)' }}>
-          <h2 className="text-base font-semibold text-white">Order Summary</h2>
+        <div className="border-b p-5" style={{ borderColor: 'var(--soft)' }}>
+          <h2 className="text-base font-semibold hi">Order Summary</h2>
         </div>
         <div className="p-6">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-white">{name}</p>
+              <p className="text-sm font-medium hi">{name}</p>
               <p className="text-xs mut">{meta}</p>
             </div>
-            <span className="text-lg font-semibold text-white">{fmtMoney(price)}</span>
+            <span className="text-lg font-semibold hi">{fmtMoney(price)}</span>
           </div>
 
-          <div className="space-y-2 border-t pt-3 text-sm" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
-            <div className="flex justify-between"><span className="mut">Total due</span><span className="font-medium text-white">{fmtMoney(price)}</span></div>
-            <div className="flex justify-between"><span className="mut">Wallet balance</span><span className="font-medium text-white">{fmtMoney(balance)}</span></div>
-            <div className="flex justify-between"><span className="mut">After purchase</span><span className={`font-medium ${remaining < 0 ? 'redt' : 'text-white'}`}>{fmtMoney(remaining)}</span></div>
+          <div className="space-y-2 border-t pt-3 text-sm" style={{ borderColor: 'var(--hairline)' }}>
+            <div className="flex justify-between"><span className="mut">Total due</span><span className="font-medium hi">{fmtMoney(price)}</span></div>
+            <div className="flex justify-between"><span className="mut">Wallet balance</span><span className="font-medium hi">{fmtMoney(balance)}</span></div>
+            <div className="flex justify-between"><span className="mut">After purchase</span><span className={`font-medium ${remaining < 0 ? 'redt' : 'hi'}`}>{fmtMoney(remaining)}</span></div>
           </div>
 
-          <div className="mt-5 flex items-center gap-2 rounded-xl border px-3 py-2.5 text-xs mut" style={{ borderColor: 'rgba(148,163,184,.12)', background: 'rgba(148,163,184,.05)' }}>
+          <div className="mt-5 flex items-center gap-2 rounded-xl border px-3 py-2.5 text-xs mut" style={{ borderColor: 'var(--hairline)', background: 'var(--soft)' }}>
             <Lock size={14} /> <span>The amount is debited from your main balance.</span>
           </div>
 

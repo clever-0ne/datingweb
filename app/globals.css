@@ -94,13 +94,6 @@
   --tone-r: 192 57 43;
   --tone-n: 92 94 98;
   --tone-o: 154 84 34;
-
-  /* A halo tuned to sit on #0a0e18 is enormous on white. */
-  --glow-wash: 0.07;
-  --glow-halo: 0.3;
-  --glow-rim: 0.35;
-  --glow-halo-hover: 0.45;
-  --glow-rim-hover: 0.55;
   --primary-glow: 0.28;
   --primary-glow-focus: 0.12;
 }
@@ -177,12 +170,6 @@
   --tone-r: 255 148 148;
   --tone-n: 176 186 208;
   --tone-o: 214 138 88;
-
-  --glow-wash: 0.2;
-  --glow-halo: 0.55;
-  --glow-rim: 0.3;
-  --glow-halo-hover: 0.75;
-  --glow-rim-hover: 0.48;
   --primary-glow: 0.75;
   --primary-glow-focus: 0.18;
 }
@@ -251,29 +238,14 @@ a { color: inherit; text-decoration: none; }
    welcome. It keeps the resting float and skips the lift. */
 .card-static { transition: none; }
 
-/* A card that carries a colour. The tint is not decoration: each of these cards
-   already had a colour in its icon chip and its footnote, and the glow is that
-   same colour, so the light on the card, the chip and the number all agree
-   instead of the card glowing one hue while its contents are another.
-
-   The glow is three things again — a wash across the face from the top right
-   where a light would be, a halo outside the rim, and a rim tinted to match.
-   Only the halo is obvious; the other two are what stop it looking like a
-   sticker. How strong each may be is a token, because the same halo on a white
-   card is several times louder than it was on a near-black one. */
-.card-glow {
-  --glow-rgb: var(--tone-b);
-  background:
-    radial-gradient(140% 130% at 100% 0%, rgb(var(--glow-rgb) / var(--glow-wash)) 0%, rgb(var(--glow-rgb) / 0) 58%),
-    linear-gradient(180deg, var(--card-top) 0%, var(--panel) 100%);
-  border-color: rgb(var(--glow-rgb) / var(--glow-rim));
-  box-shadow:
-    var(--sh-card),
-    0 0 30px -8px rgb(var(--glow-rgb) / var(--glow-halo)),
-    inset 0 1px 0 var(--rim);
-}
-/* One triplet per tone, so the value above is the only place a tier's colour is
-   ever written down. */
+/* The card glow is gone, at the user's request.
+   These classes survive as a *tone carrier* and nothing else: the triplet they
+   set is what `.pill-tone` reads for its text colour and what `.card-sel` draws
+   its selection ring in. A card wearing `card-glow` is therefore deliberately
+   indistinguishable from a plain `.card`. If you came here looking for the
+   halo, the wash and the tinted rim — they were removed, not lost. */
+.card-glow { --glow-rgb: var(--tone-b); }
+/* One triplet per tone, so this is the only place a tier's colour is written. */
 .card-glow-g { --glow-rgb: var(--tone-g); }   /* --green  */
 .card-glow-y { --glow-rgb: var(--tone-y); }   /* --yellow */
 .card-glow-p { --glow-rgb: var(--tone-p); }   /* --purple */
@@ -282,26 +254,15 @@ a { color: inherit; text-decoration: none; }
 .card-glow-n { --glow-rgb: var(--tone-n); }   /* --slate, for "Silver" */
 .card-glow-o { --glow-rgb: var(--tone-o); }   /* --bronze, for "Bronze" */
 
-@media (hover: hover) and (pointer: fine) {
-  .card-glow:not(.card-static):hover {
-    border-color: rgb(var(--glow-rgb) / var(--glow-rim-hover));
-    box-shadow:
-      var(--sh-card-hover),
-      0 0 46px -6px rgb(var(--glow-rgb) / var(--glow-halo-hover)),
-      inset 0 1px 0 var(--rim-hover);
-  }
-}
-
 /* A chosen card. This is a rule of its own rather than Tailwind's ring-2
-   because a ring is a box-shadow too, so on a glowing card the two would
-   overwrite each other and the selection would vanish. Here the ring is drawn
-   in the card's own colour, so picking the gold plan rings it gold. */
+   because a ring is a box-shadow too, so a ring and a card's own shadow would
+   overwrite each other and the selection would vanish. Drawn in the card's own
+   tone, so picking the gold plan rings it gold. */
 .card-sel {
   border-color: rgb(var(--glow-rgb) / 0.8);
   box-shadow:
     var(--sh-card),
     0 0 0 2px rgb(var(--glow-rgb) / 0.5),
-    0 0 40px -6px rgb(var(--glow-rgb) / var(--glow-halo-hover)),
     inset 0 1px 0 var(--rim);
 }
 

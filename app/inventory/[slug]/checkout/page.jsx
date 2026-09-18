@@ -39,24 +39,24 @@ export default function CarCheckoutPage() {
 
   return (
     <>
-      <Link href={`/inventory/${car.slug}`} className="mb-4 inline-flex items-center text-xs font-medium text-slate-400 hover:text-white">
+      <Link href={`/inventory/${car.slug}`} className="mb-4 inline-flex items-center text-xs font-medium mut hover-tx">
         <ArrowLeft size={14} className="mr-1" /> Back to Order
       </Link>
 
       <div className="panel relative mb-6 p-6">
         <div>
-          <h1 className="mb-1 text-xl font-light text-white">Checkout</h1>
-          <p className="text-sm text-slate-400">Complete your order</p>
+          <h1 className="mb-1 text-xl font-light hi">Checkout</h1>
+          <p className="text-sm mut">Complete your order</p>
         </div>
       </div>
 
       {receipt ? (
         <div className="panel mx-auto max-w-md p-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'rgba(47,138,104,.16)' }}>
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'var(--ok-bg)' }}>
             <Check size={28} className="grn" />
           </div>
-          <h3 className="mb-1 text-lg font-medium text-white">Order placed</h3>
-          <p className="mb-2 text-sm text-slate-400">You paid <span className="font-medium grn">{fmtMoney(car.price)}</span> from your main balance.</p>
+          <h3 className="mb-1 text-lg font-medium hi">Order placed</h3>
+          <p className="mb-2 text-sm mut">You paid <span className="font-medium grn">{fmtMoney(car.price)}</span> from your main balance.</p>
           <p className="mb-5 font-mono text-xs mut">Receipt {receipt.receiptId}</p>
           <Link href={`/receipt/${receipt.receiptId}`} className="btn btn-pri w-full py-3">
             <FileText size={16} /> View Receipt
@@ -73,7 +73,7 @@ export default function CarCheckoutPage() {
             <div className="panel p-6">
               <div className="mb-4 flex items-center">
                 <Step n={1} />
-                <h2 className="text-base font-medium text-white">Contact Information</h2>
+                <h2 className="text-base font-medium hi">Contact Information</h2>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field label="Full name"><input className="inp" placeholder="Wilson" /></Field>
@@ -84,7 +84,7 @@ export default function CarCheckoutPage() {
             <div className="panel p-6">
               <div className="mb-4 flex items-center">
                 <Step n={2} />
-                <h2 className="text-base font-medium text-white">Billing Address</h2>
+                <h2 className="text-base font-medium hi">Billing Address</h2>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2"><Field label="Street address"><input className="inp" placeholder="1 Innovation Drive" /></Field></div>
@@ -102,10 +102,10 @@ export default function CarCheckoutPage() {
             <div className="panel p-6">
               <div className="mb-4 flex items-center">
                 <Step n={3} />
-                <h2 className="text-base font-medium text-white">Payment Method</h2>
+                <h2 className="text-base font-medium hi">Payment Method</h2>
               </div>
-              <div className="flex items-start gap-3 rounded-xl border p-4" style={{ borderColor: 'rgba(47,138,104,.3)', background: 'rgba(47,138,104,.08)' }}>
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg" style={{ background: 'rgba(148,163,184,.12)' }}>
+              <div className="flex items-start gap-3 rounded-xl border p-4" style={{ borderColor: 'var(--ok-bg)', background: 'var(--ok-bg)' }}>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg" style={{ background: 'var(--hairline)' }}>
                   <Wallet size={20} className="grn" />
                 </div>
                 <div>
@@ -119,33 +119,33 @@ export default function CarCheckoutPage() {
           {/* Right: order summary */}
           <div className="lg:col-span-1">
             <div className="panel p-6 lg:sticky lg:top-4">
-              <h2 className="mb-4 text-base font-medium text-white">Order Summary</h2>
+              <h2 className="mb-4 text-base font-medium hi">Order Summary</h2>
 
               <div className="mb-4 flex items-center gap-3">
                 <img src={car.image} alt={car.name} className="h-16 w-24 shrink-0 rounded-xl object-cover" />
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-white">{car.name}</p>
-                  <p className="text-xs text-slate-400">{car.year} Tesla {car.model}</p>
+                  <p className="truncate text-sm font-medium hi">{car.name}</p>
+                  <p className="text-xs mut">{car.year} Tesla {car.model}</p>
                 </div>
               </div>
 
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-slate-400">Vehicle price</span><span className="font-medium text-white">{car.priceLabel}</span></div>
-                <div className="flex justify-between"><span className="text-slate-400">Exterior color</span><span className="font-medium text-white">{color}</span></div>
-                <div className="flex justify-between"><span className="text-slate-400">Est. delivery</span><span className="text-slate-400">2-4 weeks</span></div>
-                <div className="flex justify-between border-t pt-3 font-medium text-white" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
+                <div className="flex justify-between"><span className="mut">Vehicle price</span><span className="font-medium hi">{car.priceLabel}</span></div>
+                <div className="flex justify-between"><span className="mut">Exterior color</span><span className="font-medium hi">{color}</span></div>
+                <div className="flex justify-between"><span className="mut">Est. delivery</span><span className="mut">2-4 weeks</span></div>
+                <div className="flex justify-between border-t pt-3 font-medium hi" style={{ borderColor: 'var(--hairline)' }}>
                   <span>Total due</span><span>{car.priceLabel}</span>
                 </div>
-                <div className="flex justify-between border-t pt-3" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
-                  <span className="text-slate-400">Wallet balance</span><span className="font-medium text-white">{fmtMoney(balance)}</span>
+                <div className="flex justify-between border-t pt-3" style={{ borderColor: 'var(--hairline)' }}>
+                  <span className="mut">Wallet balance</span><span className="font-medium hi">{fmtMoney(balance)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">After order</span>
-                  <span className={`font-medium ${remaining < 0 ? 'redt' : 'text-white'}`}>{fmtMoney(remaining)}</span>
+                  <span className="mut">After order</span>
+                  <span className={`font-medium ${remaining < 0 ? 'redt' : 'hi'}`}>{fmtMoney(remaining)}</span>
                 </div>
               </div>
 
-              <div className="mt-5 flex items-center gap-2 rounded-xl border px-3 py-2.5 text-xs text-slate-400" style={{ borderColor: 'rgba(148,163,184,.12)', background: 'rgba(148,163,184,.05)' }}>
+              <div className="mt-5 flex items-center gap-2 rounded-xl border px-3 py-2.5 text-xs mut" style={{ borderColor: 'var(--hairline)', background: 'var(--soft)' }}>
                 <Lock size={14} /> <span>The amount is debited from your main balance.</span>
               </div>
 
@@ -178,7 +178,7 @@ export default function CarCheckoutPage() {
 
 function Step({ n }) {
   return (
-    <span className="mr-2 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-medium text-white" style={{ background: 'var(--primary)' }}>
+    <span className="mr-2 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-medium hi" style={{ background: 'var(--primary)' }}>
       {n}
     </span>
   );
@@ -187,7 +187,7 @@ function Step({ n }) {
 function Field({ label, children }) {
   return (
     <div>
-      <label className="mb-1.5 block text-xs font-medium text-slate-400">{label}</label>
+      <label className="mb-1.5 block text-xs font-medium mut">{label}</label>
       {children}
     </div>
   );

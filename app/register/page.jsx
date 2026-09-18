@@ -133,7 +133,7 @@ export default function RegisterPage() {
 
         <div>
           <label htmlFor="reg-ref" className={authLabelCls}>
-            Referral code <span className="font-normal text-slate-400">(optional)</span>
+            Referral code <span className="font-normal mut">(optional)</span>
           </label>
           <input
             id="reg-ref"
@@ -157,7 +157,7 @@ export default function RegisterPage() {
         </button>
       </form>
 
-      <p className="mt-4 text-center text-xs text-slate-500">
+      <p className="mt-4 text-center text-xs faint">
         Already have an account?{' '}
         <Link href="/login" className="font-medium text-black hover:underline">
           Sign In

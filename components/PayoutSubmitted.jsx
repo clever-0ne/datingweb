@@ -23,19 +23,19 @@ export default function PayoutSubmitted({ request, itemLabel = 'contract', onDis
   return (
     <section
       className="mb-6 overflow-hidden rounded-2xl"
-      style={{ background: 'rgba(47,138,104,.07)', border: '1px solid rgba(47,138,104,.28)' }}
+      style={{ background: 'var(--ok-bg)', border: '1px solid var(--ok-bg)' }}
     >
       <header className="flex items-start gap-3 p-5">
         <span
           className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full"
-          style={{ background: 'rgba(47,138,104,.18)' }}
+          style={{ background: 'var(--ok-bg)' }}
         >
           <CheckCircle2 size={18} className="grn" />
         </span>
         <div className="min-w-0">
-          <h2 className="text-base font-semibold text-white">Withdrawal request submitted</h2>
+          <h2 className="text-base font-semibold hi">Withdrawal request submitted</h2>
           <p className="mt-0.5 text-xs mut">
-            <span className="font-mono text-slate-300">{request?.id}</span>
+            <span className="font-mono mut">{request?.id}</span>
             {count > 0 && (
               <> · {count} {itemLabel}{count === 1 ? '' : 's'}</>
             )}
@@ -47,7 +47,7 @@ export default function PayoutSubmitted({ request, itemLabel = 'contract', onDis
             type="button"
             onClick={onDismiss}
             aria-label="Dismiss"
-            className="ml-auto shrink-0 text-slate-400 transition hover:text-white"
+            className="ml-auto shrink-0 mut transition hover-tx"
           >
             <X size={16} />
           </button>
@@ -57,7 +57,7 @@ export default function PayoutSubmitted({ request, itemLabel = 'contract', onDis
       <div className="px-5 pb-5">
         <p className="text-xs leading-relaxed mut">
           Your request is with an administrator now, and{' '}
-          <span className="font-medium text-white">no money has moved yet</span> — the returns stay on
+          <span className="font-medium hi">no money has moved yet</span> — the returns stay on
           the {itemLabel}s until you complete the last step below.
         </p>
 
@@ -65,14 +65,14 @@ export default function PayoutSubmitted({ request, itemLabel = 'contract', onDis
           <li className="flex gap-3">
             <Step n={1} />
             <p className="text-xs leading-relaxed mut">
-              <span className="font-medium text-white">An administrator reviews it.</span> Approval is
+              <span className="font-medium hi">An administrator reviews it.</span> Approval is
               what releases your code, so this step is a person, not a timer.
             </p>
           </li>
           <li className="flex gap-3">
             <Step n={2} />
             <p className="text-xs leading-relaxed">
-              <span className="font-medium text-white">Check your notifications for the code.</span>{' '}
+              <span className="font-medium hi">Check your notifications for the code.</span>{' '}
               <span className="mut">
                 The moment it is approved, a six-digit verification code arrives behind the{' '}
                 <Bell size={12} className="-mt-0.5 inline" aria-hidden="true" /> bell in the top bar.
@@ -84,8 +84,8 @@ export default function PayoutSubmitted({ request, itemLabel = 'contract', onDis
           <li className="flex gap-3">
             <Step n={3} />
             <p className="text-xs leading-relaxed mut">
-              <span className="font-medium text-white">Enter the code on the payout card below.</span>{' '}
-              Once approved it switches to <span className="text-white">Enter your code</span>, and
+              <span className="font-medium hi">Enter the code on the payout card below.</span>{' '}
+              Once approved it switches to <span className="hi">Enter your code</span>, and
               submitting it credits the full {gross > 0 ? fmtMoney(gross) : 'gross'} to your main
               balance.
             </p>
@@ -95,7 +95,7 @@ export default function PayoutSubmitted({ request, itemLabel = 'contract', onDis
         {fee > 0 && (
           <p
             className="mt-4 border-t pt-3 text-xs leading-relaxed mut"
-            style={{ borderColor: 'rgba(47,138,104,.22)' }}
+            style={{ borderColor: 'var(--ok-bg)' }}
           >
             <ShieldCheck size={12} className="-mt-0.5 mr-1 inline blut" aria-hidden="true" />
             The {fmtMoney(fee)} gas fee was already charged against your balance. It is charged once,
@@ -112,7 +112,7 @@ function Step({ n }) {
   return (
     <span
       className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-[10px] font-semibold"
-      style={{ background: 'rgba(47,138,104,.2)', color: '#5ee0a9' }}
+      style={{ background: 'var(--ok-bg)', color: 'var(--ok-text)' }}
     >
       {n}
     </span>

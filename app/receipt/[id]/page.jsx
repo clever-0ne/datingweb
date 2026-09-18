@@ -22,7 +22,7 @@ function Line({ k, v, strong }) {
   return (
     <div className="flex justify-between py-1.5">
       <span className="mut">{k}</span>
-      <span className={strong ? 'font-semibold text-white' : 'font-medium text-white'}>{v}</span>
+      <span className={strong ? 'font-semibold hi' : 'font-medium hi'}>{v}</span>
     </div>
   );
 }
@@ -56,8 +56,8 @@ export default function ReceiptPage() {
   if (error || !receipt) {
     return (
       <div className="panel p-10 text-center">
-        <FileText size={40} className="mx-auto mb-3 text-slate-500" />
-        <h3 className="mb-1 text-lg font-semibold text-white">Receipt unavailable</h3>
+        <FileText size={40} className="mx-auto mb-3 faint" />
+        <h3 className="mb-1 text-lg font-semibold hi">Receipt unavailable</h3>
         <p className="mb-5 text-sm mut">{error || 'Receipt not found.'}</p>
         <Link href="/transactions" className="btn btn-pri">Back to Transactions</Link>
       </div>
@@ -66,17 +66,17 @@ export default function ReceiptPage() {
 
   return (
     <>
-      <Link href="/transactions" className="mb-4 inline-flex items-center text-xs font-medium text-slate-400 hover:text-white">
+      <Link href="/transactions" className="mb-4 inline-flex items-center text-xs font-medium mut hover-tx">
         <ArrowLeft size={14} className="mr-1" /> Back to Transactions
       </Link>
 
       <div className="mx-auto max-w-2xl">
         <div className="panel p-6 sm:p-8">
           {/* Header */}
-          <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b pb-5" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
+          <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b pb-5" style={{ borderColor: 'var(--hairline)' }}>
             <div>
-              <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-slate-400">{receipt.issuer}</p>
-              <h1 className="text-2xl font-semibold text-white">Receipt</h1>
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest mut">{receipt.issuer}</p>
+              <h1 className="text-2xl font-semibold hi">Receipt</h1>
               <p className="mt-1 font-mono text-xs mut">{receipt.receiptId}</p>
             </div>
             <span className="pill pill-sec">
@@ -87,29 +87,29 @@ export default function ReceiptPage() {
           {/* Parties */}
           <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400">Billed to</p>
-              <p className="text-sm font-medium text-white">{receipt.customer.name}</p>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider mut">Billed to</p>
+              <p className="text-sm font-medium hi">{receipt.customer.name}</p>
               <p className="text-xs mut">{receipt.customer.email}</p>
             </div>
             <div className="sm:text-right">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400">Issued</p>
-              <p className="text-sm font-medium text-white">{fmtStamp(receipt.issuedAt)}</p>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider mut">Issued</p>
+              <p className="text-sm font-medium hi">{fmtStamp(receipt.issuedAt)}</p>
               <p className="text-xs mut">Order {receipt.orderId}</p>
             </div>
           </div>
 
           {/* Line items */}
-          <div className="mb-5 rounded-xl border p-4" style={{ borderColor: 'rgba(148,163,184,.12)', background: 'rgba(148,163,184,.03)' }}>
-            <div className="flex justify-between border-b pb-2 text-xs font-semibold uppercase tracking-wider text-slate-400" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
+          <div className="mb-5 rounded-xl border p-4" style={{ borderColor: 'var(--hairline)', background: 'var(--soft)' }}>
+            <div className="flex justify-between border-b pb-2 text-xs font-semibold uppercase tracking-wider mut" style={{ borderColor: 'var(--hairline)' }}>
               <span>Description</span>
               <span>Amount</span>
             </div>
             <div className="flex justify-between pt-3">
               <div className="min-w-0 pr-4">
-                <p className="text-sm font-medium text-white">{receipt.item}</p>
+                <p className="text-sm font-medium hi">{receipt.item}</p>
                 <p className="text-xs mut">{receipt.type}{receipt.ref ? ` · ${receipt.ref}` : ''}</p>
               </div>
-              <p className="whitespace-nowrap text-sm font-semibold text-white">{fmtMoney(receipt.amount)}</p>
+              <p className="whitespace-nowrap text-sm font-semibold hi">{fmtMoney(receipt.amount)}</p>
             </div>
           </div>
 
@@ -117,7 +117,7 @@ export default function ReceiptPage() {
           <div className="mb-6 ml-auto max-w-xs text-sm">
             <Line k="Subtotal" v={fmtMoney(receipt.amount)} />
             <Line k="Payment method" v="Main balance" />
-            <div className="mt-1 border-t pt-2" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
+            <div className="mt-1 border-t pt-2" style={{ borderColor: 'var(--hairline)' }}>
               <Line k="Total paid" v={fmtMoney(receipt.amount)} strong />
             </div>
             <Line k="Balance after" v={fmtMoney(receipt.balanceAfter)} />

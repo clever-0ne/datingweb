@@ -170,6 +170,8 @@ export default function AppChrome({ children }) {
               <ThemeToggle />
               <button className="icon-btn relative" onClick={toggleNotif} aria-label="Notifications">
                 <Bell size={20} />
+                {/* text-white, not the `hi` token: this one really is white
+                    text, because the surface behind it is red in both themes. */}
                 {unread > 0 && (
                   <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ef4444] px-1 text-[10px] font-bold text-white">
                     {unread > 9 ? '9+' : unread}

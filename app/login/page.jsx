@@ -85,7 +85,7 @@ export default function LoginPage() {
 
       <PasskeySignIn />
 
-      <p className="mt-4 text-center text-xs text-slate-500">
+      <p className="mt-4 text-center text-xs faint">
         Don&apos;t have an account?{' '}
         <Link href="/register" className="font-medium text-black hover:underline">
           Create Account

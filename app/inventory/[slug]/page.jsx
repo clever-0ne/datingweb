@@ -23,7 +23,7 @@ export default function CarOrderPage() {
   return (
     <>
       {/* Breadcrumb */}
-      <Link href="/inventory" className="mb-4 inline-flex items-center text-xs font-medium text-slate-400 hover:text-white">
+      <Link href="/inventory" className="mb-4 inline-flex items-center text-xs font-medium mut hover-tx">
         <ArrowLeft size={14} className="mr-1" /> Back to Inventory
       </Link>
 
@@ -33,8 +33,8 @@ export default function CarOrderPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e18]/90 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 p-6 sm:p-8">
           {car.badge && <span className="mb-2 inline-flex rounded-full bg-white px-2 py-0.5 text-xs font-medium text-black">{car.badge}</span>}
-          <h1 className="text-3xl font-light text-white">{car.name}</h1>
-          <p className="mt-1 text-sm text-slate-300">{car.tagline}</p>
+          <h1 className="text-3xl font-light hi">{car.name}</h1>
+          <p className="mt-1 text-sm mut">{car.tagline}</p>
         </div>
       </div>
 
@@ -50,18 +50,18 @@ export default function CarOrderPage() {
 
           {/* Overview */}
           <div className="panel p-6">
-            <h2 className="mb-3 text-lg font-semibold text-white">Overview</h2>
-            <p className="text-sm leading-relaxed text-slate-300">{car.description}</p>
+            <h2 className="mb-3 text-lg font-semibold hi">Overview</h2>
+            <p className="text-sm leading-relaxed mut">{car.description}</p>
           </div>
 
           {/* Full specifications */}
           <div className="panel p-6">
-            <h2 className="mb-4 text-lg font-semibold text-white">Full Specifications</h2>
+            <h2 className="mb-4 text-lg font-semibold hi">Full Specifications</h2>
             <div className="grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2">
               {car.specs.map((s) => (
-                <div key={s.label} className="flex items-baseline justify-between gap-4 border-b py-2.5" style={{ borderColor: 'rgba(148,163,184,.1)' }}>
-                  <span className="text-xs text-slate-400">{s.label}</span>
-                  <span className="text-sm font-medium text-right text-white">{s.value}</span>
+                <div key={s.label} className="flex items-baseline justify-between gap-4 border-b py-2.5" style={{ borderColor: 'var(--soft)' }}>
+                  <span className="text-xs mut">{s.label}</span>
+                  <span className="text-sm font-medium text-right hi">{s.value}</span>
                 </div>
               ))}
             </div>
@@ -71,19 +71,19 @@ export default function CarOrderPage() {
         {/* Order summary */}
         <div className="lg:col-span-1">
           <div className="panel p-6 lg:sticky lg:top-4">
-            <h2 className="mb-1 text-lg font-semibold text-white">Order Summary</h2>
-            <p className="mb-4 text-sm text-slate-400">{car.year} {car.name}</p>
+            <h2 className="mb-1 text-lg font-semibold hi">Order Summary</h2>
+            <p className="mb-4 text-sm mut">{car.year} {car.name}</p>
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-slate-400">Starting price</span>
+                <span className="mut">Starting price</span>
                 <span className="font-medium grn">{car.priceLabel}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">After Est. Gas Savings</span>
-                <span className="text-slate-400">Included</span>
+                <span className="mut">After Est. Gas Savings</span>
+                <span className="mut">Included</span>
               </div>
-              <div className="flex justify-between border-t pt-3 font-medium text-white" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
+              <div className="flex justify-between border-t pt-3 font-medium hi" style={{ borderColor: 'var(--hairline)' }}>
                 <span>Total</span>
                 <span>{car.priceLabel}</span>
               </div>
@@ -91,7 +91,7 @@ export default function CarOrderPage() {
 
             {/* Color selector */}
             <div className="mt-6">
-              <p className="mb-3 text-sm text-slate-400">Exterior Color</p>
+              <p className="mb-3 text-sm mut">Exterior Color</p>
               <div className="flex flex-wrap gap-2">
                 {CAR_COLORS.map((c) => (
                   <button
@@ -104,13 +104,13 @@ export default function CarOrderPage() {
                   />
                 ))}
               </div>
-              <p className="mt-2 text-xs text-slate-400">{color}</p>
+              <p className="mt-2 text-xs mut">{color}</p>
             </div>
 
             <Link href={`/inventory/${car.slug}/checkout`} className="btn btn-pri mt-6 w-full py-3">
               Continue to Checkout
             </Link>
-            <p className="mt-3 text-center text-[11px] text-slate-500">Purchases are completed from your main balance</p>
+            <p className="mt-3 text-center text-[11px] faint">Purchases are completed from your main balance</p>
           </div>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function CarOrderPage() {
 function Spec({ label, value }) {
   return (
     <div className="panel p-4 text-center">
-      <p className="mb-1 text-xs text-slate-400">{label}</p>
+      <p className="mb-1 text-xs mut">{label}</p>
       <p className="text-xl font-light blut">{value}</p>
     </div>
   );

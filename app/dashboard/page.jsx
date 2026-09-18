@@ -74,17 +74,17 @@ export default function DashboardPage() {
           <div className="card flex flex-col">
             <div className="mb-3 flex items-start justify-between">
               <div>
-                <h2 className="flex items-center text-base font-semibold text-white">
+                <h2 className="flex items-center text-base font-semibold hi">
                   <Wallet size={20} className="mr-2" style={{ color: 'var(--blue)' }} /> Account Balance
                 </h2>
                 <p className="mt-0.5 text-xs mut">Your current available balance</p>
               </div>
-              <button onClick={() => setHidden((v) => !v)} className="text-slate-400" aria-label="Toggle balance">
+              <button onClick={() => setHidden((v) => !v)} className="mut" aria-label="Toggle balance">
                 {hidden ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
             <div className="flex items-center">
-              <h3 className="text-3xl font-semibold text-white">{hidden ? '••••••' : fmtMoney(balance)}</h3>
+              <h3 className="text-3xl font-semibold hi">{hidden ? '••••••' : fmtMoney(balance)}</h3>
             </div>
             <div className="pill pill-sec mt-2 w-fit">
               <CheckCircle size={12} /> <span>Available for Withdrawal</span>
@@ -104,7 +104,7 @@ export default function DashboardPage() {
                     <span className="text-sm mut">{s.label}</span>
                     <span className={`chip ${s.chip} h-8 w-8 rounded-full`}><Icon size={16} /></span>
                   </div>
-                  <h3 className="truncate text-lg font-semibold text-white">{s.value}</h3>
+                  <h3 className="truncate text-lg font-semibold hi">{s.value}</h3>
                   <div className={`mt-auto flex items-center text-xs ${s.noteCls}`}>
                     <Icon size={12} className="mr-1" /> {s.note}
                   </div>
@@ -120,8 +120,8 @@ export default function DashboardPage() {
         <div className="space-y-6 lg:col-span-2">
           {/* Market overview */}
           <div className="panel overflow-hidden">
-            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid rgba(148,163,184,.10)' }}>
-              <h3 className="flex items-center gap-2 text-base font-semibold text-white">
+            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid var(--soft)' }}>
+              <h3 className="flex items-center gap-2 text-base font-semibold hi">
                 Market Overview
                 <span className={`pill ${pricesLive ? 'pill-sec' : 'pill-gry'}`}>
                   {pricesLive ? 'Live' : 'Offline'}
@@ -138,13 +138,13 @@ export default function DashboardPage() {
                   <div className="mb-3 flex items-center gap-2">
                     <img src={m.img} alt={m.name} className="h-8 w-8 rounded-full object-cover" />
                     <div className="min-w-0">
-                      <div className="truncate text-sm font-semibold text-white">{m.name}</div>
+                      <div className="truncate text-sm font-semibold hi">{m.name}</div>
                       <div className="text-xs mut">{m.sym}</div>
                     </div>
                     <span className={`pill ml-auto ${m.up ? 'pill-sec' : 'pill-red'}`}>{fmtChange(m.change)}</span>
                   </div>
                   <div className="flex justify-between text-xs"><span className="mut">Price</span><span className="mut">24h</span></div>
-                  <div className="flex justify-between"><span className="text-sm font-semibold text-white">{fmtPrice(m.price)}</span><span className={`text-xs ${m.up ? 'grn' : 'redt'}`}>{fmtChange(m.change)}</span></div>
+                  <div className="flex justify-between"><span className="text-sm font-semibold hi">{fmtPrice(m.price)}</span><span className={`text-xs ${m.up ? 'grn' : 'redt'}`}>{fmtChange(m.change)}</span></div>
                 </div>
               ))}
             </div>
@@ -152,8 +152,8 @@ export default function DashboardPage() {
 
           {/* Active plans */}
           <div className="panel overflow-hidden">
-            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid rgba(148,163,184,.10)' }}>
-              <h3 className="text-base font-semibold text-white">
+            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid var(--soft)' }}>
+              <h3 className="text-base font-semibold hi">
                 Active Plans <span className="text-xs mut">({investments.filter((i) => i.status === 'active').length})</span>
               </h3>
               <Link href="/invest" className="flex items-center gap-1 text-sm blut">View all <ChevronRight size={16} /></Link>
@@ -166,10 +166,10 @@ export default function DashboardPage() {
                 </div>
               )}
               {investments.slice(0, 4).map((i) => (
-                <div key={i.id} className="mb-4 flex items-center gap-3 rounded-xl border p-3 last:mb-0" style={{ borderColor: 'rgba(148,163,184,.10)', background: 'rgba(148,163,184,.03)' }}>
+                <div key={i.id} className="mb-4 flex items-center gap-3 rounded-xl border p-3 last:mb-0" style={{ borderColor: 'var(--soft)', background: 'var(--soft)' }}>
                   <span className="chip chip-b h-10 w-10 rounded-lg"><TrendingUp size={20} /></span>
                   <div className="min-w-0 flex-1">
-                    <h4 className="truncate text-sm font-semibold text-white">{i.planName}</h4>
+                    <h4 className="truncate text-sm font-semibold hi">{i.planName}</h4>
                     <p className="text-xs mut">{fmtMoney(i.amount)} <span className="faint">· {fmtDay(i.createdAt)} – {fmtDay(i.maturesAt)}</span></p>
                   </div>
                   <span className={`pill ${i.status === 'active' ? 'pill-sec' : 'pill-gry'}`}>
@@ -184,8 +184,8 @@ export default function DashboardPage() {
 
           {/* Recent transactions */}
           <div className="panel overflow-hidden">
-            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid rgba(148,163,184,.10)' }}>
-              <h3 className="text-base font-semibold text-white">Recent Transactions</h3>
+            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid var(--soft)' }}>
+              <h3 className="text-base font-semibold hi">Recent Transactions</h3>
               <Link href="/transactions" className="text-sm blut">View all <ChevronRight size={16} className="inline" /></Link>
             </div>
             <div className="overflow-x-auto">
@@ -196,11 +196,11 @@ export default function DashboardPage() {
                     const Icon = TXN_ICONS[t.icon] || Briefcase;
                     return (
                       <tr key={t.id}>
-                        <td className="text-[11px] text-white">{t.date}<div className="text-[10px] faint">ago</div></td>
+                        <td className="text-[11px] hi">{t.date}<div className="text-[10px] faint">ago</div></td>
                         <td>
                           <div className="flex items-center gap-2">
                             <span className={`chip ${t.kind === 'credit' ? 'chip-g' : 'chip-r'} h-8 w-8 rounded-full`}><Icon size={14} /></span>
-                            <div><p className="text-xs font-medium text-white sm:text-sm">{t.type}</p><p className="hidden text-xs mut sm:block">{t.sub}</p></div>
+                            <div><p className="text-xs font-medium hi sm:text-sm">{t.type}</p><p className="hidden text-xs mut sm:block">{t.sub}</p></div>
                           </div>
                         </td>
                         <td className={`whitespace-nowrap text-right text-xs font-semibold sm:text-sm ${t.kind === 'credit' ? 'grn' : 'redt'}`}>{t.amount > 0 ? '+' : ''}{fmtMoney(t.amount)}</td>
@@ -217,10 +217,10 @@ export default function DashboardPage() {
         <div className="space-y-6">
           {/* Bitcoin live chart */}
           <div className="panel overflow-hidden">
-            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid rgba(148,163,184,.10)' }}>
+            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid var(--soft)' }}>
               <div className="flex items-center gap-2">
                 <img src="/assets/coins/btc.png" alt="Bitcoin" className="h-6 w-6 rounded-full object-cover" />
-                <h3 className="text-sm font-semibold text-white sm:text-base">Bitcoin (BTC)</h3>
+                <h3 className="text-sm font-semibold hi sm:text-base">Bitcoin (BTC)</h3>
               </div>
               <span className="pill pill-sec">Live</span>
             </div>
@@ -231,30 +231,30 @@ export default function DashboardPage() {
 
           {/* Refer & Earn */}
           <div className="panel overflow-hidden">
-            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid rgba(148,163,184,.10)' }}>
-              <h3 className="text-sm font-semibold text-white sm:text-base">Refer &amp; Earn</h3>
+            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid var(--soft)' }}>
+              <h3 className="text-sm font-semibold hi sm:text-base">Refer &amp; Earn</h3>
               <Link href="/account" className="flex items-center gap-1 text-xs blut sm:text-sm">Details <ChevronRight size={16} /></Link>
             </div>
             <div className="p-4 sm:p-5">
               <div className="mb-4 flex gap-3">
                 <span className="chip chip-y h-10 w-10 rounded-full"><Users size={20} /></span>
                 <div>
-                  <h4 className="text-xs font-semibold text-white sm:text-sm">Earn Through Referrals</h4>
+                  <h4 className="text-xs font-semibold hi sm:text-sm">Earn Through Referrals</h4>
                   <p className="text-xs mut">Earn commission when someone signs up using your link</p>
                 </div>
               </div>
-              <div className="flex overflow-hidden rounded-lg" style={{ background: 'rgba(148,163,184,.10)', border: '1px solid rgba(148,163,184,.16)' }}>
-                <input readOnly value={refLink} className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white focus:outline-none sm:text-sm" />
-                <button onClick={copyRef} className="flex items-center gap-1 px-3 py-2 text-xs font-semibold text-white" style={{ background: 'linear-gradient(135deg,#2f6dff,#0a54ff)' }}><Copy size={14} /> {copied ? 'Copied' : 'Copy'}</button>
+              <div className="flex overflow-hidden rounded-lg" style={{ background: 'var(--soft)', border: '1px solid var(--hairline-strong)' }}>
+                <input readOnly value={refLink} className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs hi focus:outline-none sm:text-sm" />
+                <button onClick={copyRef} className="flex items-center gap-1 px-3 py-2 text-xs font-semibold text-white" style={{ background: 'linear-gradient(135deg, var(--primary-2), var(--primary))' }}><Copy size={14} /> {copied ? 'Copied' : 'Copy'}</button>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-2">
-                <div className="rounded-lg p-3" style={{ background: 'rgba(148,163,184,.10)' }}>
+                <div className="rounded-lg p-3" style={{ background: 'var(--soft)' }}>
                   <p className="mb-1 text-xs mut">Total Referrals</p>
-                  <p className="text-lg font-semibold text-white">{referralCount}</p>
+                  <p className="text-lg font-semibold hi">{referralCount}</p>
                 </div>
-                <div className="rounded-lg p-3" style={{ background: 'rgba(148,163,184,.10)' }}>
+                <div className="rounded-lg p-3" style={{ background: 'var(--soft)' }}>
                   <p className="mb-1 text-xs mut">Earnings</p>
-                  <p className="text-lg font-semibold text-white">{fmtMoney(referralBonus)}</p>
+                  <p className="text-lg font-semibold hi">{fmtMoney(referralBonus)}</p>
                 </div>
               </div>
             </div>
@@ -262,8 +262,8 @@ export default function DashboardPage() {
 
           {/* Inventory */}
           <div className="panel overflow-hidden">
-            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid rgba(148,163,184,.10)' }}>
-              <h3 className="text-sm font-semibold text-white sm:text-base">Inventory</h3>
+            <div className="flex items-center justify-between p-4 sm:p-5" style={{ borderBottom: '1px solid var(--soft)' }}>
+              <h3 className="text-sm font-semibold hi sm:text-base">Inventory</h3>
               <Link href="/inventory" className="flex items-center gap-1 text-xs blut sm:text-sm">Browse all <ChevronRight size={16} /></Link>
             </div>
             <div className="p-2">
@@ -271,10 +271,10 @@ export default function DashboardPage() {
                 <Link key={v.slug} href={`/inventory/${v.slug}`} className="flex items-center gap-3 rounded-lg p-3 hover:bg-white/5">
                   <span className={`chip ${v.chip} h-10 w-10 rounded-lg`}><Car size={20} /></span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold text-white">{v.name}</span>
+                    <span className="block truncate text-sm font-semibold hi">{v.name}</span>
                     <span className="block text-xs mut">{v.meta}</span>
                   </span>
-                  <span className="text-sm font-semibold text-white">{v.price}</span>
+                  <span className="text-sm font-semibold hi">{v.price}</span>
                 </Link>
               ))}
             </div>

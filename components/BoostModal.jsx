@@ -40,10 +40,10 @@ export default function BoostModal({ item, balance, onBoost, onClose }) {
       <div className="card card-static relative z-10 w-full max-w-md p-6">
         <div className="mb-4 flex items-start justify-between">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">Boost Payout</p>
-            <h2 className="text-xl font-bold text-white">{item.name}</h2>
+            <p className="text-[11px] font-semibold uppercase tracking-widest mut">Boost Payout</p>
+            <h2 className="text-xl font-bold hi">{item.name}</h2>
           </div>
-          <button type="button" onClick={onClose} className="text-slate-400 hover:text-white" aria-label="Close">
+          <button type="button" onClick={onClose} className="mut hover-tx" aria-label="Close">
             <X size={20} />
           </button>
         </div>
@@ -69,14 +69,14 @@ export default function BoostModal({ item, balance, onBoost, onClose }) {
 
         <div className="mb-4 space-y-2 text-sm">
           <Row k={`Payout added (${BOOST_MULTIPLIER}×)`} v={<span className="grn">+{fmtMoney(added)}</span>} />
-          <div className="border-t pt-2" style={{ borderColor: 'rgba(148,163,184,.15)' }}>
+          <div className="border-t pt-2" style={{ borderColor: 'var(--soft-2)' }}>
             <Row k="New payout" v={<span className="grn">{fmtMoney(newReturn)}</span>} />
           </div>
           <Row k="Balance after boost" v={fmtMoney(round2(balance - amt))} />
         </div>
 
         {err && (
-          <p className="mb-4 rounded-lg px-3 py-2 text-xs font-medium" style={{ background: 'rgba(239,68,68,.15)', color: '#fca5a5' }}>
+          <p className="mb-4 rounded-lg px-3 py-2 text-xs font-medium" style={{ background: 'var(--bad-bg)', color: 'var(--bad-text)' }}>
             {err}
           </p>
         )}
@@ -98,7 +98,7 @@ function Row({ k, v }) {
   return (
     <div className="flex justify-between">
       <span className="mut">{k}</span>
-      <span className="font-medium text-white">{v}</span>
+      <span className="font-medium hi">{v}</span>
     </div>
   );
 }

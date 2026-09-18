@@ -28,7 +28,7 @@ function Row({ k, v }) {
   return (
     <div className="flex justify-between">
       <span className="mut">{k}</span>
-      <span className="font-medium text-white">{v}</span>
+      <span className="font-medium hi">{v}</span>
     </div>
   );
 }
@@ -54,7 +54,7 @@ export default function PayoutCard({ w, onConfirm, itemLabel = 'contract' }) {
     <div className="card flex flex-col">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <h3 className="font-mono text-sm font-semibold text-white">{w.id}</h3>
+          <h3 className="font-mono text-sm font-semibold hi">{w.id}</h3>
           <p className="text-xs mut">
             {count} {itemLabel}{count === 1 ? '' : 's'} · requested {fmtDay(w.createdAt)}
           </p>
@@ -70,7 +70,7 @@ export default function PayoutCard({ w, onConfirm, itemLabel = 'contract' }) {
             w.feeRefundedAt ? (
               <span className="grn">{fmtMoney(w.fee)} back</span>
             ) : (
-              <span style={{ color: '#fca5a5' }}>−{fmtMoney(w.fee)}</span>
+              <span style={{ color: 'var(--bad-text)' }}>−{fmtMoney(w.fee)}</span>
             )
           }
         />
@@ -106,9 +106,9 @@ export default function PayoutCard({ w, onConfirm, itemLabel = 'contract' }) {
             </button>
           </div>
           {err ? (
-            <p className="mt-2 text-xs" style={{ color: '#fca5a5' }}>{err}</p>
+            <p className="mt-2 text-xs" style={{ color: 'var(--bad-text)' }}>{err}</p>
           ) : w.attemptsLeft <= 3 ? (
-            <p className="mt-2 text-xs" style={{ color: '#fca5a5' }}>
+            <p className="mt-2 text-xs" style={{ color: 'var(--bad-text)' }}>
               {w.attemptsLeft} attempt{w.attemptsLeft === 1 ? '' : 's'} left before this request locks.
             </p>
           ) : null}
@@ -128,7 +128,7 @@ export default function PayoutCard({ w, onConfirm, itemLabel = 'contract' }) {
       )}
 
       {w.status === 'rejected' && (
-        <p className="mt-4 text-xs" style={{ color: '#fca5a5' }}>
+        <p className="mt-4 text-xs" style={{ color: 'var(--bad-text)' }}>
           {w.rejectReason}
           {w.feeRefundedAt && (
             <span className="mt-1 block mut">

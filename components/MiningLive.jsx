@@ -109,11 +109,11 @@ export function MiningProgress({ contract }) {
   const initial = total ? (miningAccrued(contract, serverNow()) / total) * 100 : 0;
 
   return (
-    <div className="h-1.5 w-full overflow-hidden rounded-full" style={{ background: 'rgba(148,163,184,.15)' }}>
+    <div className="h-1.5 w-full overflow-hidden rounded-full" style={{ background: 'var(--soft-2)' }}>
       <div
         ref={ref}
         className="h-full rounded-full"
-        style={{ width: `${initial}%`, background: 'linear-gradient(90deg, #2f8a68, #5ee0a9)' }}
+        style={{ width: `${initial}%`, background: 'linear-gradient(90deg, var(--secondary), var(--ok-text))' }}
       />
     </div>
   );

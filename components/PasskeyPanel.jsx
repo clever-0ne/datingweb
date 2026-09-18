@@ -99,7 +99,7 @@ export function PasskeySignIn() {
           a fork in the form, which is what it is. */}
       <div className="my-5 flex items-center gap-3" aria-hidden="true">
         <span className="h-px flex-1 bg-black/10" />
-        <span className="text-xs font-medium text-slate-400">or</span>
+        <span className="text-xs font-medium mut">or</span>
         <span className="h-px flex-1 bg-black/10" />
       </div>
 

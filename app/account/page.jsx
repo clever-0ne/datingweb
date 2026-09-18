@@ -14,7 +14,7 @@ function Toggle({ on = false, onChange, disabled = false }) {
       disabled={disabled}
       onClick={() => onChange(!on)}
       className="relative h-6 w-11 rounded-full transition disabled:cursor-not-allowed disabled:opacity-50"
-      style={{ background: on ? 'var(--primary)' : 'rgba(148,163,184,.25)' }}
+      style={{ background: on ? 'var(--primary)' : 'var(--hairline-strong)' }}
     >
       <span
         className="absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all"
@@ -88,8 +88,8 @@ export default function AccountPage() {
               <img src={user?.profileImage || '/assets/avatar.svg'} alt="Profile" className="h-full w-full object-cover" />
             </div>
             <div className="min-w-0">
-              <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-slate-400">Tesla Capital</p>
-              <h1 className="mb-1 truncate text-2xl font-semibold text-white">Hi, {user?.name || 'there'}</h1>
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest mut">Tesla Capital</p>
+              <h1 className="mb-1 truncate text-2xl font-semibold hi">Hi, {user?.name || 'there'}</h1>
               <p className="truncate text-sm mut">{user?.email || ''}</p>
             </div>
           </div>
@@ -104,10 +104,10 @@ export default function AccountPage() {
         <div className="panel p-5 sm:p-6 lg:col-span-2">
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-white">Personal Information</h3>
+              <h3 className="text-lg font-semibold hi">Personal Information</h3>
               <p className="text-xs mut">Manage your profile details</p>
             </div>
-            <button onClick={() => fileRef.current?.click()} className="rounded-full border px-3.5 py-1.5 text-xs font-semibold text-white" style={{ borderColor: 'rgba(148,163,184,.3)' }}>
+            <button onClick={() => fileRef.current?.click()} className="rounded-full border px-3.5 py-1.5 text-xs font-semibold hi" style={{ borderColor: 'var(--hairline-strong)' }}>
               <Camera size={14} className="mr-1 inline" /> {photoBusy ? 'Uploading…' : 'Change photo'}
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPhoto} />
@@ -125,14 +125,14 @@ export default function AccountPage() {
         </div>
 
         <div className="panel p-5 sm:p-6">
-          <h3 className="mb-1 text-lg font-semibold text-white">Account</h3>
+          <h3 className="mb-1 text-lg font-semibold hi">Account</h3>
           <p className="mb-4 text-xs mut">Membership &amp; identifiers</p>
           <dl className="space-y-3.5 text-sm">
             <Dd k="Account ID" v={user?.id || '—'} mono />
             <Dd k="Member since" v={user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—'} />
-            <div className="flex items-center justify-between border-t pt-3.5" style={{ borderColor: 'rgba(148,163,184,.12)' }}>
+            <div className="flex items-center justify-between border-t pt-3.5" style={{ borderColor: 'var(--hairline)' }}>
               <dt className="mut">Referral code</dt>
-              <dd><button className="rounded-full px-2.5 py-1 font-mono text-xs font-bold text-white" style={{ background: 'rgba(148,163,184,.14)' }}>{referralCode} <Copy size={12} className="inline" /></button></dd>
+              <dd><button className="rounded-full px-2.5 py-1 font-mono text-xs font-bold hi" style={{ background: 'var(--soft-2)' }}>{referralCode} <Copy size={12} className="inline" /></button></dd>
             </div>
           </dl>
         </div>
@@ -141,7 +141,7 @@ export default function AccountPage() {
       {/* Security + 2FA */}
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="panel p-5 sm:p-6">
-          <h3 className="mb-1 text-lg font-semibold text-white">Security</h3>
+          <h3 className="mb-1 text-lg font-semibold hi">Security</h3>
           <p className="mb-5 text-xs mut">Update your password</p>
           <div className="space-y-4">
             <Label label="Current password"><input type="password" placeholder="••••••••••" className="inp" /></Label>
@@ -154,7 +154,7 @@ export default function AccountPage() {
         </div>
 
         <div className="panel p-5 sm:p-6">
-          <h3 className="mb-1 text-lg font-semibold text-white">Passkeys</h3>
+          <h3 className="mb-1 text-lg font-semibold hi">Passkeys</h3>
           <p className="mb-5 text-xs mut">
             Sign in with your fingerprint, face or screen lock instead of a password
           </p>
@@ -164,9 +164,9 @@ export default function AccountPage() {
 
       {/* Notifications */}
       <div className="panel p-5 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-white">Notifications</h3>
+        <h3 className="mb-1 text-lg font-semibold hi">Notifications</h3>
         <p className="mb-4 text-xs mut">Choose what we send you</p>
-        <div className="divide-y" style={{ borderColor: 'rgba(148,163,184,.1)' }}>
+        <div className="divide-y" style={{ borderColor: 'var(--soft)' }}>
           <SettingRow icon={Bell} title="Payout & deposit updates" sub="When money moves on your account"><Toggle on={nPayout} onChange={setNPayout} /></SettingRow>
           <SettingRow icon={TrendingUp} title="Market movers" sub="Significant crypto & stock changes"><Toggle on={nMarket} onChange={setNMarket} /></SettingRow>
           <SettingRow icon={Mail} title="Weekly email summary" sub="A digest of your portfolio every Monday"><Toggle on={nWeekly} onChange={setNWeekly} /></SettingRow>
@@ -193,7 +193,7 @@ export default function AccountPage() {
         </div>
 
         {push.available && push.error && (
-          <p className="mt-3 text-xs" style={{ color: '#fca5a5' }}>{push.error}</p>
+          <p className="mt-3 text-xs" style={{ color: 'var(--bad-text)' }}>{push.error}</p>
         )}
         {!push.supported && (
           <p className="mt-3 text-xs mut">
@@ -214,7 +214,7 @@ function Stat({ label, value, note, noteCls }) {
   return (
     <div className="card">
       <p className="mb-1 text-xs mut">{label}</p>
-      <p className="text-lg font-semibold text-white">{value}</p>
+      <p className="text-lg font-semibold hi">{value}</p>
       <p className={`text-xs font-medium ${noteCls}`}>{note}</p>
     </div>
   );
@@ -233,7 +233,7 @@ function Dd({ k, v, mono, green }) {
   return (
     <div className="flex items-center justify-between">
       <dt className="mut">{k}</dt>
-      <dd className={`${mono ? 'font-mono text-xs' : 'text-sm'} font-semibold ${green ? 'grn' : 'text-white'}`}>{v}</dd>
+      <dd className={`${mono ? 'font-mono text-xs' : 'text-sm'} font-semibold ${green ? 'grn' : 'hi'}`}>{v}</dd>
     </div>
   );
 }
@@ -244,7 +244,7 @@ function SettingRow({ icon: Icon, title, sub, children }) {
       <div className="flex items-center gap-3">
         <span className="chip chip-b h-9 w-9 rounded-lg"><Icon size={16} /></span>
         <div>
-          <p className="text-sm font-semibold text-white">{title}</p>
+          <p className="text-sm font-semibold hi">{title}</p>
           <p className="text-xs mut">{sub}</p>
         </div>
       </div>
