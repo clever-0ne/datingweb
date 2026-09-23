@@ -159,7 +159,7 @@ export default function DepositPage() {
               <span className="text-sm font-medium hi">Send {coin.symbol} to this address</span>
               <span className="pill pill-sec">{coin.network}</span>
             </div>
-            <div className="flex items-center justify-between gap-2 rounded-xl border border-dashed px-3 py-2.5" style={{ borderColor: 'var(--hairline-strong)', background: '#0d1321' }}>
+            <div className="flex items-center justify-between gap-2 rounded-xl border border-dashed px-3 py-2.5" style={{ borderColor: 'var(--hairline-strong)', background: 'var(--field)' }}>
               <span className="truncate font-mono text-xs hi">
                 {coin.address || 'Awaiting deposit address from support'}
               </span>
