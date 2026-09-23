@@ -25,27 +25,33 @@
   --accent: #b8860b;
   --danger: #c0392b;
 
-  --bg: #ffffff;
-  --panel: #ffffff;
-  --panel-2: #ffffff;
-  --panel-top: #ffffff;
-  --card-top: #ffffff;
+  /* Light is frosted glass over a soft pastel wash: the page carries the
+     colour, and every surface is translucent white that lets it through.
+     --chrome stays opaque because modals and dropdowns sit on it and must not
+     show the content underneath. */
+  --bg: #f4f6fc;
+  --panel: rgba(255, 255, 255, 0.62);
+  --panel-2: rgba(255, 255, 255, 0.52);
+  --panel-top: rgba(255, 255, 255, 0.78);
+  --card-top: rgba(255, 255, 255, 0.86);
   --chrome: #ffffff;
-  --chrome-2: #fafafa;
-  --chrome-grad: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
-  --field: #f4f4f4;
+  --chrome-2: rgba(255, 255, 255, 0.72);
+  --chrome-grad: linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.6) 100%);
+  --field: rgba(255, 255, 255, 0.7);
 
-  --border: #eeeeee;
-  --card-border: #e8e8e8;
-  --card-border-hover: #d0d1d2;
-  --hairline: rgba(23, 26, 32, 0.1);
-  --hairline-strong: rgba(23, 26, 32, 0.16);
-  --soft: rgba(23, 26, 32, 0.04);
-  --soft-2: rgba(23, 26, 32, 0.06);
+  --border: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(255, 255, 255, 0.8);
+  --card-border-hover: rgba(62, 106, 225, 0.28);
+  --hairline: rgba(30, 41, 80, 0.09);
+  --hairline-strong: rgba(30, 41, 80, 0.15);
+  --soft: rgba(30, 41, 80, 0.04);
+  --soft-2: rgba(30, 41, 80, 0.07);
 
-  --text: #171a20;
-  --muted: #5c5e62;
-  --faint: #8e8e8e;
+  /* Slightly navy inks read richer than neutral grey on a cool wash, and all
+     three hold at least 4.5:1 against the translucent panels. */
+  --text: #0f1629;
+  --muted: #4a5470;
+  --faint: #6b7590;
 
   --green: #1e7a4c;
   --blue: #3e6ae1;
@@ -61,21 +67,27 @@
   /* A white ground takes a shadow beautifully, so light mode's lift is weight
      plus a hairline. There is no lit rim to draw: a white rim on a white card
      is not something anyone can see, so these resolve to nothing. */
-  --rim: rgba(255, 255, 255, 0);
-  --rim-hover: rgba(255, 255, 255, 0);
-  --sh-panel: 0 1px 2px rgba(23, 26, 32, 0.05), 0 10px 28px -14px rgba(23, 26, 32, 0.14);
-  --sh-card: 0 1px 2px rgba(23, 26, 32, 0.05), 0 8px 22px -10px rgba(23, 26, 32, 0.14);
-  --sh-card-hover: 0 2px 4px rgba(23, 26, 32, 0.06), 0 18px 38px -14px rgba(23, 26, 32, 0.22);
-  --sh-band: 0 1px 2px rgba(23, 26, 32, 0.05), 0 14px 34px -18px rgba(23, 26, 32, 0.16);
-  --sh-glass: 0 10px 30px -12px rgba(23, 26, 32, 0.22), 0 1px 3px rgba(23, 26, 32, 0.06);
+  /* On glass the lit top edge is visible again — it is what makes a pane read
+     as glass rather than as fog — so the rim comes back in light mode. */
+  --rim: rgba(255, 255, 255, 0.95);
+  --rim-hover: rgba(255, 255, 255, 1);
+  --sh-panel: 0 1px 2px rgba(30, 41, 80, 0.04), 0 18px 40px -20px rgba(40, 60, 140, 0.18);
+  --sh-card: 0 1px 2px rgba(30, 41, 80, 0.04), 0 12px 30px -14px rgba(40, 60, 140, 0.2);
+  --sh-card-hover: 0 2px 4px rgba(30, 41, 80, 0.05), 0 24px 46px -16px rgba(40, 60, 140, 0.28);
+  --sh-band: 0 1px 2px rgba(30, 41, 80, 0.04), 0 20px 44px -22px rgba(40, 60, 140, 0.22);
+  --sh-glass: 0 14px 36px -12px rgba(40, 60, 140, 0.24), 0 1px 3px rgba(30, 41, 80, 0.06);
 
-  --body-image: none;
+  --body-image:
+    radial-gradient(900px 600px at 110% -10%, rgba(62, 106, 225, 0.16), rgba(62, 106, 225, 0) 60%),
+    radial-gradient(760px 520px at -10% 10%, rgba(139, 92, 246, 0.11), rgba(139, 92, 246, 0) 60%),
+    radial-gradient(820px 560px at 50% 115%, rgba(45, 190, 170, 0.1), rgba(45, 190, 170, 0) 60%),
+    linear-gradient(180deg, #f7f8fd 0%, #eef1f9 100%);
   --band-bg:
-    radial-gradient(560px 320px at 112% -22%, rgba(62, 106, 225, 0.07), rgba(62, 106, 225, 0) 60%),
-    radial-gradient(460px 280px at -8% 132%, rgba(30, 122, 76, 0.05), rgba(30, 122, 76, 0) 55%),
-    linear-gradient(115deg, #ffffff 0%, #fcfcfd 62%, #f7f8fa 100%);
-  --glass-bg: rgba(255, 255, 255, 0.78);
-  --glass-border: rgba(23, 26, 32, 0.08);
+    radial-gradient(560px 320px at 112% -22%, rgba(62, 106, 225, 0.14), rgba(62, 106, 225, 0) 60%),
+    radial-gradient(460px 280px at -8% 132%, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0) 55%),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.62) 100%);
+  --glass-bg: rgba(255, 255, 255, 0.66);
+  --glass-border: rgba(255, 255, 255, 0.8);
 
   --boot-bg: #ffffff;
   --boot-word: #8e8e8e;
@@ -182,8 +194,20 @@ body {
   color: var(--text);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* The wash stays put while content scrolls over it, so the glass always has
+     colour behind it instead of tiling or running out at the fold. */
+  background-attachment: fixed;
 }
 a { color: inherit; text-decoration: none; }
+
+/* The frosting itself. Light mode only: dark surfaces are opaque, and a blur
+   behind an opaque pane is pure cost. */
+:root:not([data-theme="dark"]) .panel,
+:root:not([data-theme="dark"]) .card,
+:root:not([data-theme="dark"]) .balance-band {
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+}
 
 /* ---- panels / cards ----
    In dark mode the three surfaces stack by luminance and the order is the whole

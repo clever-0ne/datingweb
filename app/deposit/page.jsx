@@ -90,7 +90,7 @@ export default function DepositPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4" style={{ borderColor: 'var(--soft)', background: 'var(--soft)' }}>
           <div className="flex items-center gap-2">
             <span className="btn btn-pri" style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem' }}>Crypto</span>
-            <span className="rounded-lg px-3 py-1.5 text-xs font-medium" style={{ background: 'var(--soft-2)', color: '#aab4c8' }}>Select a network</span>
+            <span className="rounded-lg px-3 py-1.5 text-xs font-medium" style={{ background: 'var(--soft-2)', color: 'var(--muted)' }}>Select a network</span>
           </div>
           <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 faint" />
@@ -193,7 +193,7 @@ export default function DepositPage() {
             <ol className="relative ml-3 space-y-6 border-l" style={{ borderColor: 'var(--hairline-strong)' }}>
               {['Select Method', 'Enter Amount', 'Send Crypto', 'Pending Approval'].map((s, i) => (
                 <li key={s} className="ml-6">
-                  <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full ring-4" style={{ background: 'rgba(10,84,255,.16)', color: '#8db2ff', '--tw-ring-color': '#0b0f1a' }}><span className="text-xs font-bold">{i + 1}</span></span>
+                  <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full ring-4" style={{ background: 'rgb(var(--tone-b) / 0.16)', color: 'var(--blue)', '--tw-ring-color': 'var(--chrome)' }}><span className="text-xs font-bold">{i + 1}</span></span>
                   <h3 className="font-medium hi">{s}</h3>
                 </li>
               ))}
