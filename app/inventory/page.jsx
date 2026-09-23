@@ -7,10 +7,9 @@ import { CARS, CATEGORIES, categoryOf, headlineStats } from '@/lib/cars';
 
 // Short context line shown above the results for the active category.
 const CATEGORY_INTRO = {
-  '': 'Everything in stock right now: electric vehicles, plus the solar, battery and charging products that power them.',
+  '': 'Everything in stock right now: electric vehicles, plus the solar and charging products that power them.',
   Vehicles: 'All-electric sedans, SUVs and trucks, from the everyday Model 3 to the tri-motor Model X Plaid. Every vehicle listed is ready for immediate delivery.',
   Solar: 'Generate your own clean electricity with low-profile panels or a full glass-tile roof. Installation is included.',
-  Battery: 'Store solar energy for the evening and keep the lights on through outages with Powerwall. Installation is included.',
   Charging: 'Charge at home with the Wall Connector, or bring Supercharging to your business property. Installation is included.',
 };
 
@@ -50,10 +49,10 @@ export default function InventoryPage() {
             <p className="mb-3 text-sm font-medium mut">Inventory</p>
             <h1 className="text-3xl font-semibold hi sm:text-4xl">Browse Inventory</h1>
             <p className="mt-4 text-base mut">
-              Explore premium electric vehicles, solar, home batteries and charging, ready for immediate delivery.
+              Explore premium electric vehicles, solar and charging, ready for immediate delivery.
               Every listing includes a full description, headline specs and pricing.
             </p>
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
+            <div className="mt-6 grid grid-cols-3 gap-3">
               {CATEGORIES.map((k) => (
                 <button
                   key={k}
@@ -211,7 +210,7 @@ export default function InventoryPage() {
           height={1430}
           alt="Silver Model 3 driving on a desert highway"
           title="Power the drive at home"
-          text="Pair your vehicle with a Wall Connector for fast home charging, then add Solar and Powerwall to run it on energy you generate yourself."
+          text="Pair your vehicle with a Wall Connector for fast home charging, then add Solar to run it on energy you generate yourself."
           action={{ label: 'See charging', onClick: () => pickCategory('Charging') }}
         />
       </section>
