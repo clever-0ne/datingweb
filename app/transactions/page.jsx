@@ -16,6 +16,11 @@ const ICONS = {
   'shopping-bag': ShoppingBag,
 };
 
+const KIND_CHIP = {
+  credit: 'chip-g',
+  debit: 'chip-r',
+};
+
 export default function TransactionsPage() {
   const { transactions } = useWallet();
 
@@ -23,7 +28,7 @@ export default function TransactionsPage() {
     <>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="flex items-center text-xl font-bold hi">
-          <Receipt size={24} className="mr-2 hi" /> Transactions
+          <Receipt size={24} className="mr-2 blut" /> Transactions
         </h1>
         <span className="pill pill-gry">{transactions.length} records</span>
       </div>
@@ -47,7 +52,7 @@ export default function TransactionsPage() {
                     <td className="text-[11px] hi">{t.date}</td>
                     <td>
                       <div className="flex items-center gap-2">
-                        <span className={`chip chip-n h-8 w-8 rounded-full`}>
+                        <span className={`chip ${KIND_CHIP[t.kind]} h-8 w-8 rounded-full`}>
                           <Icon size={14} />
                         </span>
                         <div>
@@ -63,7 +68,7 @@ export default function TransactionsPage() {
                       {t.receiptId ? (
                         <Link
                           href={`/receipt/${t.receiptId}`}
-                          className="inline-flex items-center gap-1 text-xs font-medium hi"
+                          className="inline-flex items-center gap-1 text-xs font-medium blut"
                         >
                           <FileText size={13} /> View
                         </Link>
