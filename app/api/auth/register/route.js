@@ -5,6 +5,7 @@ import { hashPassword, createSession, USER_COOKIE } from '@/lib/auth';
 import { pushNotification } from '@/lib/notifications';
 import { deliverPush, deliverAdminPush } from '@/lib/push';
 import { REFERRAL_BONUS } from '@/lib/plans';
+import { sendWelcomeEmail } from '@/lib/email-helpers';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -84,6 +85,14 @@ export async function POST(req) {
     title: 'New user registered',
     body: `${name} (${email}) just created an account.`,
   });
+
+  // Send welcome email (non-blocking)
+  try {
+    await sendWelcomeEmail(email, name);
+  } catch (error) {
+    console.error('Welcome email failed:', error);
+    // Don't fail registration if email fails
+  }
 
   const res = NextResponse.json({
     ok: true,

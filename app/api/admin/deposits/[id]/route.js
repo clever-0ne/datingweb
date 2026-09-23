@@ -3,6 +3,7 @@ import { readDb, writeDb, isAuthed } from '@/lib/db';
 import { pushNotification } from '@/lib/notifications';
 import { deliverPush } from '@/lib/push';
 import { fmtUsd, round2 } from '@/lib/format';
+import { sendDepositApprovedEmail, sendDepositRejectedEmail } from '@/lib/email-helpers';
 
 // PATCH /api/admin/deposits/:id — approve or reject a deposit.
 // Approving credits the amount to the user's main balance; moving a deposit
@@ -63,5 +64,17 @@ export async function PATCH(req, { params }) {
   // After the write, never before: a push about a credit that failed to save
   // would be a lie the user has no way to correct.
   if (notification) await deliverPush(db, deposit.userId, notification);
+
+  // Send email notifications (non-blocking)
+  try {
+    if (!wasApproved && nowApproved) {
+      await sendDepositApprovedEmail(user?.email, user?.name, amount, deposit.id);
+    } else if (!nowApproved && (wasApproved || status === 'rejected')) {
+      await sendDepositRejectedEmail(user?.email, user?.name, amount, 'Admin decision');
+    }
+  } catch (error) {
+    console.error('Email notification failed:', error);
+  }
+
   return NextResponse.json({ ok: true, deposit });
 }

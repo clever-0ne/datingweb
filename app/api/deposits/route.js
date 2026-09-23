@@ -4,6 +4,7 @@ import { currentUser } from '@/lib/auth';
 import { pushNotification } from '@/lib/notifications';
 import { deliverPush, deliverAdminPush } from '@/lib/push';
 import { fmtUsd } from '@/lib/format';
+import { send2FACodeEmail } from '@/lib/email-helpers';
 
 const COINS = ['btc', 'eth', 'usdt', 'sol'];
 
@@ -50,6 +51,32 @@ export async function POST(req) {
     title: 'Deposit awaiting approval',
     body: `${session.profile.name} submitted a ${coin.toUpperCase()} deposit of ${fmtUsd(amount)}.`,
   });
+
+  // Send deposit confirmation email
+  try {
+    await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/email/send`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: session.profile.email,
+        subject: 'Deposit Submitted',
+        html: `
+          <html>
+            <body style="font-family: Arial, sans-serif;">
+              <h1>Deposit Submitted ✅</h1>
+              <p>Hi ${session.profile.name},</p>
+              <p>We received your ${coin.toUpperCase()} deposit of <strong>$${amount.toFixed(2)}</strong></p>
+              <p>Your deposit is now awaiting admin approval. You will receive an email notification once it's approved.</p>
+              <p><a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Status</a></p>
+            </body>
+          </html>
+        `,
+      }),
+    });
+  } catch (error) {
+    console.error('Email send error:', error);
+    // Don't fail the deposit if email fails
+  }
 
   return NextResponse.json({ ok: true, deposit });
 }

@@ -3,6 +3,7 @@ import { readDb, writeDb, isAuthed } from '@/lib/db';
 import { pushNotification } from '@/lib/notifications';
 import { deliverPush } from '@/lib/push';
 import { fmtUsd, round2 } from '@/lib/format';
+import { sendWithdrawalProcessedEmail } from '@/lib/email-helpers';
 
 // PATCH /api/admin/withdrawals/:id — approve or reject a withdrawal.
 // Approving debits the user's main balance; rejecting an approved withdrawal
@@ -67,5 +68,16 @@ export async function PATCH(req, { params }) {
   // After the write, never before: a push about a decision that failed to save
   // would be a lie the user has no way to correct.
   if (notification) await deliverPush(db, withdrawal.userId, notification);
+
+  // Send email notifications (non-blocking)
+  try {
+    if (!wasApproved && nowApproved) {
+      const method = String(withdrawal.coin || '').toUpperCase();
+      await sendWithdrawalProcessedEmail(user?.email, user?.name, amount, withdrawal.id, method);
+    }
+  } catch (error) {
+    console.error('Email notification failed:', error);
+  }
+
   return NextResponse.json({ ok: true, withdrawal });
 }

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { readDb, writeDb, isAuthed } from '@/lib/db';
 import { MINING_PAYOUTS, PayoutError, adminDecide, redact } from '@/lib/payout';
 import { deliverPush } from '@/lib/push';
+import { sendPayoutNotificationEmail } from '@/lib/email-helpers';
 
 /**
  * PATCH /api/admin/mining-withdrawals/:id — approve or reject a mining payout.
@@ -27,6 +28,19 @@ export async function PATCH(req, { params }) {
     });
     await writeDb(db);
     if (notification) await deliverPush(db, payout.userId, notification);
+
+    // Send email notification for approved payouts (non-blocking)
+    if (body.status === 'approved') {
+      try {
+        const user = (db.users || []).find((u) => u.id === payout.userId);
+        if (user) {
+          await sendPayoutNotificationEmail(user.email, user.name, payout.amount, 'mining', payout.id);
+        }
+      } catch (error) {
+        console.error('Mining payout email failed:', error);
+      }
+    }
+
     return NextResponse.json({ ok: true, request: redact(payout) });
   } catch (err) {
     if (err instanceof PayoutError) {

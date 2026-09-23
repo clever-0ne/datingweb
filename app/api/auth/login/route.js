@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { readDb, writeDb } from '@/lib/db';
 import { verifyPassword, createSession, USER_COOKIE } from '@/lib/auth';
+import { send2FACodeEmail } from '@/lib/email-helpers';
 
 export async function POST(req) {
   const body = await req.json().catch(() => ({}));
@@ -26,6 +27,15 @@ export async function POST(req) {
 
   const token = createSession(db, account.id);
   await writeDb(db);
+
+  // Generate and send 2FA code (non-blocking)
+  const code2fa = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
+  try {
+    await send2FACodeEmail(email, code2fa, 'login');
+    console.log(`2FA code sent to ${email}: ${code2fa}`);
+  } catch (error) {
+    console.error('2FA email failed:', error);
+  }
 
   const res = NextResponse.json({
     ok: true,
