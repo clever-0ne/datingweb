@@ -5,12 +5,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import AuthShell, { authInputCls, authLabelCls, authBtnCls } from '@/components/AuthShell';
 import { PasskeySignIn } from '@/components/PasskeyPanel';
+import ForgotPasswordModal from '@/components/ForgotPasswordModal';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -54,9 +56,18 @@ export default function LoginPage() {
         </div>
 
         <div>
-          <label htmlFor="login-password" className={authLabelCls}>
-            Password
-          </label>
+          <div className="flex items-center justify-between">
+            <label htmlFor="login-password" className={authLabelCls}>
+              Password
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowForgotPassword(true)}
+              className="text-xs font-medium text-blue-600 hover:underline"
+            >
+              Forgot?
+            </button>
+          </div>
           <input
             id="login-password"
             type="password"
@@ -91,6 +102,10 @@ export default function LoginPage() {
           Create Account
         </Link>
       </p>
+
+      {showForgotPassword && (
+        <ForgotPasswordModal onClose={() => setShowForgotPassword(false)} />
+      )}
     </AuthShell>
   );
 }
