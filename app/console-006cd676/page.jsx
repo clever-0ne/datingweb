@@ -88,6 +88,7 @@ export default function AdminConsole() {
   const [withdrawals, setWithdrawals] = useState([]);
   const [orders, setOrders] = useState([]);
   const [payouts, setPayouts] = useState([]);
+  const [plans, setPlans] = useState({ mining: [], investments: [] });
   const [loaded, setLoaded] = useState(false);
 
   const [selectedId, setSelectedId] = useState(null);
@@ -114,14 +115,16 @@ export default function AdminConsole() {
   /* ---------------- data loading ---------------- */
 
   const loadUsers = useCallback(async () => {
-    const [u, d, w, o, p, ip] = await Promise.all([
+    const [u, d, w, o, p, ip, pl] = await Promise.all([
       api('/api/admin/users'),
       api('/api/admin/deposits'),
       api('/api/admin/withdrawals'),
       api('/api/admin/orders'),
       api('/api/admin/mining-withdrawals'),
       api('/api/admin/investment-withdrawals'),
+      api('/api/admin/plans'),
     ]);
+    if (pl.ok) setPlans({ mining: pl.data.mining || [], investments: pl.data.investments || [] });
     if (u.ok) setUsers((u.data.users || []).filter((x) => x.role !== 'admin'));
     if (d.ok) setDeposits(d.data.deposits || []);
     if (w.ok) setWithdrawals(w.data.withdrawals || []);
@@ -461,6 +464,8 @@ export default function AdminConsole() {
                 deposits={deposits.filter((d) => d.userId === currentUser.id)}
                 withdrawals={withdrawals.filter((w) => w.userId === currentUser.id)}
                 orders={orders.filter((o) => o.userId === currentUser.id)}
+                mining={plans.mining.filter((m) => m.userId === currentUser.id)}
+                investments={plans.investments.filter((i) => i.userId === currentUser.id)}
                 balanceMsg={balanceMsg}
                 userStatsMsg={userStatsMsg}
                 onBalanceChange={(v) => patchUserLocal(setUsers, currentUser.id, { balance: v })}
@@ -705,6 +710,99 @@ function patchUserLocal(setUsers, id, patch) {
   setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...patch } : u)));
 }
 
+/* ---------------- plan cards (mining / investment) ---------------- */
+
+const fmtDay = (ts) =>
+  ts ? new Date(ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+
+/** "3d 4h left" for an active plan; the maturity date itself is always shown
+ *  alongside, so this is only the at-a-glance countdown. */
+function timeLeft(end) {
+  const ms = new Date(end).getTime() - Date.now();
+  if (ms <= 0) return 'Matured';
+  const d = Math.floor(ms / 86400000);
+  const h = Math.floor((ms % 86400000) / 3600000);
+  return d > 0 ? `${d}d ${h}h left` : `${h || '<1'}h left`;
+}
+
+function PlanStatus({ status, withdrawable }) {
+  if (status === 'active') {
+    return (
+      <span className="inline-flex items-center rounded-full bg-[#e9f0fc] px-2.5 py-0.5 text-[11px] font-medium text-[#1e40af] dark:bg-[#3b82f6]/15 dark:text-[#93c5fd]">
+        Active
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center rounded-full bg-success-bg px-2.5 py-0.5 text-[11px] font-medium text-[#166534]">
+      {withdrawable ? 'Matured · unclaimed' : 'Matured · paid out'}
+    </span>
+  );
+}
+
+function PlanCard({ title, empty, items, panelCls, h4Cls }) {
+  const sorted = [...items].sort((a, b) => new Date(b.start) - new Date(a.start));
+  const active = items.filter((i) => i.status === 'active');
+  const nextMaturity = active.map((i) => i.end).sort((a, b) => new Date(a) - new Date(b))[0];
+  const totalInvested = items.reduce((s, i) => s + (Number(i.invested) || 0), 0);
+
+  return (
+    <div className={panelCls}>
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div>
+          <h4 className={h4Cls}>{title}</h4>
+          <p className="text-[11px] text-slate-400">
+            {items.length} total · {active.length} active
+            {nextMaturity && <> · next matures {fmtDay(nextMaturity)}</>}
+          </p>
+        </div>
+        <div className="shrink-0 text-right">
+          <p className="text-[11px] text-slate-400">Invested</p>
+          <p className="text-sm font-medium text-success">${fmtMoney(totalInvested)}</p>
+        </div>
+      </div>
+
+      {sorted.length ? (
+        <div className="space-y-2">
+          {sorted.map((p) => (
+            <div
+              key={p.id}
+              className="rounded-lg border border-slate-200 bg-white p-3 dark:border-white/10 dark:bg-white/5"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="min-w-0 truncate text-sm font-medium text-black dark:text-white">{p.name}</span>
+                <PlanStatus status={p.status} withdrawable={p.withdrawable} />
+              </div>
+              <p className="mt-0.5 text-[11px] text-slate-400">{p.detail}</p>
+              <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs sm:grid-cols-4">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400">Invested</p>
+                  <p className="font-medium text-black dark:text-white">${fmtMoney(p.invested)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400">Payout</p>
+                  <p className="font-medium text-success">${fmtMoney(p.payout)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400">Started</p>
+                  <p className="font-medium text-black dark:text-white">{fmtDay(p.start)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400">Maturity</p>
+                  <p className="font-medium text-black dark:text-white">{fmtDay(p.end)}</p>
+                  {p.status === 'active' && <p className="text-[10px] text-[#1e40af] dark:text-[#93c5fd]">{timeLeft(p.end)}</p>}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="py-2 text-xs text-slate-400">{empty}</p>
+      )}
+    </div>
+  );
+}
+
 /* ---------------- user detail ---------------- */
 
 function UserDetail({
@@ -712,6 +810,8 @@ function UserDetail({
   deposits,
   withdrawals,
   orders,
+  mining,
+  investments,
   balanceMsg,
   userStatsMsg,
   onBalanceChange,
@@ -878,6 +978,44 @@ function UserDetail({
         ) : (
           <p className="py-2 text-xs text-slate-400">No investments or purchases yet.</p>
         )}
+      </div>
+
+      {/* Mining + Investment plans */}
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <PlanCard
+          title="Mining Plans"
+          empty="No mining contracts yet."
+          items={mining.map((m) => ({
+            id: m.id,
+            name: m.tierName,
+            status: m.status,
+            withdrawable: m.withdrawable,
+            invested: m.price,
+            payout: m.totalReturn,
+            detail: `${m.days} days · $${fmtMoney(m.dailyEarnings)}/day${m.hashrate ? ` · ${m.hashrate}` : ''}`,
+            start: m.createdAt,
+            end: m.expiresAt,
+          }))}
+          panelCls={panelCls}
+          h4Cls={h4Cls}
+        />
+        <PlanCard
+          title="Investment Plans"
+          empty="No investment plans yet."
+          items={investments.map((i) => ({
+            id: i.id,
+            name: i.planName,
+            status: i.status,
+            withdrawable: i.withdrawable,
+            invested: i.amount,
+            payout: i.returnAmount,
+            detail: `${i.termDays} days · ${i.roi}% ROI`,
+            start: i.createdAt,
+            end: i.maturesAt,
+          }))}
+          panelCls={panelCls}
+          h4Cls={h4Cls}
+        />
       </div>
 
       {/* Account Status */}
