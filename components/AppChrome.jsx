@@ -105,7 +105,7 @@ export default function AppChrome({ children }) {
         className={`fixed inset-y-0 left-0 z-[60] w-72 transform border-r transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
-        style={{ background: 'var(--chrome-grad)', borderColor: 'var(--hairline)' }}
+        style={{ background: 'var(--chrome)', borderColor: 'var(--hairline)' }}
       >
         <div className="flex h-full flex-col">
           <div className="flex h-16 items-center justify-between px-6" style={{ borderBottom: '1px solid var(--hairline)' }}>
