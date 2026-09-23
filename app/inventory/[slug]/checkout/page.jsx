@@ -31,7 +31,7 @@ export default function CarCheckoutPage() {
     if (insufficient || busy) return;
     setBusy(true);
     setErr(null);
-    const d = await purchase(car.price, 'Vehicle Purchase', car.name, { ref: car.slug });
+    const d = await purchase(car.price, car.category ? `${car.category} Purchase` : 'Vehicle Purchase', car.name, { ref: car.slug });
     setBusy(false);
     if (d?.ok) setReceipt(d.order);
     else setErr(d?.error || 'Could not complete this order.');
@@ -130,8 +130,8 @@ export default function CarCheckoutPage() {
               </div>
 
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="mut">Vehicle price</span><span className="font-medium hi">{car.priceLabel}</span></div>
-                <div className="flex justify-between"><span className="mut">Exterior color</span><span className="font-medium hi">{color}</span></div>
+                <div className="flex justify-between"><span className="mut">{car.category ? 'Product price' : 'Vehicle price'}</span><span className="font-medium hi">{car.priceLabel}</span></div>
+                {!car.category && <div className="flex justify-between"><span className="mut">Exterior color</span><span className="font-medium hi">{color}</span></div>}
                 <div className="flex justify-between"><span className="mut">Est. delivery</span><span className="mut">2-4 weeks</span></div>
                 <div className="flex justify-between border-t pt-3 font-medium hi" style={{ borderColor: 'var(--hairline)' }}>
                   <span>Total due</span><span>{car.priceLabel}</span>

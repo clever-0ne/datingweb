@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import { findCar, CAR_COLORS } from '@/lib/cars';
+import { findCar, headlineStats, categoryOf, CAR_COLORS } from '@/lib/cars';
 
 export default function CarOrderPage() {
   const { slug } = useParams();
   const car = findCar(slug);
+  const isVehicle = categoryOf(car) === 'Vehicles';
   const [color, setColor] = useState('Pearl White');
 
   useEffect(() => {
@@ -43,9 +44,7 @@ export default function CarOrderPage() {
         <div className="space-y-6 lg:col-span-2">
           {/* Headline specs */}
           <div className="grid grid-cols-3 gap-4">
-            <Spec label="Range" value={car.range} />
-            <Spec label="0-60 mph" value={car.accel} />
-            <Spec label="Top Speed" value={car.topSpeed} />
+            {headlineStats(car).map((s) => <Spec key={s.label} label={s.label} value={s.value} />)}
           </div>
 
           {/* Overview */}
@@ -79,10 +78,12 @@ export default function CarOrderPage() {
                 <span className="mut">Starting price</span>
                 <span className="font-medium grn">{car.priceLabel}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="mut">After Est. Gas Savings</span>
-                <span className="mut">Included</span>
-              </div>
+              {isVehicle && (
+                <div className="flex justify-between">
+                  <span className="mut">After Est. Gas Savings</span>
+                  <span className="mut">Included</span>
+                </div>
+              )}
               <div className="flex justify-between border-t pt-3 font-medium hi" style={{ borderColor: 'var(--hairline)' }}>
                 <span>Total</span>
                 <span>{car.priceLabel}</span>
@@ -90,7 +91,7 @@ export default function CarOrderPage() {
             </div>
 
             {/* Color selector */}
-            <div className="mt-6">
+            {isVehicle && <div className="mt-6">
               <p className="mb-3 text-sm mut">Exterior Color</p>
               <div className="flex flex-wrap gap-2">
                 {CAR_COLORS.map((c) => (
@@ -105,7 +106,7 @@ export default function CarOrderPage() {
                 ))}
               </div>
               <p className="mt-2 text-xs mut">{color}</p>
-            </div>
+            </div>}
 
             <Link href={`/inventory/${car.slug}/checkout`} className="btn btn-pri mt-6 w-full py-3">
               Continue to Checkout
