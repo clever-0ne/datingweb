@@ -35,7 +35,7 @@ export async function POST(req) {
 
   await writeDb(db);
 
-  // Send reset email
+  // Send reset email (non-blocking - don't fail if email fails)
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://podz.buzz';
   const resetLink = `${appUrl}/reset-password?token=${resetToken}`;
 
@@ -43,12 +43,10 @@ export async function POST(req) {
     const emailResult = await sendPasswordResetEmail(email, resetLink);
     if (!emailResult.success) {
       console.error('Password reset email failed:', emailResult.error);
-      return NextResponse.json({ ok: false, error: 'Failed to send reset email. Please try again.' }, { status: 500 });
     }
   } catch (error) {
     console.error('Password reset email error:', error);
-    return NextResponse.json({ ok: false, error: 'Failed to send reset email. Please try again.' }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, message: 'Password reset link has been sent to your email.' });
+  return NextResponse.json({ ok: true, message: 'If an account exists, a reset link has been sent to the email address.' });
 }
