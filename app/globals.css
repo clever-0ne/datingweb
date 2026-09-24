@@ -187,7 +187,7 @@
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; }
 body {
   background-color: var(--bg);
   background-image: var(--body-image);
@@ -197,6 +197,8 @@ body {
   /* The wash stays put while content scrolls over it, so the glass always has
      colour behind it instead of tiling or running out at the fold. */
   background-attachment: fixed;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 a { color: inherit; text-decoration: none; }
 

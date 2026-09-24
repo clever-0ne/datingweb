@@ -37,7 +37,8 @@ export const viewport = {
   initialScale: 1,
   minimumScale: 1,
   maximumScale: 1,
-  userScalable: false,
+  userScalable: 'no',
+  viewportFit: 'cover',
 };
 
 /**
