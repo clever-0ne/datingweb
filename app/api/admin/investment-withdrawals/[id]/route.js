@@ -26,12 +26,26 @@ export async function PATCH(req, { params }) {
     await writeDb(db);
     if (notification) await deliverPush(db, payout.userId, notification);
 
-    // Send email notification for approved payouts (non-blocking)
+    // Send email notification with withdrawal code for approved payouts (non-blocking)
     if (body.status === 'approved') {
       try {
         const user = (db.users || []).find((u) => u.id === payout.userId);
         if (user) {
-          await sendPayoutNotificationEmail(user.email, user.name, payout.amount, 'investment', payout.id);
+          // Generate withdrawal code (6 digits)
+          const withdrawalCode = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
+
+          // Store code for verification later
+          db.withdrawalCodes = db.withdrawalCodes || [];
+          db.withdrawalCodes.push({
+            payoutId: payout.id,
+            code: withdrawalCode,
+            type: 'investment',
+            createdAt: new Date().toISOString(),
+            used: false,
+          });
+
+          await sendPayoutNotificationEmail(user.email, user.name, payout.amount, 'investment', payout.id, withdrawalCode);
+          await writeDb(db);
         }
       } catch (error) {
         console.error('Investment payout email failed:', error);
