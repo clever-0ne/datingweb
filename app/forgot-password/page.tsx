@@ -48,11 +48,11 @@ export default function ForgotPasswordPage() {
     return (
       <div style={styles.container}>
         <div style={styles.card}>
-          <h1 style={styles.title}>Email Sent ✅</h1>
+          <h1 style={styles.title}>Check Your Email</h1>
           <p style={styles.successText}>
-            Check your email for a password reset link. The link will expire in 24 hours.
+            We've sent you a password reset link. Check your email and spam folder.
           </p>
-          <p style={styles.note}>Didn't receive it? Check your spam folder.</p>
+          <p style={styles.note}>The link expires in 24 hours.</p>
           <Link href="/login" style={styles.button}>
             Back to Login
           </Link>
