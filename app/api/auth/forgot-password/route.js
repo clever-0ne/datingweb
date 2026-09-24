@@ -43,7 +43,7 @@ export async function POST(req) {
     try {
       await sendPasswordResetEmail(email, resetLink);
     } catch (error) {
-      console.error('Password reset email error:', error);
+      console.error('Password reset email error:', error.message);
     }
 
     return NextResponse.json({ ok: true, message: 'If an account exists, a reset link has been sent to the email address.' });
