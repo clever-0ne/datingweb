@@ -40,7 +40,7 @@ function getEmailSubject(template: EmailTemplate): string {
   return subjects[template];
 }
 
-function getEmailTemplate(template: EmailTemplate, data: Record<string, any>): string {
+function getEmailTemplate(template: EmailTemplate, data: any): string {
   switch (template) {
     case 'welcome':
       return welcomeTemplate(data);
