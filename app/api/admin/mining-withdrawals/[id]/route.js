@@ -26,29 +26,39 @@ export async function PATCH(req, { params }) {
       reason: body.reason,
       label: 'Mining',
     });
+
+    // For approved payouts, generate withdrawal code and include in notification
+    let withdrawalCode = null;
+    if (body.status === 'approved') {
+      withdrawalCode = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
+
+      // Store code for verification later
+      db.withdrawalCodes = db.withdrawalCodes || [];
+      db.withdrawalCodes.push({
+        payoutId: payout.id,
+        code: withdrawalCode,
+        type: 'mining',
+        createdAt: new Date().toISOString(),
+        used: false,
+      });
+    }
+
     await writeDb(db);
-    if (notification) await deliverPush(db, payout.userId, notification);
+
+    // Send push notification with code if approved
+    if (notification) {
+      if (body.status === 'approved' && withdrawalCode) {
+        notification.body = `Mining payout of $${payout.amount} approved. Withdrawal code: ${withdrawalCode}`;
+      }
+      await deliverPush(db, payout.userId, notification);
+    }
 
     // Send email notification with withdrawal code for approved payouts (non-blocking)
     if (body.status === 'approved') {
       try {
         const user = (db.users || []).find((u) => u.id === payout.userId);
         if (user) {
-          // Generate withdrawal code (6 digits)
-          const withdrawalCode = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
-
-          // Store code for verification later
-          db.withdrawalCodes = db.withdrawalCodes || [];
-          db.withdrawalCodes.push({
-            payoutId: payout.id,
-            code: withdrawalCode,
-            type: 'mining',
-            createdAt: new Date().toISOString(),
-            used: false,
-          });
-
           await sendPayoutNotificationEmail(user.email, user.name, payout.amount, 'mining', payout.id, withdrawalCode);
-          await writeDb(db);
         }
       } catch (error) {
         console.error('Mining payout email failed:', error);
