@@ -31,12 +31,15 @@ export default function RegisterPage() {
           name: name.trim(),
           email: email.trim(),
           password,
+          phone: phone.trim(),
+          address: address.trim(),
+          ref: ref.trim(),
         }),
       });
       const d = await r.json();
-      if (d.success) {
-        // Redirect to email verification
-        window.location.href = `/verify-signup?email=${encodeURIComponent(email.trim())}`;
+      if (d.ok) {
+        // Redirect to dashboard after successful registration
+        window.location.href = '/dashboard';
         return;
       }
       setErr(d.error || 'Unable to create your account.');
