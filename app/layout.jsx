@@ -51,6 +51,9 @@ export const viewport = {
  */
 const THEME_BOOT = `try{if(localStorage.getItem('theme')==='dark'){document.documentElement.dataset.theme='dark';var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#0a0e18')}}catch(e){}`;
 
+// iOS Safari ignores user-scalable=no, so pinch and double-tap zoom are blocked here.
+const NO_ZOOM = `(function(){var o={passive:false};function p(e){e.preventDefault()}document.addEventListener('gesturestart',p,o);document.addEventListener('gesturechange',p,o);document.addEventListener('gestureend',p,o);document.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preventDefault()},o)})();`;
+
 export default function RootLayout({ children }) {
   return (
     // suppressHydrationWarning: THEME_BOOT writes data-theme onto <html> before
@@ -59,6 +62,7 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+        <script dangerouslySetInnerHTML={{ __html: NO_ZOOM }} />
         <PageLoader />
         <WalletProvider>
           <AppChrome>{children}</AppChrome>
