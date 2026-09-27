@@ -76,7 +76,7 @@ export default function VerifySignupPage() {
 
       const data = await res.json();
 
-      if (data.success) {
+      if (data.ok) {
         setMessage('New verification code sent to your email');
         setTimeLeft(900); // Reset timer
       } else {
@@ -115,10 +115,10 @@ export default function VerifySignupPage() {
 
       const data = await res.json();
 
-      if (data.success) {
-        setMessage('Account created successfully! Redirecting to login...');
+      if (data.ok) {
+        setMessage('Account created successfully! Redirecting to dashboard...');
         setTimeout(() => {
-          window.location.href = '/login';
+          window.location.href = '/dashboard';
         }, 2000);
       } else {
         setError(data.error || 'Failed to create account');
