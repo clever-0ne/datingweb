@@ -155,7 +155,8 @@ export default function AppChrome({ children }) {
       </aside>
 
       {/* Main column */}
-      <div className="flex min-h-screen flex-1 flex-col lg:ml-72">
+      {/* min-w-0: a flex item otherwise refuses to shrink below its widest child. */}
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col lg:ml-72">
         {/* Topbar */}
         {/* Fixed rather than sticky: sticky silently stops working whenever an
             ancestor becomes a scroll container, which is how the menu button
@@ -242,7 +243,7 @@ export default function AppChrome({ children }) {
         <div aria-hidden="true" style={{ height: 'calc(57px + env(safe-area-inset-top, 0px))' }} />
 
         {/* Content */}
-        <main className="flex-1 p-4 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] sm:p-6 lg:pb-6">
+        <main className="min-w-0 flex-1 p-4 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] sm:p-6 lg:pb-6">
           <div className="mx-auto max-w-7xl">{children}</div>
         </main>
 
