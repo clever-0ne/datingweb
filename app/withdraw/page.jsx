@@ -56,21 +56,21 @@ export default function WithdrawPage() {
         </div>
       </div>
 
-      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
-        {CARDS.map((c) => {
-          const Icon = c.icon;
-          return (
-            <div key={c.label} className="card">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wide faint">{c.label}</p>
-                  <p className="mt-1 text-xl font-bold hi">{c.value}</p>
+      <div className="card card-static mb-6">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-5 md:grid-cols-4">
+          {CARDS.map((c) => {
+            const Icon = c.icon;
+            return (
+              <div key={c.label} className="flex min-w-0 items-center gap-3">
+                <div className={`chip ${c.chip} h-9 w-9 shrink-0 rounded-lg`}><Icon size={18} /></div>
+                <div className="min-w-0">
+                  <p className="truncate text-[11px] font-medium uppercase tracking-wide faint">{c.label}</p>
+                  <p className="mt-0.5 truncate text-lg font-bold hi">{c.value}</p>
                 </div>
-                <div className={`chip ${c.chip} h-10 w-10 rounded-lg`}><Icon size={20} /></div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       <div className="panel overflow-hidden">
