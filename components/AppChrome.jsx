@@ -95,19 +95,25 @@ export default function AppChrome({ children }) {
       {/* Sidebar overlay (mobile) */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-[55] bg-black/40 lg:hidden"
+          style={{ touchAction: 'manipulation' }}
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar — z-[60] keeps it and its backdrop (z-[55]) above the tab bar (z-50). */}
       <aside
-        className={`fixed inset-y-0 left-0 z-[60] w-72 transform border-r transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-[60] w-72 max-w-[85vw] transform overflow-y-auto overscroll-contain border-r transition-transform duration-300 lg:max-w-none lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
-        style={{ background: 'var(--chrome)', borderColor: 'var(--hairline)' }}
+        style={{
+          background: 'var(--chrome)',
+          borderColor: 'var(--hairline)',
+          paddingTop: 'env(safe-area-inset-top, 0px)',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        }}
       >
-        <div className="flex h-full flex-col">
+        <div className="flex min-h-full flex-col">
           <div className="flex h-16 items-center justify-between px-6" style={{ borderBottom: '1px solid var(--hairline)' }}>
             <Link href="/dashboard" onClick={() => setSidebarOpen(false)}>
               <img src="/assets/logo.svg" alt="Tesla Capital" className="logo" style={{ height: 15, width: 'auto' }} />
@@ -151,13 +157,26 @@ export default function AppChrome({ children }) {
       {/* Main column */}
       <div className="flex min-h-screen flex-1 flex-col lg:ml-72">
         {/* Topbar */}
-        <header className="sticky top-0 z-30">
+        {/* Fixed rather than sticky: sticky silently stops working whenever an
+            ancestor becomes a scroll container, which is how the menu button
+            used to scroll off-screen on phones. */}
+        <header
+          className="fixed left-0 right-0 top-0 z-30 lg:left-72"
+          style={{ background: 'var(--chrome)', paddingTop: 'env(safe-area-inset-top, 0px)' }}
+        >
           <div
-            className="flex items-center justify-between px-4 py-2.5 sm:px-6"
+            className="flex h-[57px] items-center justify-between px-4 sm:px-6"
             style={{ background: 'var(--chrome)', borderBottom: '1px solid var(--hairline)' }}
           >
             <div className="flex min-w-0 items-center">
-              <button className="icon-btn mr-2 lg:hidden" onClick={() => setSidebarOpen(true)} aria-label="Menu">
+              <button
+                type="button"
+                className="icon-btn mr-2 lg:hidden"
+                style={{ touchAction: 'manipulation' }}
+                onClick={() => setSidebarOpen((o) => !o)}
+                aria-label="Menu"
+                aria-expanded={sidebarOpen}
+              >
                 <Menu size={20} />
               </button>
               <div className="hi min-w-0 flex-1 truncate text-[15px] font-semibold sm:text-lg">
@@ -220,9 +239,10 @@ export default function AppChrome({ children }) {
             </div>
           </div>
         </header>
+        <div aria-hidden="true" style={{ height: 'calc(57px + env(safe-area-inset-top, 0px))' }} />
 
         {/* Content */}
-        <main className="flex-1 overflow-y-auto p-4 pb-24 sm:p-6 lg:pb-6">
+        <main className="flex-1 p-4 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] sm:p-6 lg:pb-6">
           <div className="mx-auto max-w-7xl">{children}</div>
         </main>
 
@@ -230,7 +250,7 @@ export default function AppChrome({ children }) {
         {/* pb-24 on phones: the tab bar floats over this row rather than sitting
             above it, so the footer has to clear the bar itself. */}
         <footer
-          className="mt-auto border-t pt-6 pb-24 lg:pb-6"
+          className="mt-auto border-t pt-6 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] lg:pb-6"
           style={{ borderColor: 'var(--hairline)', background: 'var(--chrome-2)' }}
         >
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 sm:px-6 md:flex-row">
