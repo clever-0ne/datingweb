@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Wallet, DollarSign, Clock, ArrowDownToLine, Search, PlusCircle, ListChecks, ShieldCheck, FileText, Check, Copy } from 'lucide-react';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { useCoins, pickCoin } from '@/lib/useCoins';
+import RampBuy from './RampBuy';
 
 export default function DepositPage() {
   const [method, setMethod] = useState('btc');
@@ -122,6 +123,9 @@ export default function DepositPage() {
           </table>
         </div>
       </div>
+
+      {/* Buy crypto with card (Ramp) */}
+      <RampBuy coin={coin} deposit={deposit} />
 
       {/* Form */}
       <div id="form" className="panel mt-6 overflow-hidden">

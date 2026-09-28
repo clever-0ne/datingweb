@@ -778,3 +778,89 @@ body.conult-page img.processor {
   .tab-glass__item { transition: none; }
   .tab-glass__item:active { transform: none; }
 }
+
+/* ---------- Ramp: buy crypto with card ---------- */
+.ramp-card { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding: 1.25rem; }
+.ramp-card-body { flex: 1 1 220px; min-width: 0; }
+.ramp-card-body p { margin-top: 0.25rem; }
+.ramp-card-icon {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 2.75rem; height: 2.75rem; border-radius: 0.75rem;
+  background: var(--soft-2, rgba(99,102,241,0.12)); color: var(--text);
+}
+.ramp-card-btn, .ramp-copy, .ramp-buy { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap; }
+.ramp-card-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ramp-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  animation: ramp-fade 0.15s ease-out;
+}
+.ramp-modal {
+  position: relative; width: 100%; max-width: 30rem; max-height: calc(100vh - 2rem); overflow-y: auto;
+  padding: 1.5rem; border-radius: 1rem;
+  background: var(--panel, var(--field, #fff)); color: var(--text);
+  border: 1px solid var(--hairline-strong, var(--hairline));
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  animation: ramp-pop 0.18s ease-out;
+}
+.ramp-close {
+  position: absolute; top: 0.75rem; right: 0.75rem;
+  display: flex; padding: 0.35rem; border-radius: 0.5rem; color: var(--muted);
+}
+.ramp-close:hover { background: var(--soft); color: var(--text); }
+.ramp-modal-head { display: flex; gap: 0.85rem; align-items: flex-start; padding-right: 2rem; margin-bottom: 1.25rem; }
+.ramp-modal-head p { margin-top: 0.2rem; }
+
+.ramp-address {
+  display: flex; flex-direction: column; gap: 0.75rem;
+  padding: 0.9rem; border-radius: 0.75rem;
+  background: var(--soft); border: 1px solid var(--hairline);
+}
+.ramp-address-value {
+  margin-top: 0.3rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85rem; word-break: break-all; line-height: 1.4;
+}
+.ramp-copy { width: 100%; }
+
+.ramp-steps { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 0.6rem; }
+.ramp-steps li { display: flex; align-items: center; gap: 0.65rem; font-size: 0.875rem; color: var(--muted); }
+.ramp-steps li span {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 1.5rem; height: 1.5rem; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 700;
+  background: var(--soft-2, var(--soft)); color: var(--text);
+}
+
+.ramp-warn {
+  margin-top: 1.1rem; padding: 0.65rem 0.8rem; border-radius: 0.6rem;
+  font-size: 0.75rem; line-height: 1.45;
+  background: rgba(245,158,11,0.12); color: #d97706; border: 1px solid rgba(245,158,11,0.3);
+}
+.ramp-buy { width: 100%; margin-top: 1.1rem; padding: 0.8rem 1rem; font-size: 0.95rem; animation: ramp-pop 0.2s ease-out; }
+.ramp-hint { margin-top: 1.1rem; text-align: center; font-size: 0.8rem; color: var(--muted); }
+
+@keyframes ramp-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ramp-pop { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .ramp-overlay, .ramp-modal, .ramp-buy { animation: none; } }
+.ramp-return { margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid var(--hairline); }
+.ramp-return > p + p { margin-top: 0.2rem; }
+.ramp-amount {
+  display: flex; align-items: center; gap: 0.4rem; margin-top: 0.8rem;
+  padding: 0 0.9rem; border-radius: 0.75rem;
+  background: var(--field); border: 1px solid var(--hairline-strong, var(--hairline)); color: var(--text);
+}
+.ramp-amount input { flex: 1; min-width: 0; padding: 0.7rem 0; font-size: 1.05rem; background: transparent; color: var(--text); outline: none; border: 0; }
+.ramp-amount:focus-within { border-color: var(--text); }
+.ramp-error { margin-top: 0.5rem; font-size: 0.8rem; color: #ef4444; }
+.ramp-link { display: block; width: 100%; margin-top: 0.6rem; font-size: 0.8rem; color: var(--muted); text-decoration: underline; }
+.ramp-link:hover { color: var(--text); }
+.ramp-buy:disabled { opacity: 0.6; cursor: wait; }
+.ramp-done { margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid var(--hairline); text-align: center; }
+.ramp-done > p + p { margin-top: 0.3rem; }
+.ramp-done-icon {
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 0.6rem;
+  width: 2.75rem; height: 2.75rem; border-radius: 999px;
+  background: rgba(245,158,11,0.14); color: #d97706;
+}
