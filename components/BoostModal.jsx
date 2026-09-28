@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { X, Zap } from 'lucide-react';
 import { fmtMoney } from '@/lib/wallet';
+import { toUSD } from '@/lib/locale';
 import { round2 } from '@/lib/format';
 import { BOOST_MULTIPLIER } from '@/lib/plans';
 
@@ -19,7 +20,7 @@ export default function BoostModal({ item, balance, onBoost, onClose }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState(null);
 
-  const amt = Number(amount) || 0;
+  const amt = toUSD(amount);
   const added = round2(amt * BOOST_MULTIPLIER);
   const newReturn = round2(Number(item.currentReturn) + added);
   const covered = amt > 0 && amt <= balance;

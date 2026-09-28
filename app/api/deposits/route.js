@@ -21,8 +21,8 @@ export async function POST(req) {
   if (!COINS.includes(coin)) {
     return NextResponse.json({ error: 'Select a valid deposit method.' }, { status: 400 });
   }
-  if (!(amount >= 10)) {
-    return NextResponse.json({ error: 'Minimum deposit is $10.00.' }, { status: 400 });
+  if (!(amount >= 500)) {
+    return NextResponse.json({ error: 'Minimum deposit is $500.00.' }, { status: 400 });
   }
 
   const db = await readDb();

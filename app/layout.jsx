@@ -2,6 +2,7 @@ import './globals.css';
 import AppChrome from '@/components/AppChrome';
 import PageLoader from '@/components/PageLoader';
 import { WalletProvider } from '@/lib/wallet';
+import { LocaleProvider } from '@/lib/locale';
 
 export const metadata = {
   title: 'Tesla Capital',
@@ -65,7 +66,9 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: NO_ZOOM }} />
         <PageLoader />
         <WalletProvider>
-          <AppChrome>{children}</AppChrome>
+          <LocaleProvider>
+            <AppChrome>{children}</AppChrome>
+          </LocaleProvider>
         </WalletProvider>
       </body>
     </html>

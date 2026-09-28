@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Wallet, DollarSign, Clock, ArrowUpFromLine, Search, ListChecks, ShieldCheck, FileText, Check } from 'lucide-react';
 import { useWallet, fmtMoney } from '@/lib/wallet';
+import { toUSD, minLocal, currencySymbol } from '@/lib/locale';
 
 const METHODS = [
   { id: 'btc', name: 'Bitcoin', network: 'BTC network', icon: '/assets/coins/btc.png' },
@@ -28,7 +29,7 @@ export default function WithdrawPage() {
     e.preventDefault();
     setNotice(null);
     setSubmitting(true);
-    const d = await withdraw(amount, method, address);
+    const d = await withdraw(toUSD(amount), method, address);
     setSubmitting(false);
     if (d?.ok) {
       setAmount('');
@@ -43,7 +44,7 @@ export default function WithdrawPage() {
     { label: 'Available Balance', value: fmtMoney(balance), icon: Wallet, chip: 'chip-b' },
     { label: 'Total Withdrawn', value: fmtMoney(totalWithdrawn), icon: DollarSign, chip: 'chip-g' },
     { label: 'Pending Withdrawals', value: fmtMoney(pendingWithdrawals), icon: Clock, chip: 'chip-p' },
-    { label: 'Last Withdrawal', value: last ? fmtMoney(Math.abs(last.amount)) : '$0.00', icon: ArrowUpFromLine, chip: 'chip-y' },
+    { label: 'Last Withdrawal', value: last ? fmtMoney(Math.abs(last.amount)) : fmtMoney(0), icon: ArrowUpFromLine, chip: 'chip-y' },
   ];
 
   return (
@@ -119,16 +120,16 @@ export default function WithdrawPage() {
             <span className="text-xs faint">Available: <span className="font-medium hi">{fmtMoney(balance)}</span></span>
           </div>
           <div className="relative mb-4">
-            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center hi">$</span>
+            <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center hi">{currencySymbol()}</span>
             <input
               type="number"
-              min="10"
+              min={minLocal(10)}
               step="0.01"
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="block w-full rounded-xl border py-3 pl-10 pr-12 text-lg"
-              style={{ background: 'var(--field)', borderColor: 'var(--hairline-strong)', color: 'var(--text)' }}
+              className="block w-full rounded-xl border py-3 pr-12 text-lg"
+              style={{ paddingLeft: `calc(1.5rem + ${currencySymbol().length}ch)`, background: 'var(--field)', borderColor: 'var(--hairline-strong)', color: 'var(--text)' }}
             />
           </div>
           <div className="mb-4">
@@ -194,7 +195,7 @@ export default function WithdrawPage() {
           </div>
           <div className="space-y-4 p-5">
             <Row k="Processing Time" v="24-72 hours" />
-            <Row k="Minimum Withdrawal" v="$10.00" />
+            <Row k="Minimum Withdrawal" v={fmtMoney(10)} />
             <Row k="Daily Limit" v={fmtMoney(balance)} />
             <Row k="Processing Days" v="Monday-Friday" />
           </div>

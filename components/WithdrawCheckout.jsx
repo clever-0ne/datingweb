@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowUpFromLine, ShieldCheck, Check, X, Mail } from 'lucide-react';
 import { useCoins, pickCoin } from '@/lib/useCoins';
 import { useWallet, fmtMoney } from '@/lib/wallet';
+import { MoneyInput } from '@/lib/locale';
 
 export default function WithdrawCheckout({ backHref = '/withdraw' }) {
   const { balance, withdraw } = useWallet();
@@ -29,7 +30,7 @@ export default function WithdrawCheckout({ backHref = '/withdraw' }) {
 
   const submit = () => {
     setErr('');
-    if (amount < 10) { setErr('Minimum withdrawal is $10.00.'); return; }
+    if (amount < 10) { setErr(`Minimum withdrawal is ${fmtMoney(10)}.`); return; }
     if (!address.trim()) { setErr('Please enter a destination wallet address.'); return; }
     if (!otp) { setErr('Request an OTP first — an auth key is required to withdraw.'); return; }
     if (otpInput !== otp) { setErr('Invalid OTP. Enter the 6-digit code sent to your email.'); return; }
@@ -89,7 +90,7 @@ export default function WithdrawCheckout({ backHref = '/withdraw' }) {
           <div className="p-6">
             <div className="mb-4">
               <label className="mb-1.5 block text-sm font-medium hi">Amount to withdraw (USD)</label>
-              <input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value) || 0)} className="inp py-3 text-lg" placeholder="0.00" />
+              <MoneyInput usd={amount} onUsd={setAmount} className="inp py-3 text-lg" placeholder="0.00" />
             </div>
 
             <div className="mb-4">

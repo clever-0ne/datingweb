@@ -1,27 +1,34 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { formatMoney, toUSD, minLocal, currencySymbol } from '@/lib/locale';
 import { CreditCard, Copy, Check, X, ExternalLink, ClipboardPaste, UserCheck, Wallet, Clock } from 'lucide-react';
 
-// Ramp asset codes for the coins we accept. Unknown ids just open Ramp without
-// a preselected asset, so the user can still pick it there.
-const RAMP_ASSETS = {
-  btc: 'BTC_BTC',
-  eth: 'ETH_ETH',
-  usdt: 'ETH_USDT',
-  usdt_trc20: 'TRON_USDT',
-  usdt_erc20: 'ETH_USDT',
-  usdc: 'ETH_USDC',
-  ltc: 'LTC_LTC',
-  sol: 'SOLANA_SOL',
-  bnb: 'BSC_BNB',
-  trx: 'TRON_TRX',
-  doge: 'DOGE_DOGE',
+// Ramp's public buy pages work without a partner API key (the app.ramp.network
+// widget needs one and shows "integration issue" otherwise). Unknown coins land
+// on the general buy page where the user picks the asset.
+const RAMP_PAGES = {
+  btc: 'bitcoin',
+  eth: 'ethereum',
+  usdt: 'tether',
+  usdt_trc20: 'tether',
+  usdt_erc20: 'tether',
+  ltc: 'litecoin',
+  sol: 'solana',
+  bnb: 'bnb',
+  trx: 'tron',
+  xrp: 'xrp',
+  ada: 'cardano',
+  dot: 'polkadot',
+  xlm: 'stellar',
+  bch: 'bitcoin-cash',
+  avax: 'avalanche',
+  ton: 'toncoin',
 };
 
 function rampUrl(coinId) {
-  const asset = RAMP_ASSETS[String(coinId || '').toLowerCase()];
-  return asset ? `https://app.ramp.network/?swapAsset=${asset}` : 'https://app.ramp.network/';
+  const slug = RAMP_PAGES[String(coinId || '').toLowerCase()];
+  return slug ? `https://rampnetwork.com/buy-crypto/${slug}` : 'https://rampnetwork.com/buy-crypto';
 }
 
 export default function RampBuy({ coin, deposit }) {
@@ -71,12 +78,12 @@ export default function RampBuy({ coin, deposit }) {
   const submitPurchase = async (e) => {
     e.preventDefault();
     setError(null);
-    if (!(Number(amount) >= 10)) {
-      setError('Minimum deposit is $10.00');
+    if (!(Number(amount) >= minLocal(500))) {
+      setError(`Minimum deposit is ${formatMoney(500)}`);
       return;
     }
     setSubmitting(true);
-    const d = await deposit(amount, coin.id);
+    const d = await deposit(toUSD(amount), coin.id);
     setSubmitting(false);
     if (d?.ok) setStage('done');
     else setError(d?.error || 'Something went wrong. Please try again.');
@@ -127,7 +134,7 @@ export default function RampBuy({ coin, deposit }) {
             </div>
 
             <ol className="ramp-steps">
-              <li><span>1</span> Select the amount you want to buy</li>
+              <li><span>1</span> On Ramp, tap <b>Buy</b> and enter the amount</li>
               <li><span><UserCheck size={13} /></span> Complete the quick identity check (KYC)</li>
               <li><span><ClipboardPaste size={13} /></span> Paste the address you just copied</li>
               <li><span><CreditCard size={13} /></span> Choose a payment method and pay</li>
@@ -150,9 +157,9 @@ export default function RampBuy({ coin, deposit }) {
                 <p className="text-sm font-bold hi">Finished paying on Ramp?</p>
                 <p className="text-xs mut">Enter the amount you bought so we can track your deposit.</p>
                 <div className="ramp-amount">
-                  <span>$</span>
+                  <span>{currencySymbol()}</span>
                   <input
-                    type="number" min="10" step="0.01" inputMode="decimal" placeholder="0.00"
+                    type="number" min={minLocal(500)} step="0.01" inputMode="decimal" placeholder="0.00"
                     value={amount} onChange={(e) => setAmount(e.target.value)} required
                   />
                 </div>
@@ -169,7 +176,7 @@ export default function RampBuy({ coin, deposit }) {
                 <div className="ramp-done-icon"><Clock size={22} /></div>
                 <p className="text-base font-bold hi">Deposit pending</p>
                 <p className="text-sm mut">
-                  We've logged your ${Number(amount).toFixed(2)} {label} deposit. It'll show in your balance once an admin approves it.
+                  We've logged your {formatMoney(toUSD(amount))} {label} deposit. It'll show in your balance once an admin approves it.
                 </p>
                 <button type="button" className="btn btn-pri ramp-buy" onClick={() => setOpen(false)}>Done</button>
               </div>

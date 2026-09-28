@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { CreditCard, Copy, Check, Info, QrCode, ArrowLeft, ArrowDownToLine, ArrowUpRight, Car, TrendingUp } from 'lucide-react';
-import { fmt } from '@/lib/coins';
+import { formatMoney as fmt, MoneyInput } from '@/lib/locale';
 import { useCoins, pickCoin } from '@/lib/useCoins';
 import { useWallet } from '@/lib/wallet';
 
@@ -110,7 +110,7 @@ export default function PaymentCheckout({ kind = 'deposit', context = 'Deposit',
 
             <div className="mb-4">
               <label className="mb-1.5 block text-sm font-medium hi">Amount (USD)</label>
-              <input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value) || 0)} className="inp py-3 text-lg" />
+              <MoneyInput usd={amount} onUsd={setAmount} className="inp py-3 text-lg" />
               <p className="mt-2 text-xs mut">
                 ≈ <span className="font-mono hi">{coinAmount >= 1 ? coinAmount.toFixed(4) : coinAmount.toFixed(8)}</span> {coin.symbol}
               </p>

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, useCallback } from 'rea
 import { usePathname } from 'next/navigation';
 import { syncClock } from './clock';
 import { isPublicRoute } from './nav';
+import { formatMoney } from './locale';
 
 /**
  * Server-backed wallet. Balance, transactions, mining contracts and
@@ -14,8 +15,9 @@ import { isPublicRoute } from './nav';
 
 const WalletContext = createContext(null);
 
+// Amounts are stored in USD and shown in the visitor's local currency.
 export function fmtMoney(n) {
-  return '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return formatMoney(n);
 }
 
 const EMPTY = {
