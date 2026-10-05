@@ -2,6 +2,7 @@ import './globals.css';
 import Script from 'next/script';
 import AppChrome from '@/components/AppChrome';
 import PageLoader from '@/components/PageLoader';
+import PullToRefresh from '@/components/PullToRefresh';
 import { WalletProvider } from '@/lib/wallet';
 import { LocaleProvider } from '@/lib/locale';
 
@@ -71,6 +72,7 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <script dangerouslySetInnerHTML={{ __html: NO_ZOOM }} />
         <PageLoader />
+        <PullToRefresh />
         <WalletProvider>
           <LocaleProvider>
             <AppChrome>{children}</AppChrome>

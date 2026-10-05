@@ -258,6 +258,7 @@ export default function LandingShell({ variant = 'three', children }) {
           <ul className="mobile-nav__contact list-unstyled">
             <li>
               <i className="fa fa-envelope"></i>
+              <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
             </li>
             <li>
               <i className="fa fa-phone-alt"></i>
