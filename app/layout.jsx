@@ -3,6 +3,8 @@ import Script from 'next/script';
 import AppChrome from '@/components/AppChrome';
 import PageLoader from '@/components/PageLoader';
 import PullToRefresh from '@/components/PullToRefresh';
+import InstallButton from '@/components/InstallButton';
+import SupportButton from '@/components/SupportButton';
 import { WalletProvider } from '@/lib/wallet';
 import { LocaleProvider } from '@/lib/locale';
 
@@ -59,6 +61,9 @@ const THEME_BOOT = `try{if(localStorage.getItem('theme')==='dark'){document.docu
 // iOS Safari ignores user-scalable=no, so pinch and double-tap zoom are blocked here.
 const NO_ZOOM = `(function(){var o={passive:false};function p(e){e.preventDefault()}document.addEventListener('gesturestart',p,o);document.addEventListener('gesturechange',p,o);document.addEventListener('gestureend',p,o);document.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preventDefault()},o)})();`;
 
+// Chrome's install prompt can fire before React mounts; keep it for InstallButton.
+const INSTALL_BOOT = `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__installPrompt=e;window.dispatchEvent(new Event('installpromptready'))});`;
+
 // Smartsupp live-chat support widget; only loaded when a key is configured.
 const SMARTSUPP_KEY = process.env.NEXT_PUBLIC_SMARTSUPP_KEY;
 
@@ -71,17 +76,22 @@ export default function RootLayout({ children }) {
       <body>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <script dangerouslySetInnerHTML={{ __html: NO_ZOOM }} />
+        <script dangerouslySetInnerHTML={{ __html: INSTALL_BOOT }} />
         <PageLoader />
         <PullToRefresh />
+        <InstallButton />
         <WalletProvider>
           <LocaleProvider>
             <AppChrome>{children}</AppChrome>
           </LocaleProvider>
         </WalletProvider>
+        {/* Smartsupp's own bubble is hidden (hideWidget) — this draggable one opens the chat. */}
+        {SMARTSUPP_KEY && <SupportButton />}
         {SMARTSUPP_KEY && (
           <Script id="smartsupp-loader" strategy="lazyOnload">
             {`var _smartsupp = _smartsupp || {};
 _smartsupp.key = ${JSON.stringify(SMARTSUPP_KEY)};
+_smartsupp.hideWidget = true;
 window.smartsupp||(function(d) {
   var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
   s=d.getElementsByTagName('script')[0];c=d.createElement('script');

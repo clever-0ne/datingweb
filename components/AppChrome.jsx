@@ -10,6 +10,7 @@ import {
 import { NAV, BOTTOM_NAV, isPublicRoute } from '@/lib/nav';
 import { useWallet } from '@/lib/wallet';
 import ThemeToggle from '@/components/ThemeToggle';
+import NotificationCheck from '@/components/NotificationCheck';
 
 const ICONS = {
   LayoutDashboard, ArrowDownToLine, ArrowUpFromLine, TrendingUp, BarChart3,
@@ -244,7 +245,10 @@ export default function AppChrome({ children }) {
 
         {/* Content */}
         <main className="min-w-0 flex-1 p-4 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] sm:p-6 lg:pb-6">
-          <div className="mx-auto max-w-7xl">{children}</div>
+          <div className="mx-auto max-w-7xl">
+            <NotificationCheck />
+            {children}
+          </div>
         </main>
 
         {/* Footer */}
