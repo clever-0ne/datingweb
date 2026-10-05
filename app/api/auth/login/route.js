@@ -1,7 +1,9 @@
+import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 import { readDb, writeDb } from '@/lib/db';
-import { verifyPassword, createSession, USER_COOKIE } from '@/lib/auth';
+import { verifyPassword } from '@/lib/auth';
 import { send2FACodeEmail } from '@/lib/email-helpers';
+import { CHALLENGE_COOKIE, CHALLENGE_TTL_MS, hashCode, pruneChallenges } from '@/lib/login-2fa';
 
 export async function POST(req) {
   const body = await req.json().catch(() => ({}));
@@ -25,24 +27,31 @@ export async function POST(req) {
     return NextResponse.json({ error: 'This account has been suspended.' }, { status: 403 });
   }
 
-  const token = createSession(db, account.id);
-  await writeDb(db);
+  // Password is correct — no session yet. Email a one-time code; the session is
+  // only created by /api/auth/login/verify once that code is entered.
+  const challenges = pruneChallenges(db);
+  const challengeId = crypto.randomBytes(24).toString('hex');
+  const code = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
 
-  // Generate and send 2FA code (non-blocking)
-  const code2fa = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
-  try {
-    await send2FACodeEmail(email, code2fa, 'login');
-    console.log(`2FA code sent to ${email}: ${code2fa}`);
-  } catch (error) {
-    console.error('2FA email failed:', error);
+  const sent = await send2FACodeEmail(email, code, 'login');
+  if (!sent.success) {
+    return NextResponse.json({ error: 'Could not send your verification code. Please try again.' }, { status: 502 });
   }
 
-  const res = NextResponse.json({
-    ok: true,
-    user: profile
-      ? { id: profile.id, name: profile.name, email: profile.email, balance: profile.balance, kycStatus: profile.kycStatus }
-      : { id: account.userId, name: account.name, email: account.email, balance: 0, kycStatus: 'not_submitted' },
+  challenges[challengeId] = {
+    accountId: account.id,
+    codeHash: hashCode(code),
+    expires: Date.now() + CHALLENGE_TTL_MS,
+    attempts: 0,
+  };
+  await writeDb(db);
+
+  const res = NextResponse.json({ ok: true, twoFactor: true });
+  res.cookies.set(CHALLENGE_COOKIE, challengeId, {
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: CHALLENGE_TTL_MS / 1000,
   });
-  res.cookies.set(USER_COOKIE, token, { httpOnly: true, sameSite: 'lax', path: '/' });
   return res;
 }

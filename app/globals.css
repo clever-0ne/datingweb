@@ -870,3 +870,15 @@ body.conult-page img.processor {
 body { top: 0 !important; position: static !important; }
 .goog-text-highlight { background: none !important; box-shadow: none !important; }
 font[style] { background: transparent !important; box-shadow: none !important; }
+
+/* Smartsupp chat: on phones it opens full-screen from top:0, and with
+   viewport-fit=cover that puts its header under the status bar (blurred and
+   unreachable on iOS). Only the full-width (opened, mobile) state is matched. */
+@media (max-width: 767px) {
+  #smartsupp-widget-container [data-testid="widgetMessengerFrame"][style*="width: 100%"] {
+    top: env(safe-area-inset-top, 0px) !important;
+    bottom: env(safe-area-inset-bottom, 0px) !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+}
