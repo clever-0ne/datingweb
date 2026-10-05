@@ -7,6 +7,7 @@ import { useWallet, fmtMoney } from '@/lib/wallet';
 import { useCoins, pickCoin } from '@/lib/useCoins';
 import RampBuy from './RampBuy';
 import { toUSD, minLocal, currencySymbol } from '@/lib/locale';
+import { MIN_DEPOSIT_USD } from '@/lib/plans';
 
 export default function DepositPage() {
   const [method, setMethod] = useState('btc');
@@ -37,6 +38,10 @@ export default function DepositPage() {
   const submitDeposit = async (e) => {
     e.preventDefault();
     setNotice(null);
+    if (!(Number(amount) >= minLocal(MIN_DEPOSIT_USD))) {
+      setNotice({ kind: 'err', text: `Minimum deposit is ${fmtMoney(MIN_DEPOSIT_USD)}.` });
+      return;
+    }
     setSubmitting(true);
     const d = await deposit(toUSD(amount), coin.id);
     setSubmitting(false);
@@ -116,7 +121,7 @@ export default function DepositPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="py-4 text-right"><div className="text-xs faint">Min: <span className="font-medium hi">{fmtMoney(500)}</span></div></td>
+                  <td className="py-4 text-right"><div className="text-xs faint">Min: <span className="font-medium hi">{fmtMoney(MIN_DEPOSIT_USD)}</span></div></td>
                   <td className="py-4 text-right"><button className="btn btn-pri" style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem' }} onClick={() => setMethod(m.id)}>Deposit</button></td>
                 </tr>
               ))}
@@ -136,13 +141,13 @@ export default function DepositPage() {
         <form className="p-6" onSubmit={submitDeposit}>
           <div className="mb-4 flex items-center justify-between">
             <label className="text-sm font-medium hi">Amount to deposit</label>
-            <span className="text-xs faint">Min: <span className="font-medium hi">{fmtMoney(500)}</span></span>
+            <span className="text-xs faint">Min: <span className="font-medium hi">{fmtMoney(MIN_DEPOSIT_USD)}</span></span>
           </div>
           <div className="relative mb-4">
             <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center hi">{currencySymbol()}</span>
             <input
               type="number"
-              min={minLocal(500)}
+              min={minLocal(MIN_DEPOSIT_USD)}
               step="0.01"
               placeholder="0.00"
               value={amount}
@@ -221,7 +226,7 @@ export default function DepositPage() {
           </div>
           <div className="space-y-4 p-5">
             <Row k="Processing Time" v="After admin approval" />
-            <Row k="Minimum Deposit" v={fmtMoney(500)} />
+            <Row k="Minimum Deposit" v={fmtMoney(MIN_DEPOSIT_USD)} />
             <Row k="Deposit Methods" v="Multiple" />
           </div>
         </div>

@@ -1,5 +1,5 @@
 import LandingShell, { PageHeader } from '@/components/LandingShell';
-import { SITE } from '@/lib/plans';
+import { SITE, MIN_DEPOSIT_USD } from '@/lib/plans';
 
 export const metadata = {
   title: `F.A.Q || ${SITE.name}`,
@@ -21,7 +21,7 @@ const FAQS = [
   },
   {
     q: `What is the minimum amount required to invest with ${SITE.name}?`,
-    a: 'Our program minimum deposit is $10, You can invest $10 from your eWallet account. Profit from the $10 deposit can be withdrawn at the end of the investment period or you can re-invest from your account balance.',
+    a: `The minimum deposit is $${MIN_DEPOSIT_USD} (or the equivalent in your local currency) for every deposit method. Profit can be withdrawn at the end of the investment period or re-invested from your account balance.`,
   },
   {
     q: 'Which e-currencies do you accept?',

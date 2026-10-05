@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { formatMoney, toUSD, minLocal, currencySymbol } from '@/lib/locale';
+import { MIN_DEPOSIT_USD } from '@/lib/plans';
 import { CreditCard, Copy, Check, X, ExternalLink, ClipboardPaste, UserCheck, Wallet, Clock } from 'lucide-react';
 
 // Ramp's public buy pages work without a partner API key (the app.ramp.network
@@ -78,8 +79,8 @@ export default function RampBuy({ coin, deposit }) {
   const submitPurchase = async (e) => {
     e.preventDefault();
     setError(null);
-    if (!(Number(amount) >= minLocal(500))) {
-      setError(`Minimum deposit is ${formatMoney(500)}`);
+    if (!(Number(amount) >= minLocal(MIN_DEPOSIT_USD))) {
+      setError(`Minimum deposit is ${formatMoney(MIN_DEPOSIT_USD)}`);
       return;
     }
     setSubmitting(true);
@@ -159,7 +160,7 @@ export default function RampBuy({ coin, deposit }) {
                 <div className="ramp-amount">
                   <span>{currencySymbol()}</span>
                   <input
-                    type="number" min={minLocal(500)} step="0.01" inputMode="decimal" placeholder="0.00"
+                    type="number" min={minLocal(MIN_DEPOSIT_USD)} step="0.01" inputMode="decimal" placeholder="0.00"
                     value={amount} onChange={(e) => setAmount(e.target.value)} required
                   />
                 </div>

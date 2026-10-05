@@ -5,6 +5,7 @@ import { pushNotification } from '@/lib/notifications';
 import { deliverPush, deliverAdminPush } from '@/lib/push';
 import { fmtUsd } from '@/lib/format';
 import { send2FACodeEmail } from '@/lib/email-helpers';
+import { MIN_DEPOSIT_USD } from '@/lib/plans';
 
 const COINS = ['btc', 'eth', 'usdt', 'sol'];
 
@@ -21,8 +22,8 @@ export async function POST(req) {
   if (!COINS.includes(coin)) {
     return NextResponse.json({ error: 'Select a valid deposit method.' }, { status: 400 });
   }
-  if (!(amount >= 500)) {
-    return NextResponse.json({ error: 'Minimum deposit is $500.00.' }, { status: 400 });
+  if (!(amount >= MIN_DEPOSIT_USD)) {
+    return NextResponse.json({ error: `Minimum deposit is ${fmtUsd(MIN_DEPOSIT_USD)}.` }, { status: 400 });
   }
 
   const db = await readDb();
