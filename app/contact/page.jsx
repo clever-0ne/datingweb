@@ -1,15 +1,14 @@
 import LandingShell, { PageHeader } from '@/components/LandingShell';
 import { SITE } from '@/lib/plans';
+import ContactForm from '@/components/ContactForm';
 
 export const metadata = {
   title: `Contact us || ${SITE.name}`,
 };
 
 /**
- * Port of the Archive 2 `home/contact.blade.php` page. The original posted to
- * a `enquiry` route and emailed the message; there is no mail transport wired
- * up here, so the form is presentational — see the note under the submit
- * button. Wire it to a real endpoint before the site takes live enquiries.
+ * Port of the Archive 2 `home/contact.blade.php` page. The form posts to
+ * /api/contact, which emails the support inbox (CONTACT_EMAIL).
  */
 export default function ContactPage() {
   return (
@@ -30,47 +29,7 @@ export default function ContactPage() {
                     <div className="row">
                       <div className="col-xl-12">
                         <div className="contact-page__form">
-                          <form className="comment-one__form" id="contactForm">
-                            <div className="row">
-                              <div className="col-xl-6">
-                                <div className="comment-form__input-box">
-                                  <input type="text" placeholder="Your Name" name="name" />
-                                </div>
-                              </div>
-                              <div className="col-xl-6">
-                                <div className="comment-form__input-box">
-                                  <input type="email" placeholder="Email Address" name="email" />
-                                </div>
-                              </div>
-                              <div className="col-xl-6">
-                                <div className="comment-form__input-box">
-                                  <input type="text" placeholder="Phone Number" name="phone" />
-                                </div>
-                              </div>
-                              <div className="col-xl-6">
-                                <div className="comment-form__input-box">
-                                  <input type="text" placeholder="Subject" name="subject" />
-                                </div>
-                              </div>
-                              <div className="col-xl-12">
-                                <div className="comment-form__input-box">
-                                  <textarea name="message" placeholder="Write a Message"></textarea>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="row">
-                              <div className="col-xl-12 text-left">
-                                <button type="submit" className="thm-btn comment-form__btn">
-                                  send a message
-                                </button>
-                                <p style={{ marginTop: 15 }}>
-                                  Or email us directly at{' '}
-                                  <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
-                                </p>
-                              </div>
-                            </div>
-                          </form>
+                          <ContactForm supportEmail={SITE.email} />
                         </div>
                       </div>
                     </div>

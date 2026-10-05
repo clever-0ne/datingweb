@@ -38,8 +38,8 @@ export default function RegisterPage() {
       });
       const d = await r.json();
       if (d.ok) {
-        // Redirect to dashboard after successful registration
-        window.location.href = '/dashboard';
+        // The account is created once the emailed code is entered.
+        window.location.href = '/verify-signup';
         return;
       }
       setErr(d.error || 'Unable to create your account.');

@@ -4,6 +4,7 @@ import { currentUser } from '@/lib/auth';
 import { pushNotification } from '@/lib/notifications';
 import { deliverPush, deliverAdminPush } from '@/lib/push';
 import { fmtUsd } from '@/lib/format';
+import { checkOtp } from '@/lib/withdraw-otp';
 
 const COINS = ['btc', 'eth', 'usdt', 'sol'];
 
@@ -32,6 +33,13 @@ export async function POST(req) {
   const user = (db.users || []).find((u) => u.id === session.profile.id);
   if (user && Number(user.balance) < amount) {
     return NextResponse.json({ error: 'Insufficient balance for this withdrawal.' }, { status: 400 });
+  }
+
+  // Emailed code, checked last so a typo elsewhere doesn't burn an attempt.
+  const otpError = checkOtp(db, session.profile.id, body.otp);
+  if (otpError) {
+    await writeDb(db); // keep the attempt count
+    return NextResponse.json({ error: otpError }, { status: 400 });
   }
 
   db.withdrawals = db.withdrawals || [];

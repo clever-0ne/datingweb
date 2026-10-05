@@ -23,31 +23,12 @@ export async function PATCH(req, { params }) {
       label: 'Investment',
     });
 
-    // For approved payouts, generate withdrawal code and include in notification
-    let withdrawalCode = null;
-    if (body.status === 'approved') {
-      withdrawalCode = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
-
-      // Store code for verification later
-      db.withdrawalCodes = db.withdrawalCodes || [];
-      db.withdrawalCodes.push({
-        payoutId: payout.id,
-        code: withdrawalCode,
-        type: 'investment',
-        createdAt: new Date().toISOString(),
-        used: false,
-      });
-    }
-
     await writeDb(db);
 
-    // Send push notification with code if approved
-    if (notification) {
-      if (body.status === 'approved' && withdrawalCode) {
-        notification.body = `Investment payout of $${payout.amount} approved. Withdrawal code: ${withdrawalCode}`;
-      }
-      await deliverPush(db, payout.userId, notification);
-    }
+    // adminDecide already put the payout's real code in the notification body.
+    // Don't replace it: confirmRequest checks payout.code, so any other code
+    // shown to the user can never release the payout.
+    if (notification) await deliverPush(db, payout.userId, notification);
 
     // The code goes to the in-app bell only, never email — the payout screens
     // tell users to watch the bell, and a code in a mailbox is easier to steal.

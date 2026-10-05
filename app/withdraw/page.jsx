@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Wallet, DollarSign, Clock, ArrowUpFromLine, Search, ListChecks, ShieldCheck, FileText, Check } from 'lucide-react';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { toUSD, minLocal, currencySymbol } from '@/lib/locale';
+import WithdrawOtpField from '@/components/WithdrawOtpField';
 
 const METHODS = [
   { id: 'btc', name: 'Bitcoin', network: 'BTC network', icon: '/assets/coins/btc.png' },
@@ -17,6 +18,7 @@ export default function WithdrawPage() {
   const [method, setMethod] = useState('btc');
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
+  const [otp, setOtp] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [notice, setNotice] = useState(null);
   const { balance, totalWithdrawn, transactions, withdraw } = useWallet();
@@ -28,12 +30,17 @@ export default function WithdrawPage() {
   const submitWithdrawal = async (e) => {
     e.preventDefault();
     setNotice(null);
+    if (otp.length !== 6) {
+      setNotice({ kind: 'err', text: 'Send yourself a code and enter the 6 digits from your email.' });
+      return;
+    }
     setSubmitting(true);
-    const d = await withdraw(toUSD(amount), method, address);
+    const d = await withdraw(toUSD(amount), method, address, otp);
     setSubmitting(false);
     if (d?.ok) {
       setAmount('');
       setAddress('');
+      setOtp('');
       setNotice({ kind: 'ok', text: 'Withdrawal request submitted — pending admin approval.' });
     } else {
       setNotice({ kind: 'err', text: d?.error || 'Something went wrong. Please try again.' });
@@ -149,6 +156,8 @@ export default function WithdrawPage() {
               style={{ background: 'var(--field)', borderColor: 'var(--hairline-strong)', color: 'var(--text)' }}
             />
           </div>
+
+          <WithdrawOtpField value={otp} onChange={setOtp} />
 
           {notice && (
             <p className={`mb-4 rounded-xl px-3 py-2 text-xs font-medium ${notice.kind === 'ok' ? 'bg-[var(--ok-bg)] text-[var(--ok-text)]' : 'bg-[var(--bad-bg)] text-[var(--bad-text)]'}`}>

@@ -1,6 +1,7 @@
 import { SITE } from '@/lib/plans';
 import { VENDOR_CSS, VENDOR_JS, BOOT_JS } from '@/lib/theme-assets';
 import LandingBoot from '@/components/LandingBoot';
+import NewsletterForm from '@/components/NewsletterForm';
 
 /**
  * Shared chrome for the public marketing pages, ported from the Archive 2
@@ -165,14 +166,7 @@ export default function LandingShell({ variant = 'three', children }) {
                       <h5 className="site-footer__top-newsletter-title">
                         Contact us for investment products and services
                       </h5>
-                      <form className="site-footer__top-newsletter-form">
-                        <div className="site-footer__top-newsletter-input-box">
-                          <input type="email" placeholder="Email Address" name="email" />
-                          <button type="submit" className="site-footer__top-newsletter-btn">
-                            Go
-                          </button>
-                        </div>
-                      </form>
+                      <NewsletterForm />
                     </div>
                   </div>
                 </div>

@@ -170,8 +170,8 @@ export function WalletProvider({ children }) {
     [post],
   );
   const withdraw = useCallback(
-    (amount, coinOrType, address) =>
-      post('/api/withdrawals', { amount, coin: resolveCoin(coinOrType), address: address || '' }),
+    (amount, coinOrType, address, otp) =>
+      post('/api/withdrawals', { amount, coin: resolveCoin(coinOrType), address: address || '', otp: otp || '' }),
     [post],
   );
   // `opts.ref` carries the stock slug so the order can be traced back to the

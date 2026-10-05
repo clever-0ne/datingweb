@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { readDb, writeDb } from '@/lib/db';
-import { hashPassword, createSession, USER_COOKIE } from '@/lib/auth';
-import { pushNotification } from '@/lib/notifications';
-import { deliverPush, deliverAdminPush } from '@/lib/push';
-import { REFERRAL_BONUS } from '@/lib/plans';
-import { sendWelcomeEmail } from '@/lib/email-helpers';
+import { hashPassword } from '@/lib/auth';
+import { SIGNUP_COOKIE, SIGNUP_TTL_MS, prunePending, issueSignupCode } from '@/lib/signup';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * POST /api/auth/register — step 1 of sign-up. Validates the form, holds it as
+ * a pending sign-up and emails a code. The account is created by
+ * /api/auth/verify-signup once the code comes back (see lib/signup.js).
+ */
 export async function POST(req) {
   const body = await req.json().catch(() => ({}));
   const name = String(body.name || '').trim();
@@ -16,6 +18,7 @@ export async function POST(req) {
   const password = String(body.password || '');
   const phone = String(body.phone || '').trim();
   const address = String(body.address || '').trim();
+  const ref = String(body.ref || '').trim();
 
   if (!name) return NextResponse.json({ error: 'Please enter your name.' }, { status: 400 });
   if (!EMAIL_RE.test(email)) return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
@@ -26,78 +29,30 @@ export async function POST(req) {
   if (!address) return NextResponse.json({ error: 'Please enter your address.' }, { status: 400 });
 
   const db = await readDb();
-  db.accounts = db.accounts || [];
-  db.users = db.users || [];
-
-  const ref = String(body.ref || '').trim();
-  const referrer = ref ? (db.users || []).find((u) => u.id === ref) : null;
-
-  if (db.accounts.some((a) => a.email === email)) {
+  if ((db.accounts || []).some((a) => a.email === email)) {
     return NextResponse.json({ error: 'An account with that email already exists.' }, { status: 409 });
   }
 
-  const userId = `TC-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+  const pending = prunePending(db);
+  // One pending sign-up per email: starting again replaces the old one.
+  for (const [id, p] of Object.entries(pending)) if (p.email === email) delete pending[id];
+
+  const id = crypto.randomBytes(24).toString('hex');
   const { salt, hash } = hashPassword(password);
+  pending[id] = { name, email, phone, address, ref, salt, hash };
 
-  db.users.push({
-    id: userId,
-    name,
-    email,
-    phone,
-    address,
-    role: 'user',
-    balance: 0,
-    profileImage: null,
-    kycStatus: 'not_submitted',
-    kycData: {},
-    idImages: [],
-    blocked: false,
-    createdAt: new Date().toISOString(),
-    dashboardStats: { totalProfit: 0, bonus: 0 },
-    referredBy: referrer ? referrer.id : null,
-  });
-
-  const account = { id: `ACC-${crypto.randomBytes(4).toString('hex').toUpperCase()}`, userId, name, email, salt, hash, createdAt: new Date().toISOString() };
-  db.accounts.push(account);
-
-  if (referrer) {
-    referrer.balance = Math.round((Number(referrer.balance || 0) + REFERRAL_BONUS) * 100) / 100;
-    pushNotification(db, referrer.id, {
-      title: 'Referral bonus',
-      body: `${name} signed up with your link — $${REFERRAL_BONUS} added to your balance.`,
-      kind: 'success',
-    });
+  const sent = await issueSignupCode(pending[id]);
+  if (!sent) {
+    return NextResponse.json({ error: 'We could not send the verification email. Please try again.' }, { status: 502 });
   }
-
-  const token = createSession(db, account.id);
-  const notification = pushNotification(db, userId, {
-    title: 'Welcome to Tesla Capital',
-    body: `Your account ${userId} is ready. Fund it to start investing.`,
-    kind: 'success',
-  });
   await writeDb(db);
-  await deliverPush(db, userId, notification);
 
-  // Alert the console that there is a new account. After the write, like every
-  // other push: the user is registered whether or not this lands, and a push
-  // failure must not fail their signup.
-  await deliverAdminPush(db, {
-    title: 'New user registered',
-    body: `${name} (${email}) just created an account.`,
+  const res = NextResponse.json({ ok: true, verify: true });
+  res.cookies.set(SIGNUP_COOKIE, id, {
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: Math.floor(SIGNUP_TTL_MS / 1000),
   });
-
-  // Send welcome email (non-blocking)
-  try {
-    await sendWelcomeEmail(email, name);
-  } catch (error) {
-    console.error('Welcome email failed:', error);
-    // Don't fail registration if email fails
-  }
-
-  const res = NextResponse.json({
-    ok: true,
-    user: { id: userId, name, email, balance: 0, kycStatus: 'not_submitted' },
-  });
-  res.cookies.set(USER_COOKIE, token, { httpOnly: true, sameSite: 'lax', path: '/' });
   return res;
 }

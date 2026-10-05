@@ -2,47 +2,38 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowUpFromLine, ShieldCheck, Check, X, Mail } from 'lucide-react';
+import { ArrowLeft, ArrowUpFromLine, ShieldCheck, Check } from 'lucide-react';
 import { useCoins, pickCoin } from '@/lib/useCoins';
 import { useWallet, fmtMoney } from '@/lib/wallet';
 import { MoneyInput } from '@/lib/locale';
+import WithdrawOtpField from '@/components/WithdrawOtpField';
+
+// The coins /api/withdrawals accepts.
+const WITHDRAW_COINS = ['btc', 'eth', 'usdt', 'sol'];
 
 export default function WithdrawCheckout({ backHref = '/withdraw' }) {
   const { balance, withdraw } = useWallet();
   // Same source as the deposit screens, so the two never disagree about which
   // networks are on offer.
-  const coins = useCoins();
+  const coins = useCoins().filter((c) => WITHDRAW_COINS.includes(c.id));
   const [amount, setAmount] = useState(500);
   const [coinId, setCoinId] = useState('btc');
   const [address, setAddress] = useState('');
-  const [otp, setOtp] = useState(null);
-  const [otpInput, setOtpInput] = useState('');
-  const [showPin, setShowPin] = useState(false);
-  const [pin, setPin] = useState('');
+  const [otp, setOtp] = useState('');
+  const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [err, setErr] = useState('');
 
-  const requestOtp = () => {
-    const code = String(Math.floor(100000 + Math.random() * 900000));
-    setOtp(code);
-    setErr('');
-  };
-
-  const submit = () => {
+  const submit = async () => {
     setErr('');
     if (amount < 10) { setErr(`Minimum withdrawal is ${fmtMoney(10)}.`); return; }
     if (!address.trim()) { setErr('Please enter a destination wallet address.'); return; }
-    if (!otp) { setErr('Request an OTP first — an auth key is required to withdraw.'); return; }
-    if (otpInput !== otp) { setErr('Invalid OTP. Enter the 6-digit code sent to your email.'); return; }
-    setShowPin(true);
-  };
-
-  const confirmPin = () => {
-    if (pin.length < 4) { setErr('Enter your 4-digit withdrawal PIN.'); return; }
-    const c = pickCoin(coins, coinId);
-    withdraw(amount, 'Withdrawal', c.name + ' · ' + c.network);
-    setShowPin(false);
-    setDone(true);
+    if (otp.length !== 6) { setErr('Send yourself a code and enter the 6 digits from your email.'); return; }
+    setBusy(true);
+    const d = await withdraw(amount, pickCoin(coins, coinId)?.id, address.trim(), otp);
+    setBusy(false);
+    if (d?.ok) setDone(true);
+    else setErr(d?.error || 'Something went wrong. Please try again.');
   };
 
   return (
@@ -110,48 +101,16 @@ export default function WithdrawCheckout({ backHref = '/withdraw' }) {
               <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className="inp" placeholder="Enter your wallet address" />
             </div>
 
-            {/* Auth key (OTP) */}
-            <div className="mb-4 rounded-xl border p-4" style={{ borderColor: 'rgba(240,185,11,.3)', background: 'rgba(240,185,11,.06)' }}>
-              <div className="mb-2 flex items-center justify-between">
-                <span className="text-sm font-medium hi">Auth Key (OTP)</span>
-                <button onClick={requestOtp} className="flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium text-white" style={{ background: 'linear-gradient(135deg, var(--secondary), var(--secondary))' }}>
-                  <Mail size={12} /> Request OTP
-                </button>
-              </div>
-              {otp && <p className="mb-2 text-xs grn">Auth key issued — <span className="font-mono font-bold">{otp}</span></p>}
-              <input type="text" maxLength={6} value={otpInput} onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ''))} className="inp text-center tracking-[0.5em]" placeholder="••••••" />
-              <p className="mt-1 text-xs mut">A one-time auth key is required to withdraw. It expires in 5 minutes.</p>
-            </div>
+            <WithdrawOtpField value={otp} onChange={setOtp} />
 
             {err && <p className="mb-4 rounded-lg border p-3 text-xs font-medium" style={{ borderColor: 'rgba(255,107,107,.3)', background: 'rgba(255,107,107,.1)', color: '#ff9494' }}>{err}</p>}
 
-            <button onClick={submit} className="btn btn-sec flex w-full py-4"><ArrowUpFromLine size={20} /> Complete Request</button>
-            <p className="mt-3 text-center text-xs faint">Withdrawals require OTP + PIN verification and are processed Monday-Friday.</p>
+            <button onClick={submit} disabled={busy} className="btn btn-sec flex w-full py-4 disabled:opacity-60"><ArrowUpFromLine size={20} /> {busy ? 'Submitting…' : 'Complete Request'}</button>
+            <p className="mt-3 text-center text-xs faint">Withdrawals require an emailed verification code and are processed Monday-Friday.</p>
           </div>
         </div>
       )}
 
-      {/* PIN modal */}
-      {showPin && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,.6)' }}>
-          <div className="w-full max-w-md overflow-hidden rounded-2xl border bg-[var(--chrome)]" style={{ borderColor: 'var(--hairline-strong)' }}>
-            <div className="flex items-center justify-between border-b px-6 py-4" style={{ borderColor: 'var(--hairline)' }}>
-              <h3 className="text-lg font-medium hi">Security Verification</h3>
-              <button onClick={() => setShowPin(false)} className="mut hover-tx"><X size={20} /></button>
-            </div>
-            <div className="px-6 py-4">
-              <label className="mb-2 block text-sm font-medium hi">Withdrawal PIN</label>
-              <input type="password" maxLength={4} value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))} className="inp py-3 text-center text-lg tracking-[0.5em]" placeholder="••••" />
-              <p className="mt-1 text-xs mut">Enter your 4-digit withdrawal PIN to confirm.</p>
-              {err && <p className="mt-3 text-xs font-medium" style={{ color: '#ff9494' }}>{err}</p>}
-              <div className="mt-4 flex justify-end gap-3">
-                <button onClick={() => setShowPin(false)} className="btn btn-ghost">Cancel</button>
-                <button onClick={confirmPin} className="btn btn-pri">Confirm</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
