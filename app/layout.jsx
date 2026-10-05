@@ -20,7 +20,9 @@ export const metadata = {
       { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
       { url: '/assets/tesla-t.svg', type: 'image/svg+xml' },
     ],
-    apple: '/assets/apple-touch-icon.png',
+    // ?v= busts iOS's home-screen icon cache, which otherwise keeps the old
+    // black icon. Bump it whenever the icons are regenerated.
+    apple: '/assets/apple-touch-icon.png?v=2',
   },
   appleWebApp: {
     capable: true,
