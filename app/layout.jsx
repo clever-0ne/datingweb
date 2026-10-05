@@ -1,4 +1,5 @@
 import './globals.css';
+import Script from 'next/script';
 import AppChrome from '@/components/AppChrome';
 import PageLoader from '@/components/PageLoader';
 import { WalletProvider } from '@/lib/wallet';
@@ -55,6 +56,9 @@ const THEME_BOOT = `try{if(localStorage.getItem('theme')==='dark'){document.docu
 // iOS Safari ignores user-scalable=no, so pinch and double-tap zoom are blocked here.
 const NO_ZOOM = `(function(){var o={passive:false};function p(e){e.preventDefault()}document.addEventListener('gesturestart',p,o);document.addEventListener('gesturechange',p,o);document.addEventListener('gestureend',p,o);document.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preventDefault()},o)})();`;
 
+// Smartsupp live-chat support widget; only loaded when a key is configured.
+const SMARTSUPP_KEY = process.env.NEXT_PUBLIC_SMARTSUPP_KEY;
+
 export default function RootLayout({ children }) {
   return (
     // suppressHydrationWarning: THEME_BOOT writes data-theme onto <html> before
@@ -70,6 +74,18 @@ export default function RootLayout({ children }) {
             <AppChrome>{children}</AppChrome>
           </LocaleProvider>
         </WalletProvider>
+        {SMARTSUPP_KEY && (
+          <Script id="smartsupp-loader" strategy="lazyOnload">
+            {`var _smartsupp = _smartsupp || {};
+_smartsupp.key = ${JSON.stringify(SMARTSUPP_KEY)};
+window.smartsupp||(function(d) {
+  var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+  s=d.getElementsByTagName('script')[0];c=d.createElement('script');
+  c.type='text/javascript';c.charset='utf-8';c.async=true;
+  c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+})(document);`}
+          </Script>
+        )}
       </body>
     </html>
   );
