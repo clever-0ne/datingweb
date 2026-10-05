@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import JunkMailHint from '@/components/JunkMailHint';
 
 export default function ForgotPasswordModal({ onClose }) {
   const [email, setEmail] = useState('');
@@ -146,6 +147,7 @@ export default function ForgotPasswordModal({ onClose }) {
             <p className="text-sm text-gray-600 mb-4">
               Paste the reset token from your email and enter a new password.
             </p>
+            <JunkMailHint />
 
             <div>
               <label htmlFor="reset-token" className="block text-sm font-medium text-gray-700 mb-1">

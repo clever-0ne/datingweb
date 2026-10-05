@@ -78,6 +78,37 @@ export default function AccountPage() {
     setPhotoBusy(false);
   };
 
+  const [pw, setPw] = useState({ current: '', next: '', confirm: '' });
+  const [pwBusy, setPwBusy] = useState(false);
+  const [pwMsg, setPwMsg] = useState(null); // { ok, text }
+  const setPwField = (k) => (e) => setPw((p) => ({ ...p, [k]: e.target.value }));
+  const onPassword = async (e) => {
+    e.preventDefault();
+    if (pw.next !== pw.confirm) {
+      setPwMsg({ ok: false, text: 'New passwords do not match.' });
+      return;
+    }
+    setPwBusy(true);
+    setPwMsg(null);
+    try {
+      const r = await fetch('/api/account/password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: pw.current, newPassword: pw.next }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (d.ok) {
+        setPw({ current: '', next: '', confirm: '' });
+        setPwMsg({ ok: true, text: 'Password updated.' });
+      } else {
+        setPwMsg({ ok: false, text: d.error || 'Could not update password.' });
+      }
+    } catch {
+      setPwMsg({ ok: false, text: 'Network error — try again.' });
+    }
+    setPwBusy(false);
+  };
+
   return (
     <>
       {/* Hero */}
@@ -143,14 +174,25 @@ export default function AccountPage() {
         <div className="panel p-5 sm:p-6">
           <h3 className="mb-1 text-lg font-semibold hi">Security</h3>
           <p className="mb-5 text-xs mut">Update your password</p>
-          <div className="space-y-4">
-            <Label label="Current password"><input type="password" placeholder="••••••••••" className="inp" /></Label>
+          <form onSubmit={onPassword} className="space-y-4">
+            <Label label="Current password">
+              <input type="password" autoComplete="current-password" required value={pw.current} onChange={setPwField('current')} placeholder="••••••••••" className="inp" />
+            </Label>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Label label="New password"><input type="password" placeholder="••••••••••" className="inp" /></Label>
-              <Label label="Confirm new password"><input type="password" placeholder="••••••••••" className="inp" /></Label>
+              <Label label="New password">
+                <input type="password" autoComplete="new-password" required minLength={8} value={pw.next} onChange={setPwField('next')} placeholder="••••••••••" className="inp" />
+              </Label>
+              <Label label="Confirm new password">
+                <input type="password" autoComplete="new-password" required minLength={8} value={pw.confirm} onChange={setPwField('confirm')} placeholder="••••••••••" className="inp" />
+              </Label>
             </div>
-            <button className="btn btn-pri">Update password</button>
-          </div>
+            {pwMsg && (
+              <p role="status" className={`text-sm ${pwMsg.ok ? 'text-emerald-500' : 'text-red-500'}`}>{pwMsg.text}</p>
+            )}
+            <button type="submit" disabled={pwBusy} className="btn btn-pri disabled:opacity-60">
+              {pwBusy ? 'Updating…' : 'Update password'}
+            </button>
+          </form>
         </div>
 
         <div className="panel p-5 sm:p-6">

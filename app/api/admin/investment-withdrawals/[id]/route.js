@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { readDb, writeDb, isAuthed } from '@/lib/db';
 import { INVESTMENT_PAYOUTS, PayoutError, adminDecide, redact } from '@/lib/payout';
 import { deliverPush } from '@/lib/push';
-import { sendPayoutNotificationEmail } from '@/lib/email-helpers';
 
 /**
  * PATCH /api/admin/investment-withdrawals/:id — approve or reject an
@@ -50,17 +49,8 @@ export async function PATCH(req, { params }) {
       await deliverPush(db, payout.userId, notification);
     }
 
-    // Send email notification with withdrawal code for approved payouts (non-blocking)
-    if (body.status === 'approved') {
-      try {
-        const user = (db.users || []).find((u) => u.id === payout.userId);
-        if (user) {
-          await sendPayoutNotificationEmail(user.email, user.name, payout.amount, 'investment', payout.id, withdrawalCode);
-        }
-      } catch (error) {
-        console.error('Investment payout email failed:', error);
-      }
-    }
+    // The code goes to the in-app bell only, never email — the payout screens
+    // tell users to watch the bell, and a code in a mailbox is easier to steal.
 
     return NextResponse.json({ ok: true, request: redact(payout) });
   } catch (err) {

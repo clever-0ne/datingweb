@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import AuthShell, { authInputCls, authLabelCls, authBtnCls } from '@/components/AuthShell';
+import JunkMailHint from '@/components/JunkMailHint';
 
 export default function VerifySignupPage() {
   const searchParams = useSearchParams();
@@ -172,6 +173,8 @@ export default function VerifySignupPage() {
               Check your email for the 6-digit code
             </p>
           </div>
+
+          <JunkMailHint />
 
           {error && (
             <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-700">

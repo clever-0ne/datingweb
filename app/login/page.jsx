@@ -6,6 +6,7 @@ import Link from 'next/link';
 import AuthShell, { authInputCls, authLabelCls, authBtnCls } from '@/components/AuthShell';
 import { PasskeySignIn } from '@/components/PasskeyPanel';
 import ForgotPasswordModal from '@/components/ForgotPasswordModal';
+import JunkMailHint from '@/components/JunkMailHint';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -121,6 +122,8 @@ export default function LoginPage() {
             />
             <p className="mt-1 text-xs faint">The code is valid for 10 minutes.</p>
           </div>
+
+          <JunkMailHint />
 
           {err && (
             <div

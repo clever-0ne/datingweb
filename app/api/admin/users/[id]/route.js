@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { readDb, writeDb, isAuthed } from '@/lib/db';
+import { purgeUser } from '@/lib/purge-user';
 
 // PATCH /api/admin/users/:id — set balance or KYC status
 export async function PATCH(req, { params }) {
@@ -39,10 +40,7 @@ export async function DELETE(req, { params }) {
   const exists = (db.users || []).some((u) => u.id === params.id);
   if (!exists) return NextResponse.json({ error: 'User not found.' }, { status: 404 });
 
-  db.users = db.users.filter((u) => u.id !== params.id);
-  db.deposits = (db.deposits || []).filter((d) => d.userId !== params.id);
-  db.withdrawals = (db.withdrawals || []).filter((w) => w.userId !== params.id);
-  db.orders = (db.orders || []).filter((o) => o.userId !== params.id);
+  purgeUser(db, params.id);
 
   await writeDb(db);
   return NextResponse.json({ ok: true });
