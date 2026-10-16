@@ -54,6 +54,11 @@ export default function InstallButton() {
 
     const pick = () => setPlatform(window.__installPrompt ? 'prompt' : ios ? 'ios' : android ? 'android' : null);
     pick();
+    // Chrome never offers the prompt when the app is already installed — so
+    // say nothing rather than showing steps for something already done.
+    navigator.getInstalledRelatedApps?.()
+      .then((apps) => { if (apps?.length) setPlatform(null); })
+      .catch(() => {});
     const onInstalled = () => setPlatform(null);
     window.addEventListener('installpromptready', pick);
     window.addEventListener('appinstalled', onInstalled);
@@ -68,6 +73,7 @@ export default function InstallButton() {
   const install = async () => {
     const prompt = window.__installPrompt;
     if (!prompt) return setOpen(true);
+    setOpen(false);
     prompt.prompt();
     const { outcome } = await prompt.userChoice.catch(() => ({}));
     window.__installPrompt = null; // a prompt can only be used once
@@ -136,7 +142,15 @@ export default function InstallButton() {
                 <X size={20} />
               </button>
             </div>
-            {platform === 'ios' ? (
+            {platform === 'prompt' ? (
+              <button
+                type="button"
+                onClick={install}
+                style={{ width: '100%', padding: '14px 18px', borderRadius: 12, border: 'none', background: '#e82127', color: '#fff', fontSize: 16, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, cursor: 'pointer' }}
+              >
+                <Download size={20} style={{ display: 'inline-block' }} /> Install now
+              </button>
+            ) : platform === 'ios' ? (
               <ol style={{ margin: 0, paddingLeft: 20, lineHeight: 1.9, fontSize: 15 }}>
                 <li>
                   Tap the <Share size={16} style={{ display: 'inline-block', verticalAlign: '-3px' }} /> <b>Share</b> button in your browser bar.
@@ -147,6 +161,14 @@ export default function InstallButton() {
                 <li>Tap <b>Add</b>. The app appears on your home screen.</li>
               </ol>
             ) : (
+              <>
+              {/* Chrome hands over its install prompt only after a little use of
+                  the page (a tap and ~30 seconds). When it arrives, this sheet
+                  swaps to the one-tap "Install now" button above. */}
+              <p style={{ margin: '0 0 10px', fontSize: 14, color: '#444' }}>
+                Getting the installer ready… Stay on this page a few seconds and an <b>Install now</b> button
+                appears here. Or install from your browser menu:
+              </p>
               <ol style={{ margin: 0, paddingLeft: 20, lineHeight: 1.9, fontSize: 15 }}>
                 <li>
                   Tap the <MoreVertical size={16} style={{ display: 'inline-block', verticalAlign: '-3px' }} /> <b>menu</b> button in your browser.
@@ -154,6 +176,7 @@ export default function InstallButton() {
                 <li>Tap <b>Install app</b> or <b>Add to Home screen</b>.</li>
                 <li>Tap <b>Install</b> to confirm.</li>
               </ol>
+              </>
             )}
             <p style={{ marginTop: 14, fontSize: 13, color: '#666' }}>
               Installing also lets you get notifications for payout codes and account activity.

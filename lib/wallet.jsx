@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { syncClock } from './clock';
 import { isPublicRoute } from './nav';
@@ -66,6 +66,10 @@ export function WalletProvider({ children }) {
 
   const pathname = usePathname();
   const isPublic = isPublicRoute(pathname);
+  const failures = useRef(0);
+  const authedRef = useRef(null);
+  authedRef.current = authed;
+  const refreshRef = useRef(null);
 
   const refresh = useCallback(async () => {
     // A marketing page has no wallet behind it, and /api/wallet would answer
@@ -76,42 +80,51 @@ export function WalletProvider({ children }) {
     }
     try {
       const r = await fetch('/api/wallet');
-      const d = await r.json();
-      if (r.status === 401 || !d.ok) {
+      // Only a 401 means "signed out". A 5xx, a cold-start timeout or a phone
+      // briefly offline must not bounce a signed-in user back to /login.
+      if (r.status === 401) {
         setAuthed(false);
         setUser(null);
+        return;
       }
-      if (d.ok) {
-        setAuthed(true);
-        setUser(d.user ?? null);
-        // Re-anchor the display clock to the server's before anything renders
-        // a duration from it.
-        syncClock(d.serverNow);
-        setState({
-          balance: d.balance ?? 0,
-          transactions: d.transactions ?? [],
-          mining: d.mining ?? [],
-          investments: d.investments ?? [],
-          miningWithdrawals: d.miningWithdrawals ?? [],
-          investmentWithdrawals: d.investmentWithdrawals ?? [],
-          notifications: d.notifications ?? [],
-          portfolio: d.portfolio ?? EMPTY.portfolio,
-          investmentPortfolio: d.investmentPortfolio ?? EMPTY.investmentPortfolio,
-          totalDeposited: d.totalDeposited ?? 0,
-          totalWithdrawn: d.totalWithdrawn ?? 0,
-          referralCode: d.referralCode ?? '',
-          referralCount: d.referralCount ?? 0,
-          referralBonus: d.referralBonus ?? 0,
-        });
-      }
+      const d = await r.json().catch(() => null);
+      if (!d?.ok) throw new Error(`wallet ${r.status}`);
+      failures.current = 0;
+      setAuthed(true);
+      setUser(d.user ?? null);
+      // Re-anchor the display clock to the server's before anything renders
+      // a duration from it.
+      syncClock(d.serverNow);
+      setState({
+        balance: d.balance ?? 0,
+        transactions: d.transactions ?? [],
+        mining: d.mining ?? [],
+        investments: d.investments ?? [],
+        miningWithdrawals: d.miningWithdrawals ?? [],
+        investmentWithdrawals: d.investmentWithdrawals ?? [],
+        notifications: d.notifications ?? [],
+        portfolio: d.portfolio ?? EMPTY.portfolio,
+        investmentPortfolio: d.investmentPortfolio ?? EMPTY.investmentPortfolio,
+        totalDeposited: d.totalDeposited ?? 0,
+        totalWithdrawn: d.totalWithdrawn ?? 0,
+        referralCode: d.referralCode ?? '',
+        referralCount: d.referralCount ?? 0,
+        referralBonus: d.referralBonus ?? 0,
+      });
     } catch (e) {
-      // Leave the last known state on a network error, but do answer the auth
-      // question: a null here would leave the shell on its skeleton forever.
-      setAuthed(false);
+      // Transient failure: keep the last known state. If we don't know yet
+      // whether the user is signed in, retry a few times before giving up —
+      // a null left forever would keep the shell on its skeleton.
+      failures.current += 1;
+      if (authedRef.current === null) {
+        if (failures.current < 5) setTimeout(() => refreshRef.current?.(), 1500 * failures.current);
+        else setAuthed(false);
+      }
     } finally {
       setLoading(false);
     }
   }, [isPublic]);
+  refreshRef.current = refresh;
 
   useEffect(() => {
     refresh();

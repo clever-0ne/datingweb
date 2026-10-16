@@ -3,6 +3,21 @@ import { readDb, writeDb } from '@/lib/db';
 import { createSession, USER_COOKIE } from '@/lib/auth';
 import { CHALLENGE_COOKIE, MAX_ATTEMPTS, codeMatches, pruneChallenges } from '@/lib/login-2fa';
 
+/**
+ * GET — is a login code pending for this browser? Lets /login go straight back
+ * to the code step after a reload (phones often reload the page while the user
+ * is in their email app fetching the code).
+ */
+export async function GET(req) {
+  const challengeId = req.cookies.get(CHALLENGE_COOKIE)?.value;
+  if (!challengeId) return NextResponse.json({ pending: false });
+  const db = await readDb();
+  const challenge = pruneChallenges(db)[challengeId];
+  if (!challenge) return NextResponse.json({ pending: false });
+  const account = (db.accounts || []).find((a) => a.id === challenge.accountId);
+  return NextResponse.json({ pending: true, email: account?.email || '' });
+}
+
 export async function POST(req) {
   const body = await req.json().catch(() => ({}));
   const code = String(body.code || '').trim();

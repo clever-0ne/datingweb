@@ -1,7 +1,7 @@
 'use client';
 
 import '@/app/auth.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import AuthShell, { authInputCls, authLabelCls, authBtnCls } from '@/components/AuthShell';
 import { PasskeySignIn } from '@/components/PasskeyPanel';
@@ -18,6 +18,21 @@ export default function LoginPage() {
   const [step, setStep] = useState('password');
   const [code, setCode] = useState('');
   const [info, setInfo] = useState('');
+
+  // Resume the code step after a reload — the challenge lives in a cookie, so
+  // a page reload (common on phones while the user is in their email app)
+  // must not throw them back to the password form.
+  useEffect(() => {
+    fetch('/api/auth/login/verify', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.pending) {
+          if (d.email) setEmail(d.email);
+          setStep('code');
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const requestCode = async () => {
     const r = await fetch('/api/auth/login', {
@@ -77,6 +92,12 @@ export default function LoginPage() {
   const resend = async () => {
     setErr('');
     setInfo('');
+    // After a reload the password is gone from memory; a new code needs it.
+    if (!password) {
+      setStep('password');
+      setInfo('Enter your password again to get a new code.');
+      return;
+    }
     setBusy(true);
     try {
       const d = await requestCode();
@@ -204,6 +225,12 @@ export default function LoginPage() {
             className={authInputCls}
           />
         </div>
+
+        {info && (
+          <div className="rounded-lg border border-green-500/30 bg-green-500/10 px-3 py-2 text-xs text-green-700">
+            {info}
+          </div>
+        )}
 
         {err && (
           <div
