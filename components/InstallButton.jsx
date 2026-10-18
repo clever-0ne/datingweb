@@ -5,10 +5,10 @@ import { usePathname } from 'next/navigation';
 import { Download, Share, PlusSquare, MoreVertical, X } from 'lucide-react';
 import { SUPPORT_SIZE } from '@/components/SupportButton';
 
-const PAGES = ['/', '/login'];
+const PAGES = ['/'];
 
 /**
- * Floating "Install app" button on the landing and login pages.
+ * Floating "Install app" button on the landing page only.
  *
  * Android / desktop Chrome: fires the browser's own install prompt, captured
  * early by the inline script in app/layout.jsx (it can fire before React
