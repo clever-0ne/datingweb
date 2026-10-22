@@ -245,6 +245,19 @@ export default function AdminConsole() {
     else alert(r.data.error || 'Clear failed.');
   };
 
+  // Mature a running mining/investment plan now instead of waiting out its term.
+  const ripenPlan = async (kind, item) => {
+    const label = kind === 'mining' ? 'mining contract' : 'investment plan';
+    if (!confirm(`Make "${item.name}" ripe now? The ${label} will complete immediately and become withdrawable.`)) return;
+    const r = await api('/api/admin/plans/ripen', { method: 'POST', body: JSON.stringify({ kind, id: item.id }) });
+    if (!r.ok) {
+      alert(r.data.error || 'Could not mature this plan.');
+      return;
+    }
+    const pl = await api('/api/admin/plans');
+    if (pl.ok) setPlans({ mining: pl.data.mining || [], investments: pl.data.investments || [] });
+  };
+
   const toggleUserBlock = async () => {
     const willBlock = !currentUser.blocked;
     const r = await api(`/api/admin/users/${currentUser.id}/block`, {
@@ -474,6 +487,7 @@ export default function AdminConsole() {
                 onSaveStats={saveUserDashboardStats}
                 onKyc={(v) => saveUserKyc(v)}
                 onClearKyc={clearUserKyc}
+                onRipenPlan={ripenPlan}
                 onToggleBlock={toggleUserBlock}
                 onDelete={deleteUser}
                 onViewAll={setTxModal}
@@ -740,7 +754,16 @@ function PlanStatus({ status, withdrawable }) {
   );
 }
 
-function PlanCard({ title, empty, items, panelCls, h4Cls }) {
+function PlanCard({ title, empty, items, onRipen, panelCls, h4Cls }) {
+  const [busyId, setBusyId] = useState(null);
+  const ripen = async (p) => {
+    setBusyId(p.id);
+    try {
+      await onRipen(p);
+    } finally {
+      setBusyId(null);
+    }
+  };
   const sorted = [...items].sort((a, b) => new Date(b.start) - new Date(a.start));
   const active = items.filter((i) => i.status === 'active');
   const nextMaturity = active.map((i) => i.end).sort((a, b) => new Date(a) - new Date(b))[0];
@@ -793,6 +816,18 @@ function PlanCard({ title, empty, items, panelCls, h4Cls }) {
                   {p.status === 'active' && <p className="text-[10px] text-[#1e40af] dark:text-[#93c5fd]">{timeLeft(p.end)}</p>}
                 </div>
               </div>
+              {p.status === 'active' && onRipen && (
+                <div className="mt-3 flex justify-end border-t border-slate-100 pt-2.5 dark:border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => ripen(p)}
+                    disabled={busyId === p.id}
+                    className="rounded-full bg-[#16a34a] px-4 py-1.5 text-xs font-medium text-white transition hover:bg-[#15803d] disabled:cursor-wait disabled:opacity-60"
+                  >
+                    {busyId === p.id ? 'Maturing…' : 'Make ripe now'}
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -820,6 +855,7 @@ function UserDetail({
   onSaveStats,
   onKyc,
   onClearKyc,
+  onRipenPlan,
   onToggleBlock,
   onDelete,
   onViewAll,
@@ -996,6 +1032,7 @@ function UserDetail({
             start: m.createdAt,
             end: m.expiresAt,
           }))}
+          onRipen={(item) => onRipenPlan('mining', item)}
           panelCls={panelCls}
           h4Cls={h4Cls}
         />
@@ -1013,6 +1050,7 @@ function UserDetail({
             start: i.createdAt,
             end: i.maturesAt,
           }))}
+          onRipen={(item) => onRipenPlan('investment', item)}
           panelCls={panelCls}
           h4Cls={h4Cls}
         />
