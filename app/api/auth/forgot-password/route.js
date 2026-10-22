@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/site-url';
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { readDb, writeDb } from '@/lib/db';
@@ -37,7 +38,7 @@ export async function POST(req) {
     await writeDb(db);
 
     // Send reset email (non-blocking - don't fail if email fails)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://podz.buzz';
+    const appUrl = SITE_URL;
     const resetLink = `${appUrl}/reset-password?token=${resetToken}`;
 
     try {

@@ -1,3 +1,4 @@
+import { SITE_URL } from './site-url';
 import { sendEmail } from './resend';
 
 /**
@@ -66,7 +67,7 @@ export async function sendMiningPayoutEmail(
     email,
     'Mining Payout Received',
     `You have received a mining payout of $${amount.toFixed(2)}. Transaction ID: ${transactionId}`,
-    `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/payouts/${transactionId}`
+    `${SITE_URL}/dashboard/payouts/${transactionId}`
   );
 }
 
@@ -83,6 +84,6 @@ export async function sendInvestmentPayoutEmail(
     email,
     'Investment Payout Received',
     `You have received an investment payout of $${amount.toFixed(2)}. Transaction ID: ${transactionId}`,
-    `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/investments/${transactionId}`
+    `${SITE_URL}/dashboard/investments/${transactionId}`
   );
 }

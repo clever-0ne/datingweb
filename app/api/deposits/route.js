@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/site-url';
 import { NextResponse } from 'next/server';
 import { readDb, writeDb } from '@/lib/db';
 import { currentUser } from '@/lib/auth';
@@ -55,7 +56,7 @@ export async function POST(req) {
 
   // Send deposit confirmation email
   try {
-    await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/email/send`, {
+    await fetch(`${SITE_URL}/api/email/send`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -68,7 +69,7 @@ export async function POST(req) {
               <p>Hi ${session.profile.name},</p>
               <p>We received your ${coin.toUpperCase()} deposit of <strong>$${amount.toFixed(2)}</strong></p>
               <p>Your deposit is now awaiting admin approval. You will receive an email notification once it's approved.</p>
-              <p><a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Status</a></p>
+              <p><a href="${SITE_URL}/dashboard" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Status</a></p>
             </body>
           </html>
         `,

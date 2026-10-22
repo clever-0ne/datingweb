@@ -1,4 +1,5 @@
 import { resend as client, FROM_EMAIL } from './resend-client';
+import { SITE_URL } from './site-url';
 
 export const resend = client;
 
@@ -62,7 +63,7 @@ function welcomeTemplate(data: { name: string; email: string }): string {
         <h1>Welcome, ${data.name}!</h1>
         <p>Thank you for joining our platform. We're excited to have you on board.</p>
         <p>Your account has been successfully created with the email: ${data.email}</p>
-        <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Get Started</a></p>
+        <p><a href="${SITE_URL}/dashboard" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Get Started</a></p>
         <p>If you have any questions, feel free to contact our support team.</p>
       </body>
     </html>
