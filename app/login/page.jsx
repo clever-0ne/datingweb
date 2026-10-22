@@ -3,6 +3,7 @@
 import '@/app/auth.css';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
 import AuthShell, { authInputCls, authLabelCls, authBtnCls } from '@/components/AuthShell';
 import { PasskeySignIn } from '@/components/PasskeyPanel';
 import ForgotPasswordModal from '@/components/ForgotPasswordModal';
@@ -11,6 +12,7 @@ import JunkMailHint from '@/components/JunkMailHint';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPw, setShowPw] = useState(false);
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -214,16 +216,28 @@ export default function LoginPage() {
               Forgot?
             </button>
           </div>
-          <input
-            id="login-password"
-            type="password"
-            required
-            autoComplete="current-password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={authInputCls}
-          />
+          <div className="relative">
+            <input
+              id="login-password"
+              type={showPw ? 'text' : 'password'}
+              required
+              autoComplete="current-password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={authInputCls}
+              style={{ paddingRight: '2.75rem' }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPw((v) => !v)}
+              aria-label={showPw ? 'Hide password' : 'Show password'}
+              aria-pressed={showPw}
+              className="absolute inset-y-0 right-0 flex w-11 items-center justify-center faint hover:opacity-80"
+            >
+              {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
         </div>
 
         {info && (
