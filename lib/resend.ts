@@ -1,4 +1,4 @@
-import { resend as client } from './resend-client';
+import { resend as client, FROM_EMAIL } from './resend-client';
 
 export const resend = client;
 
@@ -17,7 +17,7 @@ interface SendEmailProps {
 export async function sendEmail({ to, template, data }: SendEmailProps) {
   try {
     const result = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'noreply@example.com',
+      from: FROM_EMAIL,
       to,
       subject: getEmailSubject(template),
       html: getEmailTemplate(template, data),

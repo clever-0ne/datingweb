@@ -1,4 +1,4 @@
-import { resend } from '@/lib/resend-client';
+import { resend, FROM_EMAIL } from '@/lib/resend-client';
 
 export async function POST(req) {
   try {
@@ -9,7 +9,7 @@ export async function POST(req) {
     }
 
     const result = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'noreply@podz.buzz',
+      from: FROM_EMAIL,
       to,
       subject,
       html,
